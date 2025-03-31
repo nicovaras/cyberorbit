@@ -7,7 +7,12 @@ from core.nodes import compute_node_states, compute_abilities, compute_discovere
 import markdown
 import os
 from markupsafe import Markup
+from core.s3sync import sync_down
 
+for f in ["json/ctfs.json", "json/x.json", "json/streak.json", "json/badges.json"]:
+    os.makedirs(os.path.dirname(f), exist_ok=True)
+    sync_down(f)
+    
 app = Flask(__name__, static_folder=".")
 with open("index.html") as f:
     INDEX_HTML = f.read()

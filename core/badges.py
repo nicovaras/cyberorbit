@@ -1,11 +1,13 @@
 import os
 import json
 from datetime import datetime
+from core.s3sync import sync_down, sync_up
 
 BADGES_PATH = "json/badges.json"
 
 
 def load_badges():
+    sync_down(BADGES_PATH)
     if not os.path.exists(BADGES_PATH):
         return []
     with open(BADGES_PATH, "r") as f:
@@ -15,6 +17,7 @@ def load_badges():
 def save_badges(badges):
     with open(BADGES_PATH, "w") as f:
         json.dump(badges, f, indent=2)
+    sync_up(BADGES_PATH)        
 
 
 def calculate_level(xp):
