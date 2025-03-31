@@ -1,0 +1,20 @@
+[
+  {
+    "completed": 0,
+    "description": "Beginner-friendly CTF to get started.",
+    "link": "https://picoctf.org",
+    "title": "PicoCTF"
+  },
+  {
+    "completed": 0,
+    "description": "CTF-style challenges and real vulnerable VMs.",
+    "link": "https://www.root-me.org/?lang=en",
+    "title": "RootMe"
+  },
+  {
+    "completed": 0,
+    "description": "Tons of small, self-contained challenges, each with hints and writeups.",
+    "link": "https://ctflearn.com/",
+    "title": "CTFlearn"
+  }
+]

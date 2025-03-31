@@ -1,0 +1,12 @@
+acordarse de resetear el hex y las badges
+subir a github
+
+Pasar a DB
+CVE pokedex
+Mini exams (multiple choice, timed):
+	Pass = +10 XP, early access
+	Fail = -5 XP, retry delay
+Daily/Weekly Challenge:
+	Short, surprise task (command, CTF, OSINT)
+
+
