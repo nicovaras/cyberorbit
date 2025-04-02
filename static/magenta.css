@@ -633,3 +633,14 @@ svg {
     /* Adjust value based on sidebar width (260px) + desired gap (e.g., 10px) */
     transform: translateX(-270px);
 }
+
+.modal-separator {
+  border: none;
+  border-top: 1px solid #444; // Adjust color per theme if needed
+  margin: 15px 0;
+}
+
+.modal-save-button {
+  padding: 5px 10px; // Smaller padding than default buttons
+  font-size: 0.9em;
+}

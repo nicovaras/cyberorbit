@@ -167,9 +167,8 @@ export function renderOrUpdateHexChart(abilities) {
 
     // Ensure abilities data is in the correct format
     const labels = Object.keys(abilities || {});
-    // const dataValues = Object.values(abilities || {});
-    const dataValues = [
-       5,10,50,14,31,4]
+    const dataValues = Object.values(abilities || {});
+
 
     if (labels.length === 0) {
          console.warn("No ability data provided for hexagon chart.");
