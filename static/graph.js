@@ -53,6 +53,8 @@ function getPercentText(d, discovered) {
     return '';
 }
 
+
+
 // --- Function to Apply Updates to Graph Elements ---
 export function updateGraph(updatedNodes, updatedLinks, updatedUnlocked, updatedDiscovered) {
     if (!nodeSelection || !linkSelection || !currentSimulation) {
@@ -150,6 +152,18 @@ export function initGraph(initialNodes, initialLinks, initialUnlocked, initialDi
       });
   svg.call(zoomBehavior);
 
+  const discoveredNodes = new Set();
+  const unlockedMap = initialUnlocked || {};
+  const unlockedNodeIds = new Set(Object.keys(unlockedMap).filter(id => unlockedMap[id]));
+  unlockedNodeIds.forEach(id => discoveredNodes.add(id));
+  initialLinks.forEach(link => {
+      const sourceId = typeof link.source === 'object' ? link.source.id : link.source;
+      const targetId = typeof link.target === 'object' ? link.target.id : link.target;
+      if (unlockedNodeIds.has(sourceId)) discoveredNodes.add(targetId);
+      if (unlockedNodeIds.has(targetId)) discoveredNodes.add(sourceId);
+  });
+  discoveredNodes.add("Start");
+
   // --- Simulation Setup ---
   currentSimulation = d3.forceSimulation(initialNodes) // Use initialNodes
     .force("link", d3.forceLink(initialLinks).id(d => d.id).distance(150))
@@ -207,6 +221,7 @@ export function initGraph(initialNodes, initialLinks, initialUnlocked, initialDi
           .attr("transform", d => `translate(${d.x},${d.y})`);
     }
   });
-
   console.log("Graph initialized.");
+  return discoveredNodes;
+
 }

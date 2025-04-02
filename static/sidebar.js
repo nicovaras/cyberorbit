@@ -69,7 +69,7 @@ function showCtfModal(ctf, index) {
 window.showCtfModal = showCtfModal;
 
 // --- Function to Update Sidebar Content (Chart Logic Removed) ---
-export function updateSidebar(nodes, streak, ctfs) {
+export function updateSidebar(nodes, streak, ctfs, discoveredNodes) {
   console.log("Updating sidebar content..."); // Debug log
   const mainProgress = document.getElementById("mainProgress");
   const levelDisplay = document.getElementById("levelDisplay");
@@ -84,12 +84,14 @@ export function updateSidebar(nodes, streak, ctfs) {
 
   // --- Populate Main Progress ---
   if (mainProgress && nodes) {
-    nodes.filter(n => n.type === "main").forEach(n => {
-        const item = document.createElement("div");
-        item.className = "sidebar-item";
-        item.innerHTML = `${n.title || 'N/A'} <span>${n.percent ?? 0}%</span>`;
-        mainProgress.appendChild(item);
-      });
+    nodes
+        .filter(n => n.type === "main" && discoveredNodes.has(n.id))
+        .forEach(n => {
+            const item = document.createElement("div");
+            item.className = "sidebar-item";
+            item.innerHTML = `${n.title} <span>${n.percent ?? 0}%</span>`;
+            mainProgress.appendChild(item);
+        });
   }
 
   // --- Calculate XP and Level ---

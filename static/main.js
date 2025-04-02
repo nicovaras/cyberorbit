@@ -36,7 +36,7 @@ function calculateAbilities(nodes, ctfs) {
 }
 
 // --- Function to Update All UI Components ---
-function updateUI(newState) {
+function updateUI(newState, discoveredNodes) {
     console.log("Updating UI with new state...", newState); // Log for debugging
 
     // Validate newState structure if needed
@@ -63,7 +63,8 @@ function updateUI(newState) {
     updateSidebar(
         currentAppState.nodes,
         currentAppState.streak,
-        currentAppState.ctfs
+        currentAppState.ctfs,
+        discoveredNodes
     );
 
     // Update badges (assuming these functions handle updates)
@@ -95,7 +96,7 @@ fetch('/data')
     };
 
     // Initial rendering
-    initGraph(
+    const discoveredNodes = initGraph(
         currentAppState.nodes,
         currentAppState.links,
         currentAppState.unlocked,
@@ -108,7 +109,8 @@ fetch('/data')
     updateSidebar( // Renders sidebar content
         currentAppState.nodes,
         currentAppState.streak,
-        currentAppState.ctfs
+        currentAppState.ctfs,
+        discoveredNodes
     );
     handleBadges(currentAppState.badges);
     renderBadgeGallery(currentAppState.badges);
@@ -118,7 +120,7 @@ fetch('/data')
     document.addEventListener('appDataUpdated', (event) => {
         console.log("Event 'appDataUpdated' received.");
         if (event.detail) {
-            updateUI(event.detail); // Call the central update function
+            updateUI(event.detail, discoveredNodes); // Call the central update function
         } else {
              console.warn("'appDataUpdated' event received without detail (newState).");
              // Optionally re-fetch data as a fallback

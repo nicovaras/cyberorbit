@@ -6,6 +6,49 @@
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
   <link href="https://fonts.googleapis.com/css2?family=Fira+Code&family=Share+Tech+Mono&display=swap" rel="stylesheet">
   <link id="themeStylesheet" rel="stylesheet" href="/static/dracula.css"> </head>
+  <style>
+#sidebar {
+    /* --- Core Fix --- */
+    overflow-y: auto; /* Allow vertical scrolling */
+    overflow-x: hidden; /* Prevent horizontal scrolling */
+
+    /* --- Height Constraint --- */
+    /* Option A: Full viewport height */
+    height: 100vh; /* Make sidebar height of the viewport */
+
+    /* Option B: Height minus padding/margins (adjust as needed) */
+    /* height: calc(100vh - 40px); /* Example: if you have 20px top/bottom padding */
+
+    /* Option C: If sidebar itself isn't full height, but an inner div is */
+     /* max-height: 80vh; /* Or some other max height */
+
+    /* --- Best Practice --- */
+    box-sizing: border-box; /* Include padding and border in the element's total width and height */
+
+    /* --- Keep your existing styles --- */
+    /* e.g., width, background, position, top, right, padding etc. */
+    width: 280px; /* Your existing width */
+    background-color: #1a2639; /* Your existing background */
+    position: fixed; /* Or absolute, depending on your layout */
+    right: 0;
+    top: 0;
+    padding: 20px; /* Example padding */
+    /* etc. */
+}
+
+.sidebar-section-scrollable { /* Add this class to the DIV containing #mainProgress, and maybe the one for #ctfList */
+    max-height: 30vh; /* Example: Limit list height to 30% of viewport height */
+    overflow-y: auto;
+    margin-bottom: 15px; /* Add some space below the scrollable area */
+    border: 1px solid #334; /* Optional: visual separation */
+    padding-right: 5px; /* Prevent scrollbar overlap */
+}
+
+#sidebar .sidebar-section:last-child {
+     margin-bottom: 0; /* Adjust spacing if needed */
+}
+
+  </style>
 <body>
   <h1>// Cybersecurity Learning Roadmap //</h1>
   <svg></svg> <div id="sidebar" class="sidebar"> <h3>// Status_</h3>
