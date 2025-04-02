@@ -2,86 +2,75 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <title>Cybersecurity Roadmap</title>
+  <title>CyberOrbit Roadmap</title>
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-  <link href="https://fonts.googleapis.com/css2?family=Share+Tech+Mono&display=swap" rel="stylesheet">
-  <link id="themeStylesheet" rel="stylesheet" href="/static/green.css">
-</head>
+  <link href="https://fonts.googleapis.com/css2?family=Fira+Code&family=Share+Tech+Mono&display=swap" rel="stylesheet">
+  <link id="themeStylesheet" rel="stylesheet" href="/static/dracula.css"> </head>
 <body>
-  <h1>Cybersecurity Learning Roadmap</h1>
-  <div id="background"></div>
-  <svg></svg>
-  <div id="sidebar" class="sidebar hidden">
-    <h3>Main Progress</h3>
+  <h1>// Cybersecurity Learning Roadmap //</h1>
+  <svg></svg> <div id="sidebar" class="sidebar"> <h3>// Status_</h3>
     <div id="mainProgress"></div>
-
     <div id="xpContainer">
       <h3 id="levelDisplay" style="margin-top: 10px; font-size: 20px; "></h3>
-      <div id="xpBarWrapper">
-        <div id="xpBar"></div>
-      </div>
-      <h3  style="margin-top: 30px; ">🔥 Streak</h3>
+      <div id="xpBarWrapper"><div id="xpBar"></div></div>
+      <h3 style="margin-top: 30px; ">// Streak_</h3>
       <div id="streakDisplay" style="font-size: 20px; "></div>
-
     </div>
-
-    <h3>CTFs</h3>
+    <h3>// CTFs_</h3>
     <div id="ctfList"></div>
-
-    <h3>Theme</h3>
+    <h3>// Theme_</h3>
     <div class="custom-select" id="themeSelector">
-      <div class="selected">Green</div>
+      <div class="selected">Dracula</div>
       <div class="options">
-        <div data-value="green.css" class="option selected">✔ Green</div>
+        <div data-value="dracula.css" class="option selected">✔ Dracula</div>
+        <div data-value="green.css" class="option">Green</div>
         <div data-value="magenta.css" class="option">Magenta</div>
         <div data-value="solarized.css" class="option">Solarized</div>
         <div data-value="monokai.css" class="option">Monokai</div>
-        <div data-value="dracula.css" class="option">Dracula</div>
       </div>
     </div>
-    
   </div>
 
-  <button id="toggleSidebar">☰</button>
+  <button id="toggleSidebar">></button>
 
   <div id="modal">
     <div id="modalContent">
-      <button id="closeModalBtn"   onclick="document.getElementById('modal').style.display='none'"  class="close-btn">✖</button>
-      <h2 id="modalTitle"></h2>
-      <div id="modalBody"></div>
+        <h2 id="modalTitle">Modal Title</h2> 
+        <button id="closeModalBtn" class="close-btn">X</button> 
+
+        <div id="modalDynamicBody" style="margin-top: 20px;"> 
+        </div>
     </div>
   </div>
 
-  <img src="static/icon.png" id="openStats" style="position: fixed; top: 10px; left: 10px; width: 80px; cursor: pointer; z-index: 1000;" />
+  <img src="static/icon.png" id="openStats" alt="Open Stats" style="position: fixed; top: 10px; left: 10px; width: 60px; cursor: pointer; z-index: 1000; border-radius: 50%; border: 1px solid var(--cyan); box-shadow: 0 0 10px var(--cyan);" />
   <div id="statsModal" style="display: none; position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background: rgba(0,0,0,0.95); color: #00ffff; z-index: 999; font-family: monospace; overflow-y: auto;">
-    <div style="padding: 40px; display: flex; flex-direction: row; flex-wrap: wrap; gap: 40px; justify-content: left;">
+    <div style="padding: 40px; display: flex; flex-direction: row; flex-wrap: wrap; gap: 40px; justify-content: center;">
       <div>
-        <h2 style="text-align: center;">Abilities</h2>
-        <canvas id="hexagonChart" width="800" height="800"></canvas>
+        <h2 style="text-align: center;">// Abilities_</h2>
+        <canvas id="hexagonChart" width="700" height="700"></canvas>
       </div>
       <div>
-        <h2 style="text-align: center;">Badges</h2>
-        <div id="badgesDisplay" style="display: flex; flex-wrap: wrap; gap: 20px;"></div>
+        <h2 style="text-align: center;">// Badges_</h2>
+        <div id="badgesDisplay" style="display: flex; flex-wrap: wrap; gap: 15px; justify-content: center; max-width: 400px;"></div>
       </div>
     </div>
-    <button onclick="document.getElementById('statsModal').style.display='none'" style="position: absolute; top: 20px; right: 20px; font-size: 24px;">✖</button>
+    <button onclick="document.getElementById('statsModal').style.display='none'" style="position: absolute; top: 20px; right: 20px; font-size: 24px; background: none; border: none; color: var(--red); cursor: pointer;">X</button>
   </div>
 
   <template id="badgeTemplate">
     <div id="badgePopup" class="badge-popup-centered">
       <button id="closeBadgePopup" class="close-btn">✖</button>
-      <img class="badge-big" />
+      <img class="badge-big" alt="Badge Image"/>
       <h3 class="badge-title"></h3>
       <p class="badge-desc"></p>
     </div>
   </template>
 
   <template id="ctfModalTemplate">
-    <button id="closeCtfModal" class="close-btn">✖</button>
-    <h1 id="ctfTitle" style="margin-top: 10px;"></h1>
     <p id="ctfDescription" style="margin-top: 10px;"></p>
     <div style="text-align: center; margin-top: 12px;">
-      <a id="ctfLink" href="#" target="_blank">🔗 Visit Challenge</a>
+      <a id="ctfLink" href="#" target="_blank" rel="noopener noreferrer">🔗 Visit Challenge</a>
     </div>
     <div style="margin-top: 20px; display: flex; justify-content: center; align-items: center; gap: 10px;">
       <button id="decreaseCtf">➖</button>
