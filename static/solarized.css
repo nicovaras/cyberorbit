@@ -338,3 +338,256 @@ svg {
     background: #b58900;
     color: #0f1a0f;
   }
+
+  /* ===================== */
+/* GRAPH STYLES      */
+/* ===================== */
+
+/* Remove or comment out the original .node circle rules */
+/* .node circle { ... } */
+/* .node:hover circle { ... } */
+/* .node.mainColor circle { ... } */
+/* .node.sub:not(.done) circle { ... } */
+/* .node.sub.done circle { ... } */
+/* .node.locked circle { ... } */ /* Solarized didn't have explicit locked styles */
+
+/* Define Solarized colors as variables for convenience */
+:root {
+  --base03:  #002b36;
+  --base02:  #073642;
+  --base01:  #586e75;
+  --base00:  #657b83;
+  --base0:   #839496;
+  --base1:   #93a1a1;
+  --base2:   #eee8d5;
+  --base3:   #fdf6e3;
+  --yellow:  #b58900;
+  --orange:  #cb4b16;
+  --red:     #dc322f;
+  --magenta: #d33682;
+  --violet:  #6c71c4;
+  --blue:    #268bd2;
+  --cyan:    #2aa198;
+  --green:   #859900;
+}
+
+
+/* ADD/REPLACE Node Group Styling */
+.node {
+  cursor: pointer;
+  filter: drop-shadow(0 0 5px var(--cyan)); /* Cyan glow */
+  transition: filter 0.2s ease-out;
+}
+.node:hover {
+    filter: drop-shadow(0 0 10px var(--cyan));
+    /* No scaling on hover */
+}
+
+/* Target the hexagon shape */
+.node polygon.node-shape {
+  stroke: var(--cyan); /* Solarized cyan */
+  stroke-width: 1.5;
+  fill: var(--base02); /* Solarized dark background */
+  transition: fill 0.2s ease-out;
+}
+
+.node:hover polygon.node-shape {
+  fill: var(--base01); /* Solarized lighter background on hover */
+}
+
+/* Main node styling */
+.node.mainColor polygon.node-shape {
+  fill: var(--base01); /* Lighter fill */
+  stroke: var(--yellow); /* Solarized yellow stroke */
+  stroke-width: 2.5;
+  filter: drop-shadow(0 0 8px var(--yellow)); /* Main node yellow glow */
+}
+.node.mainColor:hover {
+     filter: drop-shadow(0 0 15px var(--yellow));
+}
+
+/* Sub node styling (default unlocked uses default node styles) */
+.node.sub polygon.node-shape {
+  /* Inherits default cyan stroke, base02 fill */
+   stroke: var(--blue); /* Use Solarized blue for sub nodes */
+   filter: drop-shadow(0 0 6px var(--blue));
+}
+.node.sub:hover {
+      filter: drop-shadow(0 0 12px var(--blue));
+}
+
+/* Done sub node styling */
+.node.sub.done polygon.node-shape {
+  stroke: var(--blue); /* Keep blue stroke */
+  fill: #199cbd; /* Dark fill when done */
+  opacity: 0.7; /* Slightly less opacity */
+}
+.node.sub.done:hover {
+     filter: drop-shadow(0 0 12px var(--blue));
+}
+.node.sub.done:hover polygon.node-shape {
+    fill: var(--base01); /* Hover fill */
+}
+
+/* Start node styling */
+.node.start polygon.node-shape {
+    stroke: var(--green); /* Solarized green */
+    stroke-width: 3;
+    fill: var(--base01); /* Grey fill */
+    filter: drop-shadow(0 0 10px var(--green));
+}
+.node.start:hover {
+     filter: drop-shadow(0 0 16px var(--green));
+}
+
+/* Locked node styling */
+.node.locked polygon.node-shape {
+    stroke: var(--base01); /* Dim grey */
+    fill: var(--base03); /* Background color fill */
+    stroke-dasharray: 3 3;
+     filter: drop-shadow(0 0 4px var(--base01));
+}
+.node.locked {
+    cursor: not-allowed;
+    filter: drop-shadow(0 0 4px var(--base01));
+}
+.node.locked:hover {
+    filter: drop-shadow(0 0 4px var(--base01)); /* No change */
+}
+.node.locked:hover polygon.node-shape {
+     fill: var(--base03); /* No change */
+}
+.node.locked text {
+    fill: var(--base01); /* Dim text */
+    text-shadow: none;
+}
+
+
+/* Undiscovered node styling */
+.node.undiscovered {
+    opacity: 0.5;
+    pointer-events: none;
+     filter: none;
+}
+.node.undiscovered polygon.node-shape {
+    fill: var(--base03);
+    stroke: var(--base01);
+     filter: none;
+}
+
+
+/* Node Label styling */
+.node text.label {
+  fill: var(--base1); /* Solarized light text */
+  font-size: 11px;
+  font-weight: bold;
+  pointer-events: none;
+  text-shadow: 0 0 2px var(--base03); /* Dark shadow for readability */
+  dominant-baseline: middle;
+  transform: translateY(1px);
+}
+.node.mainColor text.label {
+    font-size: 13px;
+    fill: var(--base2); /* Brighter text */
+}
+.node.locked text.label {
+    fill: var(--base00); /* Dim locked text */
+}
+
+/* ADD Percentage Text Styling */
+.node text.percent {
+    fill: var(--orange); /* Solarized orange */
+    font-size: 10px;
+    font-family: monospace;
+    pointer-events: none;
+    text-shadow: 0 0 2px var(--base03);
+}
+.node.locked text.percent {
+    fill: var(--base00); /* Dim percentage on locked nodes */
+}
+
+
+/* Link Styling */
+.links line { /* Added class to group */
+    stroke-opacity: 0.5; /* Slightly more visible links */
+    transition: stroke-opacity 0.2s;
+}
+
+.link.solid {
+  stroke: var(--green); /* Solarized green */
+  stroke-width: 1.5px;
+  stroke-opacity: 0.7;
+}
+
+.link.dashed {
+  stroke: var(--magenta); /* Solarized magenta */
+  stroke-width: 1px;
+  stroke-dasharray: 5 5;
+  stroke-opacity: 0.5;
+}
+
+/* Optional Body glow/scanlines for Solarized */
+body {
+  /* text-shadow: 0 0 3px var(--base0); */ /* Optional subtle body text glow */
+}
+body::before {
+  /* Keep scanlines or remove if they clash with Solarized */
+   /* opacity: 0.1; */ /* Adjust opacity if kept */
+}
+
+/* ===================== */
+/* SIDEBAR STYLES    */
+/* ===================== */
+
+#sidebar {
+  position: fixed;
+  top: 0;
+  right: 0;
+  width: 250px; /* Adjust if width changed */
+  height: 100vh;
+  background: var(--base02); /* Use variable */
+  color: var(--base1);    /* Use variable */
+  font-size: 14px;
+  padding: 60px 20px 20px;
+  overflow-y: auto;
+  box-shadow: -2px 0 8px rgba(38, 139, 210, 0.2); /* Blue shadow */
+  z-index: 100;
+  /* REMOVE transition: transform 0.3s ease; */
+  /* REPLACE .hidden logic with transform */
+  transform: translateX(100%); /* Hidden by default */
+  transition: transform 0.3s ease-in-out; /* Transition the transform */
+}
+
+/* REMOVE this rule */
+/* #sidebar.hidden {
+  transform: translateX(100%);
+} */
+
+/* ADD this rule to show the sidebar */
+#sidebar.visible {
+  transform: translateX(0);
+}
+
+#toggleSidebar {
+  position: fixed;
+  top: 20px;
+   /* ADJUST initial right position slightly */
+  right: 15px;
+  background: var(--blue); /* Use variable */
+  color: var(--base3);   /* Use variable */
+  border: none;
+  border-radius: 4px; /* Use consistent radius */
+  padding: 8px 12px; /* Use consistent padding */
+  font-size: 24px;
+  cursor: pointer;
+  box-shadow: -2px 2px 8px rgba(0,0,0,0.3), 0 0 10px var(--blue); /* Adjusted shadow */
+  z-index: 101;
+  /* ADD transition for movement */
+  transition: transform 0.3s ease-in-out;
+}
+
+/* ADD rule to move button when sidebar is visible */
+#sidebar.visible + #toggleSidebar {
+    /* Adjust value based on sidebar width (250px) + desired gap (e.g., 10px) */
+    transform: translateX(-260px);
+}

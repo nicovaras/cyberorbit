@@ -410,3 +410,226 @@ svg {
     background: #ff00ff;
     color: #0f1a0f;
   }
+
+  /* ===================== */
+/* GRAPH STYLES      */
+/* ===================== */
+
+/* Remove or comment out the original .node circle rules */
+/* .node circle { ... } */
+/* .node:hover circle { ... } */
+/* .node.mainColor circle { ... } */
+/* .node.sub:not(.done) circle { ... } */
+/* .node.sub.done circle { ... } */
+/* .node.locked circle { ... } */
+
+/* ADD/REPLACE Node Group Styling */
+.node {
+  cursor: pointer;
+  filter: drop-shadow(0 0 6px #ff00ff); /* Magenta glow */
+  transition: filter 0.2s ease-out;
+}
+.node:hover {
+    filter: drop-shadow(0 0 12px #ff00ff);
+    /* No scaling on hover */
+}
+
+/* Target the hexagon shape */
+.node polygon.node-shape {
+  stroke: #ff00ff; /* Theme magenta */
+  stroke-width: 1.5;
+  fill: #220033; /* Dark purple/magenta fill */
+  transition: fill 0.2s ease-out;
+}
+
+.node:hover polygon.node-shape {
+  fill: #390056; /* Lighter fill on hover */
+}
+
+/* Main node styling */
+.node.mainColor polygon.node-shape {
+  fill: #6600cc; /* Purple fill */
+  stroke: #ff66ff; /* Lighter magenta stroke */
+  stroke-width: 2.5;
+  filter: drop-shadow(0 0 8px #ff66ff); /* Main node glow */
+}
+.node.mainColor:hover {
+     filter: drop-shadow(0 0 15px #ff66ff);
+}
+
+/* Sub node styling (default unlocked) */
+.node.sub polygon.node-shape {
+  stroke: #cc00cc; /* Slightly darker magenta stroke */
+  filter: drop-shadow(0 0 6px #cc00cc);
+}
+.node.sub:hover {
+     filter: drop-shadow(0 0 12px #cc00cc);
+}
+
+/* Done sub node styling */
+.node.sub.done polygon.node-shape {
+  stroke: #cc00cc;
+  fill: #8f1fb4; /* Dark fill when done */
+  opacity: 0.8;
+}
+.node.sub.done:hover {
+     filter: drop-shadow(0 0 12px #cc00cc);
+}
+.node.sub.done:hover polygon.node-shape {
+    fill: #390056; /* Hover fill */
+}
+
+/* Start node styling */
+.node.start polygon.node-shape {
+    stroke: #ff99ff; /* Light pink for start */
+    stroke-width: 3;
+    fill: #330044; /* Dark fill */
+    filter: drop-shadow(0 0 10px #ff99ff);
+}
+.node.start:hover {
+     filter: drop-shadow(0 0 16px #ff99ff);
+}
+
+/* Locked node styling */
+.node.locked polygon.node-shape {
+    stroke: #551155; /* Dim magenta */
+    fill: #1a0820; /* Very dark fill */
+    stroke-dasharray: 3 3;
+     filter: drop-shadow(0 0 4px #551155);
+}
+.node.locked {
+    cursor: not-allowed;
+    filter: drop-shadow(0 0 4px #551155);
+}
+.node.locked:hover {
+    filter: drop-shadow(0 0 4px #551155); /* No change */
+}
+.node.locked:hover polygon.node-shape {
+     fill: #1a0820; /* No change */
+}
+.node.locked text {
+    fill: #551155; /* Dim text */
+    text-shadow: none;
+}
+
+
+/* Undiscovered node styling */
+.node.undiscovered {
+    opacity: 0.5;
+    pointer-events: none;
+     filter: none;
+}
+.node.undiscovered polygon.node-shape {
+    fill: #1a0820;
+    stroke: #551155;
+     filter: none;
+}
+
+
+/* Node Label styling */
+.node text.label {
+  fill: #ffe6ff; /* Light pink/white text */
+  font-size: 11px;
+  font-weight: bold; /* VT323 might need bold */
+  pointer-events: none;
+  text-shadow: 0 0 3px #000, 0 0 5px #000; /* Black shadow */
+  dominant-baseline: middle;
+  transform: translateY(1px);
+}
+.node.mainColor text.label {
+    font-size: 13px;
+    fill: #ffffff; /* Brighter white */
+}
+.node.locked text.label {
+    fill: #773377; /* Dim locked text */
+}
+
+/* ADD Percentage Text Styling */
+.node text.percent {
+    fill: #ffcc00; /* Accent color from sidebar */
+    font-size: 10px;
+    font-family: monospace;
+    pointer-events: none;
+    text-shadow: 0 0 3px #000;
+}
+.node.locked text.percent {
+    fill: #555; /* Dim percentage on locked nodes */
+}
+
+
+/* Link Styling */
+.links line { /* Added class to group */
+    stroke-opacity: 0.4;
+    transition: stroke-opacity 0.2s;
+}
+
+.link.solid {
+  stroke: #ff00ffaa; /* Use theme magenta */
+  stroke-width: 1.5px;
+  stroke-opacity: 0.7;
+  /* animation: glowlink 2s ease-in-out infinite; */
+}
+
+.link.dashed {
+  stroke: #ff00ff44; /* Fainter magenta */
+  stroke-width: 1px;
+  stroke-dasharray: 5 5;
+  stroke-opacity: 0.5;
+ /* animation: dashmove 1.5s linear infinite; */
+}
+
+/* ===================== */
+/* SIDEBAR STYLES    */
+/* ===================== */
+
+#sidebar {
+  position: fixed;
+  top: 0;
+  right: 0;
+  width: 260px; /* Adjust if width changed */
+  height: 100vh;
+  background: rgba(18, 8, 28, 0.95);
+  color: #ff00ff;
+  padding: 60px 20px 20px;
+  overflow-y: auto;
+  box-shadow: -2px 0 12px rgba(255, 0, 255, 0.3);
+  z-index: 100;
+  /* REMOVE transition: transform 0.3s ease; */
+  /* REPLACE .hidden logic with transform */
+  transform: translateX(100%); /* Hidden by default */
+  transition: transform 0.3s ease-in-out; /* Transition the transform */
+}
+
+/* REMOVE this rule */
+/* #sidebar.hidden {
+  transform: translateX(100%);
+} */
+
+/* ADD this rule to show the sidebar */
+#sidebar.visible {
+  transform: translateX(0);
+}
+
+#toggleSidebar {
+  position: fixed;
+  top: 20px;
+  /* ADJUST initial right position slightly */
+  right: 15px;
+  background: #ff00ff;
+  color: #000;
+  border: none;
+  border-radius: 4px; /* Use consistent radius */
+  padding: 8px 12px; /* Use consistent padding */
+  font-size: 24px;
+  cursor: pointer;
+  box-shadow: -2px 2px 8px rgba(0,0,0,0.3), 0 0 12px #ff00ff; /* Adjusted shadow */
+  z-index: 101;
+  /* ADD transition for movement */
+  transition: transform 0.3s ease-in-out;
+}
+
+/* ADD rule to move button when sidebar is visible */
+#sidebar.visible + #toggleSidebar {
+    /* Adjust value based on sidebar width (260px) + desired gap (e.g., 10px) */
+    transform: translateX(-270px);
+}
