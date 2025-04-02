@@ -38,8 +38,7 @@
           "completed": false,
           "label": "Functions and error handling",
           "optional": false,
-          "points": 20,
-          "id": "ex_node_x0y2yuf_0"
+          "points": 20
         },
         {
           "categories": [
@@ -48,8 +47,7 @@
           "completed": false,
           "label": "Reading CLI arguments with `argparse` ",
           "optional": false,
-          "points": 10,
-          "id": "ex_node_keht2mo_1"
+          "points": 10
         },
         {
           "categories": [
@@ -58,8 +56,7 @@
           "completed": false,
           "label": "Write your own `grep` clone in Python",
           "optional": true,
-          "points": 30,
-          "id": "ex_node_kpn8b93_2"
+          "points": 30
         }
       ],
       "pdf_link": "md/1python_fundamentals.md",
@@ -93,8 +90,7 @@
           "completed": false,
           "label": "Read, write, and clean log files",
           "optional": false,
-          "points": 10,
-          "id": "ex_node_sw464ms_0"
+          "points": 10
         },
         {
           "categories": [
@@ -103,8 +99,7 @@
           "completed": false,
           "label": "Extract fields from messy strings using `re`  ",
           "optional": false,
-          "points": 20,
-          "id": "ex_node_rjtuphy_1"
+          "points": 20
         },
         {
           "categories": [
@@ -114,8 +109,7 @@
           "completed": false,
           "label": "Summarize logs using `collections.Counter`  ",
           "optional": false,
-          "points": 15,
-          "id": "ex_node_iwl6cbe_2"
+          "points": 15
         },
         {
           "categories": [
@@ -124,8 +118,7 @@
           "completed": false,
           "label": "Parse timestamps and sort events chronologically  ",
           "optional": false,
-          "points": 15,
-          "id": "ex_node_yepz0gi_3"
+          "points": 15
         },
         {
           "categories": [
@@ -134,10 +127,9 @@
             "System Analysis"
           ],
           "completed": false,
-          "label": "🔖 Project: Security Log Analyzer",
+          "label": "\ud83d\udd16 Project: Security Log Analyzer",
           "optional": false,
-          "points": 50,
-          "id": "ex_node_7l90o93_4"
+          "points": 50
         }
       ],
       "pdf_link": "md/1files_logs.md",
@@ -170,8 +162,7 @@
           "completed": false,
           "label": "Script a CLI Recon Routine",
           "optional": false,
-          "points": 15,
-          "id": "ex_node_ek6njnw_0"
+          "points": 15
         },
         {
           "categories": [
@@ -180,8 +171,7 @@
           "completed": false,
           "label": "Clone `uptime`, `top`, and `who` in One Script",
           "optional": false,
-          "points": 10,
-          "id": "ex_node_c7z1q46_1"
+          "points": 10
         },
         {
           "categories": [
@@ -190,8 +180,7 @@
           "completed": false,
           "label": "Chain Python and Bash for Custom CLI Commands",
           "optional": false,
-          "points": 15,
-          "id": "ex_node_3468lih_2"
+          "points": 15
         },
         {
           "categories": [
@@ -199,10 +188,9 @@
             "Defensive Techniques"
           ],
           "completed": false,
-          "label": "✨ Bonus: Trigger a Live Alert on Suspicious Behavior",
+          "label": "\u2728 Bonus: Trigger a Live Alert on Suspicious Behavior",
           "optional": false,
-          "points": 30,
-          "id": "ex_node_d4wu3bj_3"
+          "points": 30
         }
       ],
       "pdf_link": "md/1automation.md",
@@ -238,7 +226,7 @@
     "title": "Network Basics & Recon",
     "type": "main",
     "vx": -0.002087499997432863,
-    "vy": -0.000055526484281208285,
+    "vy": -5.5526484281208285e-05,
     "x": 1534.3023327041765,
     "y": 554.4177453731837
   },
@@ -262,8 +250,7 @@
           "completed": false,
           "label": "Simulate TCP Handshake Visually  ",
           "optional": false,
-          "points": 20,
-          "id": "ex_node_rp0gvhc_0"
+          "points": 20
         },
         {
           "categories": [
@@ -272,8 +259,7 @@
           "completed": false,
           "label": "Deep DNS Resolution  ",
           "optional": false,
-          "points": 20,
-          "id": "ex_node_o9csuls_1"
+          "points": 20
         },
         {
           "categories": [
@@ -283,8 +269,7 @@
           "completed": false,
           "label": "Map Traceroute as Graph  ",
           "optional": false,
-          "points": 20,
-          "id": "ex_node_pmxq218_2"
+          "points": 20
         },
         {
           "categories": [
@@ -293,8 +278,7 @@
           "completed": false,
           "label": "Port Scanning Modes (Nmap + Theory)  ",
           "optional": false,
-          "points": 20,
-          "id": "ex_node_tq5v1ma_3"
+          "points": 20
         },
         {
           "categories": [
@@ -303,8 +287,7 @@
           "completed": false,
           "label": "Decode ARP & MAC Behavior  ",
           "optional": false,
-          "points": 10,
-          "id": "ex_node_d3xzapp_4"
+          "points": 10
         },
         {
           "categories": [
@@ -313,8 +296,7 @@
           "completed": false,
           "label": "Identify Protocols and Layers  ",
           "optional": false,
-          "points": 20,
-          "id": "ex_node_bjm5ae1_5"
+          "points": 20
         },
         {
           "categories": [
@@ -324,8 +306,7 @@
           "completed": false,
           "label": " Build a Ping Flood Simulation (Safe)  ",
           "optional": true,
-          "points": 30,
-          "id": "ex_node_wdv85wc_6"
+          "points": 30
         },
         {
           "categories": [
@@ -336,8 +317,7 @@
           "completed": false,
           "label": "Identify Firewall Blocking Behavior  ",
           "optional": true,
-          "points": 30,
-          "id": "ex_node_sxen5d6_7"
+          "points": 30
         }
       ],
       "pdf_link": "md/2net_fundamentals.md",
@@ -370,8 +350,7 @@
           "completed": false,
           "label": " Use Wireshark to capture basic HTTP traffic  ",
           "optional": false,
-          "points": 10,
-          "id": "ex_node_hkx710h_0"
+          "points": 10
         },
         {
           "categories": [
@@ -380,8 +359,7 @@
           "completed": false,
           "label": "Identify protocols like DNS, ICMP, TCP in `.pcap`  ",
           "optional": false,
-          "points": 15,
-          "id": "ex_node_cy25fra_1"
+          "points": 15
         },
         {
           "categories": [
@@ -391,8 +369,7 @@
           "completed": false,
           "label": "Follow TCP streams and extract credentials (if visible)  ",
           "optional": false,
-          "points": 10,
-          "id": "ex_node_d76cocn_2"
+          "points": 10
         },
         {
           "categories": [
@@ -402,8 +379,7 @@
           "completed": false,
           "label": "Create basic `.pcap` filter cheatsheet  ",
           "optional": false,
-          "points": 15,
-          "id": "ex_node_jfm3r6e_3"
+          "points": 15
         },
         {
           "categories": [
@@ -412,8 +388,7 @@
           "completed": false,
           "label": "Create your own `tcpdump` wrapper in Python",
           "optional": true,
-          "points": 30,
-          "id": "ex_node_di768gg_4"
+          "points": 30
         }
       ],
       "pdf_link": "md/2protocol.md",
@@ -447,8 +422,7 @@
           "completed": false,
           "label": "Scan Targets and Identify Services with `python-nmap`",
           "optional": false,
-          "points": 15,
-          "id": "ex_node_645od0s_0"
+          "points": 15
         },
         {
           "categories": [
@@ -459,8 +433,7 @@
           "completed": false,
           "label": "Build a Passive Subdomain Enumerator",
           "optional": false,
-          "points": 15,
-          "id": "ex_node_7n9cni0_1"
+          "points": 15
         },
         {
           "categories": [
@@ -470,8 +443,7 @@
           "completed": false,
           "label": "Scrape and Parse Open Directories",
           "optional": false,
-          "points": 10,
-          "id": "ex_node_8zedy6o_2"
+          "points": 10
         },
         {
           "categories": [
@@ -482,8 +454,7 @@
           "completed": false,
           "label": "Build a DNS Brute-forcer in Python",
           "optional": false,
-          "points": 20,
-          "id": "ex_node_km5ojyh_3"
+          "points": 20
         },
         {
           "categories": [
@@ -492,10 +463,9 @@
             "Offensive Techniques"
           ],
           "completed": false,
-          "label": "🔖 Project: Python Recon Toolkit",
+          "label": "\ud83d\udd16 Project: Python Recon Toolkit",
           "optional": false,
-          "points": 50,
-          "id": "ex_node_kdfaikq_4"
+          "points": 50
         }
       ],
       "pdf_link": "md/2recon.md",
@@ -524,7 +494,7 @@
       "completion_percent": 0,
       "exercises": [],
       "pdf_link": "",
-      "text": "Mastery means knowing how to find, exploit, and **fix** flaws in web apps—manually and methodically."
+      "text": "Mastery means knowing how to find, exploit, and **fix** flaws in web apps\u2014manually and methodically."
     },
     "prerequisites": [
       "network_basics"
@@ -554,8 +524,7 @@
           "completed": false,
           "label": "Write a Script to Mimic a Browser (but Not Quite)",
           "optional": false,
-          "points": 15,
-          "id": "ex_node_1ly7bbk_0"
+          "points": 15
         },
         {
           "categories": [
@@ -565,8 +534,7 @@
           "completed": false,
           "label": "Build a CLI Login Tool Using `requests`",
           "optional": false,
-          "points": 20,
-          "id": "ex_node_mo2tbw9_1"
+          "points": 20
         },
         {
           "categories": [
@@ -576,8 +544,7 @@
           "completed": false,
           "label": "Poison the Headers",
           "optional": false,
-          "points": 15,
-          "id": "ex_node_wm3b9ik_2"
+          "points": 15
         },
         {
           "categories": [
@@ -586,8 +553,7 @@
           "completed": false,
           "label": "Intercept and Replay Login Requests with Burp Suite",
           "optional": false,
-          "points": 10,
-          "id": "ex_node_412vjdb_3"
+          "points": 10
         },
         {
           "categories": [
@@ -595,10 +561,9 @@
             "Offensive Techniques"
           ],
           "completed": false,
-          "label": "🕹️ Lab: PortSwigger – HTTP Request Smuggling & Parsing",
+          "label": "\ud83d\udd79\ufe0f Lab: PortSwigger \u2013 HTTP Request Smuggling & Parsing",
           "optional": false,
-          "points": 50,
-          "id": "ex_node_b1wndgl_4"
+          "points": 50
         }
       ],
       "pdf_link": "md/3http.md",
@@ -633,8 +598,7 @@
           "completed": false,
           "label": "Reflected XSS in a Search Parameter ",
           "optional": false,
-          "points": 15,
-          "id": "ex_node_cbypk4w_0"
+          "points": 15
         },
         {
           "categories": [
@@ -644,8 +608,7 @@
           "completed": false,
           "label": "Stored XSS in a Comment System  ",
           "optional": false,
-          "points": 15,
-          "id": "ex_node_jr21hl2_1"
+          "points": 15
         },
         {
           "categories": [
@@ -655,8 +618,7 @@
           "completed": false,
           "label": "Bypass a Login Using SQL Injection  ",
           "optional": false,
-          "points": 15,
-          "id": "ex_node_t0vzcyh_2"
+          "points": 15
         },
         {
           "categories": [
@@ -666,8 +628,7 @@
           "completed": false,
           "label": "Build Regex to Validate Safe Usernames  ",
           "optional": false,
-          "points": 10,
-          "id": "ex_node_0p0xfpf_3"
+          "points": 10
         },
         {
           "categories": [
@@ -675,10 +636,9 @@
             "Offensive Techniques"
           ],
           "completed": false,
-          "label": " 🕹️ CTF: OWASP XSS & SQLi Practice  ",
+          "label": " \ud83d\udd79\ufe0f CTF: OWASP XSS & SQLi Practice  ",
           "optional": false,
-          "points": 40,
-          "id": "ex_node_qseddpu_4"
+          "points": 40
         }
       ],
       "pdf_link": "md/3input.md",
@@ -712,8 +672,7 @@
           "completed": false,
           "label": "Use Flask's `request.args` safely  ",
           "optional": false,
-          "points": 10,
-          "id": "ex_node_8mb138b_0"
+          "points": 10
         },
         {
           "categories": [
@@ -723,8 +682,7 @@
           "completed": false,
           "label": "Add Content Security Policy headers  ",
           "optional": false,
-          "points": 20,
-          "id": "ex_node_xl50bh8_1"
+          "points": 20
         },
         {
           "categories": [
@@ -734,8 +692,7 @@
           "completed": false,
           "label": "Block dangerous input with whitelist filtering  ",
           "optional": false,
-          "points": 10,
-          "id": "ex_node_mj6q0wg_2"
+          "points": 10
         },
         {
           "categories": [
@@ -743,10 +700,9 @@
             "Defensive Techniques"
           ],
           "completed": false,
-          "label": "🔖 Project: Break & Fix Flask App  ",
+          "label": "\ud83d\udd16 Project: Break & Fix Flask App  ",
           "optional": false,
-          "points": 50,
-          "id": "ex_node_t0p1rfn_3"
+          "points": 50
         },
         {
           "categories": [
@@ -757,8 +713,7 @@
           "completed": false,
           "label": "Deploy a secure Flask app on AWS Lightsail",
           "optional": true,
-          "points": 50,
-          "id": "ex_node_shaa7ui_4"
+          "points": 50
         }
       ],
       "pdf_link": "md/3fix.md",
@@ -815,8 +770,7 @@
           "completed": false,
           "label": "Monitor file access with `inotifywait`  ",
           "optional": false,
-          "points": 20,
-          "id": "ex_node_pbsjqcf_0"
+          "points": 20
         },
         {
           "categories": [
@@ -826,8 +780,7 @@
           "completed": false,
           "label": "Write a file change logger in Python  ",
           "optional": false,
-          "points": 15,
-          "id": "ex_node_kyv6lcz_1"
+          "points": 15
         },
         {
           "categories": [
@@ -837,8 +790,7 @@
           "completed": false,
           "label": "Compare file hashes to detect tampering  ",
           "optional": false,
-          "points": 15,
-          "id": "ex_node_b98ofv5_2"
+          "points": 15
         },
         {
           "categories": [
@@ -848,8 +800,7 @@
           "completed": false,
           "label": "Schedule integrity checks with cron  ",
           "optional": false,
-          "points": 10,
-          "id": "ex_node_fv7caby_3"
+          "points": 10
         },
         {
           "categories": [
@@ -860,8 +811,7 @@
           "completed": false,
           "label": "Bonus: Track USB insertion events on Linux (`udevadm` + logging)",
           "optional": true,
-          "points": 30,
-          "id": "ex_node_obe5hvh_4"
+          "points": 30
         }
       ],
       "pdf_link": "md/4filesystem_mon.md",
@@ -895,8 +845,7 @@
           "completed": false,
           "label": "Detect strange processes (`nc`, `python`, `curl`)  ",
           "optional": false,
-          "points": 10,
-          "id": "ex_node_nddmk8n_0"
+          "points": 10
         },
         {
           "categories": [
@@ -905,8 +854,7 @@
           "completed": false,
           "label": "Correlate processes with usernames  ",
           "optional": false,
-          "points": 15,
-          "id": "ex_node_mpg7f9s_1"
+          "points": 15
         },
         {
           "categories": [
@@ -917,8 +865,7 @@
           "completed": false,
           "label": "Alert on rare processes (via frequency thresholding)  ",
           "optional": false,
-          "points": 15,
-          "id": "ex_node_nlt8c98_2"
+          "points": 15
         },
         {
           "categories": [
@@ -928,18 +875,16 @@
           "completed": false,
           "label": "Build a script that logs processes > X CPU usage  ",
           "optional": false,
-          "points": 20,
-          "id": "ex_node_z4hdvgp_3"
+          "points": 20
         },
         {
           "categories": [
             "System Analysis"
           ],
           "completed": false,
-          "label": "🕹️ Room: TryHackMe – Linux Monitoring",
+          "label": "\ud83d\udd79\ufe0f Room: TryHackMe \u2013 Linux Monitoring",
           "optional": false,
-          "points": 50,
-          "id": "ex_node_3rvj9mp_4"
+          "points": 50
         }
       ],
       "pdf_link": "md/4process_mon.md",
@@ -972,8 +917,7 @@
           "completed": false,
           "label": "Something Touched the Shadows",
           "optional": false,
-          "points": 10,
-          "id": "ex_node_5z119r7_0"
+          "points": 10
         },
         {
           "categories": [
@@ -983,18 +927,16 @@
           "completed": false,
           "label": "Trap the Rogue Admin",
           "optional": false,
-          "points": 10,
-          "id": "ex_node_nzijjmc_1"
+          "points": 10
         },
         {
           "categories": [
             "System Analysis"
           ],
           "completed": false,
-          "label": "Who Just Logged In From… Where?",
+          "label": "Who Just Logged In From\u2026 Where?",
           "optional": false,
-          "points": 10,
-          "id": "ex_node_btt0z9i_2"
+          "points": 10
         },
         {
           "categories": [
@@ -1004,8 +946,7 @@
           "completed": false,
           "label": "Monitor for Unexpected Changes in System Binaries",
           "optional": false,
-          "points": 10,
-          "id": "ex_node_ein09yc_3"
+          "points": 10
         },
         {
           "categories": [
@@ -1014,10 +955,9 @@
             "System Analysis"
           ],
           "completed": false,
-          "label": "🔖 Project: The Alert Engine",
+          "label": "\ud83d\udd16 Project: The Alert Engine",
           "optional": false,
-          "points": 10,
-          "id": "ex_node_808dxe3_4"
+          "points": 10
         }
       ],
       "pdf_link": "md/4audits.md",
@@ -1046,7 +986,7 @@
       "completion_percent": 0,
       "exercises": [],
       "pdf_link": "",
-      "text": "Mastery here means reconstructing what happened during an intrusion—fast and accurately."
+      "text": "Mastery here means reconstructing what happened during an intrusion\u2014fast and accurately."
     },
     "prerequisites": [
       "file_integrity"
@@ -1076,8 +1016,7 @@
           "completed": false,
           "label": "`grep`, `awk`, `cut`, `uniq`, `sort` on `auth.log`  ",
           "optional": false,
-          "points": 30,
-          "id": "ex_node_r2jzgjd_0"
+          "points": 30
         },
         {
           "categories": [
@@ -1087,8 +1026,7 @@
           "completed": false,
           "label": "Identify brute-force attempts via repeated IPs  ",
           "optional": false,
-          "points": 20,
-          "id": "ex_node_idn9n5l_1"
+          "points": 20
         },
         {
           "categories": [
@@ -1097,8 +1035,7 @@
           "completed": false,
           "label": "Find sudo or su usage per user  ",
           "optional": false,
-          "points": 15,
-          "id": "ex_node_dn5skkj_2"
+          "points": 15
         },
         {
           "categories": [
@@ -1107,8 +1044,7 @@
           "completed": false,
           "label": "Check login times and correlate to `bash_history`",
           "optional": false,
-          "points": 15,
-          "id": "ex_node_bp0eqpz_3"
+          "points": 15
         }
       ],
       "pdf_link": "md/5log_analysis.md",
@@ -1142,8 +1078,7 @@
           "completed": false,
           "label": "Untangle a Timeline from Multiple Logs",
           "optional": false,
-          "points": 15,
-          "id": "ex_node_9idpk17_0"
+          "points": 15
         },
         {
           "categories": [
@@ -1151,10 +1086,9 @@
             "Defensive Techniques"
           ],
           "completed": false,
-          "label": "Follow a Single Intruder’s Session",
+          "label": "Follow a Single Intruder\u2019s Session",
           "optional": false,
-          "points": 15,
-          "id": "ex_node_wz53oal_1"
+          "points": 15
         },
         {
           "categories": [
@@ -1164,8 +1098,7 @@
           "completed": false,
           "label": "Trace a Silent Privilege Escalation",
           "optional": false,
-          "points": 20,
-          "id": "ex_node_fil5uy2_2"
+          "points": 20
         },
         {
           "categories": [
@@ -1175,8 +1108,7 @@
           "completed": false,
           "label": "Spot Encoded Payloads in Bash History",
           "optional": false,
-          "points": 20,
-          "id": "ex_node_w7zm9js_3"
+          "points": 20
         },
         {
           "categories": [
@@ -1185,10 +1117,9 @@
             "Scripting and Automation"
           ],
           "completed": false,
-          "label": "🕹️ CTF: TryHackMe – Intro to Digital Forensics",
+          "label": "\ud83d\udd79\ufe0f CTF: TryHackMe \u2013 Intro to Digital Forensics",
           "optional": false,
-          "points": 50,
-          "id": "ex_node_z7g6cs7_4"
+          "points": 50
         }
       ],
       "pdf_link": "md/5timeline.md",
@@ -1220,8 +1151,7 @@
           "completed": false,
           "label": "Build a Timeline Tool in Python",
           "optional": false,
-          "points": 15,
-          "id": "ex_node_ox78eeo_0"
+          "points": 15
         },
         {
           "categories": [
@@ -1231,8 +1161,7 @@
           "completed": false,
           "label": "Generate Incident Report in Markdown",
           "optional": false,
-          "points": 15,
-          "id": "ex_node_62zxshb_1"
+          "points": 15
         },
         {
           "categories": [
@@ -1241,10 +1170,9 @@
             "Defensive Techniques"
           ],
           "completed": false,
-          "label": " 🔖 Project: Timeline of Attack from Sample Logs",
+          "label": " \ud83d\udd16 Project: Timeline of Attack from Sample Logs",
           "optional": false,
-          "points": 40,
-          "id": "ex_node_7nu34q8_2"
+          "points": 40
         },
         {
           "categories": [
@@ -1255,8 +1183,7 @@
           "completed": false,
           "label": "Bonus: Create Regex Patterns to Catch Obfuscated Behavior",
           "optional": true,
-          "points": 25,
-          "id": "ex_node_qm3sm5e_3"
+          "points": 25
         }
       ],
       "pdf_link": "md/5tools.md",
@@ -1288,8 +1215,7 @@
           "completed": false,
           "label": "Encode and Decode Messages with Base64",
           "optional": false,
-          "points": 10,
-          "id": "ex_node_putm22b_0"
+          "points": 10
         },
         {
           "categories": [
@@ -1299,8 +1225,7 @@
           "completed": false,
           "label": "Build a ROT13 Encryptor/Decryptor",
           "optional": false,
-          "points": 10,
-          "id": "ex_node_clcncah_1"
+          "points": 10
         },
         {
           "categories": [
@@ -1310,8 +1235,7 @@
           "completed": false,
           "label": "Detect Obfuscated Commands in a Log",
           "optional": false,
-          "points": 20,
-          "id": "ex_node_v92dz93_2"
+          "points": 20
         },
         {
           "categories": [
@@ -1321,8 +1245,7 @@
           "completed": false,
           "label": "Obfuscate and Deobfuscate a Python Script",
           "optional": false,
-          "points": 15,
-          "id": "ex_node_g47tb7f_3"
+          "points": 15
         },
         {
           "categories": [
@@ -1332,8 +1255,7 @@
           "completed": false,
           "label": "Create a Self-Decoding Payload",
           "optional": true,
-          "points": 45,
-          "id": "ex_node_ld09q5f_4"
+          "points": 45
         }
       ],
       "pdf_link": "md/1encoding.md",
@@ -1365,8 +1287,7 @@
           "completed": false,
           "label": "Visualize Failed Logins from Sample Log",
           "optional": false,
-          "points": 15,
-          "id": "ex_node_t687zc0_0"
+          "points": 15
         },
         {
           "categories": [
@@ -1376,8 +1297,7 @@
           "completed": false,
           "label": "Plot Process Memory Usage Over Time",
           "optional": false,
-          "points": 15,
-          "id": "ex_node_wh3u2c9_1"
+          "points": 15
         },
         {
           "categories": [
@@ -1387,8 +1307,7 @@
           "completed": false,
           "label": "Geo-Plot Login Attempts by IP",
           "optional": false,
-          "points": 20,
-          "id": "ex_node_5sqo4fa_2"
+          "points": 20
         },
         {
           "categories": [
@@ -1398,8 +1317,7 @@
           "completed": false,
           "label": "Visualize User Activity by Hour",
           "optional": false,
-          "points": 10,
-          "id": "ex_node_5ml942p_3"
+          "points": 10
         },
         {
           "categories": [
@@ -1409,8 +1327,7 @@
           "completed": false,
           "label": "Animate Process Tree Growth Over Time",
           "optional": true,
-          "points": 40,
-          "id": "ex_node_lwiubt9_4"
+          "points": 40
         }
       ],
       "pdf_link": "md/1data_viz.md",
@@ -1442,8 +1359,7 @@
           "completed": false,
           "label": "Identify Subdomains Using Public Tools",
           "optional": false,
-          "points": 10,
-          "id": "ex_node_wjfjzc8_0"
+          "points": 10
         },
         {
           "categories": [
@@ -1453,8 +1369,7 @@
           "completed": false,
           "label": "Google Dorks to Find Sensitive Files",
           "optional": false,
-          "points": 20,
-          "id": "ex_node_aqv4j1q_1"
+          "points": 20
         },
         {
           "categories": [
@@ -1464,8 +1379,7 @@
           "completed": false,
           "label": "Extract Metadata from Local Files",
           "optional": false,
-          "points": 10,
-          "id": "ex_node_hm8u289_2"
+          "points": 10
         },
         {
           "categories": [
@@ -1475,8 +1389,7 @@
           "completed": false,
           "label": "Find Public AWS Buckets",
           "optional": false,
-          "points": 20,
-          "id": "ex_node_3ki6gy7_3"
+          "points": 20
         },
         {
           "categories": [
@@ -1487,8 +1400,7 @@
           "completed": false,
           "label": "Automate Subdomain Discovery",
           "optional": true,
-          "points": 30,
-          "id": "ex_node_5wwl2jf_4"
+          "points": 30
         }
       ],
       "pdf_link": "md/2osint.md",
@@ -1520,8 +1432,7 @@
           "completed": false,
           "label": "Simulate a SYN Flood Attack (locally)",
           "optional": false,
-          "points": 15,
-          "id": "ex_node_3sr8j67_0"
+          "points": 15
         },
         {
           "categories": [
@@ -1531,8 +1442,7 @@
           "completed": false,
           "label": "Perform ARP Spoofing in a Controlled Lab",
           "optional": false,
-          "points": 10,
-          "id": "ex_node_9swv5jn_1"
+          "points": 10
         },
         {
           "categories": [
@@ -1542,8 +1452,7 @@
           "completed": false,
           "label": "MITM HTTP Traffic Using Ettercap",
           "optional": false,
-          "points": 20,
-          "id": "ex_node_5iohb7a_2"
+          "points": 20
         },
         {
           "categories": [
@@ -1553,8 +1462,7 @@
           "completed": false,
           "label": "DNS Spoofing in a Virtual Lab",
           "optional": false,
-          "points": 15,
-          "id": "ex_node_okitahk_3"
+          "points": 15
         },
         {
           "categories": [
@@ -1562,10 +1470,9 @@
             "Offensive Techniques"
           ],
           "completed": false,
-          "label": "Lab: TryHackMe – Network Exploitation Basics",
+          "label": "Lab: TryHackMe \u2013 Network Exploitation Basics",
           "optional": false,
-          "points": 50,
-          "id": "ex_node_vzw0fjx_4"
+          "points": 50
         }
       ],
       "pdf_link": "md/2active_attacks.md",
@@ -1597,8 +1504,7 @@
           "completed": false,
           "label": "Capture Wi-Fi Handshake Using Aircrack-ng",
           "optional": false,
-          "points": 20,
-          "id": "ex_node_0qqxjze_0"
+          "points": 20
         },
         {
           "categories": [
@@ -1608,8 +1514,7 @@
           "completed": false,
           "label": "Identify Local Wi-Fi Devices with Python",
           "optional": false,
-          "points": 10,
-          "id": "ex_node_cf2s1ye_1"
+          "points": 10
         },
         {
           "categories": [
@@ -1619,8 +1524,7 @@
           "completed": false,
           "label": "Analyze Wi-Fi Traffic Using Wireshark",
           "optional": false,
-          "points": 20,
-          "id": "ex_node_f8abonl_2"
+          "points": 20
         },
         {
           "categories": [
@@ -1630,8 +1534,7 @@
           "completed": false,
           "label": "Visualize Wi-Fi Signal Coverage at Home",
           "optional": true,
-          "points": 30,
-          "id": "ex_node_rldj8em_3"
+          "points": 30
         }
       ],
       "pdf_link": "md/2wireless.md",
@@ -1663,8 +1566,7 @@
           "completed": false,
           "label": "Set Up a Basic SSH Honeypot (Cowrie)",
           "optional": false,
-          "points": 20,
-          "id": "ex_node_91j4tis_0"
+          "points": 20
         },
         {
           "categories": [
@@ -1674,8 +1576,7 @@
           "completed": false,
           "label": "Analyze Attacker Interactions in Honeypot Logs",
           "optional": false,
-          "points": 30,
-          "id": "ex_node_l0qb5c5_1"
+          "points": 30
         },
         {
           "categories": [
@@ -1684,10 +1585,9 @@
             "Offensive Techniques"
           ],
           "completed": false,
-          "label": "Project: Custom Python Honeypot – Fake FTP Service",
+          "label": "Project: Custom Python Honeypot \u2013 Fake FTP Service",
           "optional": false,
-          "points": 50,
-          "id": "ex_node_g461s1p_2"
+          "points": 50
         }
       ],
       "pdf_link": "md/2honeypots.md",
@@ -1719,8 +1619,7 @@
           "completed": false,
           "label": "Find and Exploit a Basic API Authentication Flaw (JWT Manipulation)",
           "optional": false,
-          "points": 20,
-          "id": "ex_node_ooq84wl_0"
+          "points": 20
         },
         {
           "categories": [
@@ -1729,8 +1628,7 @@
           "completed": false,
           "label": "Intercept and Replay API Calls with Postman and Burp",
           "optional": false,
-          "points": 10,
-          "id": "ex_node_il0ueer_1"
+          "points": 10
         },
         {
           "categories": [
@@ -1740,8 +1638,7 @@
           "completed": false,
           "label": "Enumerate Hidden API Endpoints with Burp Suite Intruder",
           "optional": false,
-          "points": 15,
-          "id": "ex_node_6xk5eqr_2"
+          "points": 15
         },
         {
           "categories": [
@@ -1749,10 +1646,9 @@
             "Offensive Techniques"
           ],
           "completed": false,
-          "label": "Lab: PortSwigger – API Security Labs",
+          "label": "Lab: PortSwigger \u2013 API Security Labs",
           "optional": false,
-          "points": 35,
-          "id": "ex_node_fkjb4g9_3"
+          "points": 35
         }
       ],
       "pdf_link": "md/3api_sec.md",
@@ -1783,8 +1679,7 @@
           "completed": false,
           "label": "Capture and Reuse Cookies for Session Hijacking",
           "optional": false,
-          "points": 20,
-          "id": "ex_node_2qkwyi4_0"
+          "points": 20
         },
         {
           "categories": [
@@ -1794,8 +1689,7 @@
           "completed": false,
           "label": "Forge Cookies to Escalate Privileges",
           "optional": false,
-          "points": 20,
-          "id": "ex_node_wboob6v_1"
+          "points": 20
         },
         {
           "categories": [
@@ -1806,8 +1700,7 @@
           "completed": false,
           "label": "Implement Secure Session Cookies in Flask",
           "optional": false,
-          "points": 10,
-          "id": "ex_node_sk422id_2"
+          "points": 10
         },
         {
           "categories": [
@@ -1817,8 +1710,7 @@
           "completed": false,
           "label": "Build a Python Tool to Detect Weak Session Management",
           "optional": true,
-          "points": 30,
-          "id": "ex_node_qtu5i64_3"
+          "points": 30
         }
       ],
       "pdf_link": "md/3session_attacks.md",
@@ -1850,8 +1742,7 @@
           "completed": false,
           "label": "Exploit Vulnerable Client-Side JavaScript Validation",
           "optional": false,
-          "points": 15,
-          "id": "ex_node_6mbs1gk_0"
+          "points": 15
         },
         {
           "categories": [
@@ -1860,8 +1751,7 @@
           "completed": false,
           "label": "Bypass Client-Side Rate Limiting",
           "optional": false,
-          "points": 15,
-          "id": "ex_node_3gn23ir_1"
+          "points": 15
         },
         {
           "categories": [
@@ -1871,8 +1761,7 @@
           "completed": false,
           "label": "Harden a Site Against Common Client-Side Bypasses",
           "optional": false,
-          "points": 20,
-          "id": "ex_node_ms7ffoq_2"
+          "points": 20
         },
         {
           "categories": [
@@ -1880,10 +1769,9 @@
             "Offensive Techniques"
           ],
           "completed": false,
-          "label": "CTF: TryHackMe – JavaScript Exploitation Room",
+          "label": "CTF: TryHackMe \u2013 JavaScript Exploitation Room",
           "optional": false,
-          "points": 30,
-          "id": "ex_node_ut9pxe8_3"
+          "points": 30
         }
       ],
       "pdf_link": "md/3client.md",
@@ -1915,8 +1803,7 @@
           "completed": false,
           "label": "Upload a Simple Payload and Achieve Remote Execution",
           "optional": false,
-          "points": 20,
-          "id": "ex_node_qffjoqp_0"
+          "points": 20
         },
         {
           "categories": [
@@ -1925,8 +1812,7 @@
           "completed": false,
           "label": "Evade File Upload Restrictions",
           "optional": false,
-          "points": 20,
-          "id": "ex_node_znpf5hu_1"
+          "points": 20
         },
         {
           "categories": [
@@ -1934,10 +1820,9 @@
             "Defensive Techniques"
           ],
           "completed": false,
-          "label": "🔖 Project: Harden a Flask App Against Upload Exploits",
+          "label": "\ud83d\udd16 Project: Harden a Flask App Against Upload Exploits",
           "optional": false,
-          "points": 50,
-          "id": "ex_node_0kbud85_2"
+          "points": 50
         }
       ],
       "pdf_link": "md/3file_upload.md",
@@ -1969,8 +1854,7 @@
           "completed": false,
           "label": "Identify Loaded Kernel Modules Using `lsmod` and Detect Suspicious Ones",
           "optional": false,
-          "points": 20,
-          "id": "ex_node_uffcn4k_0"
+          "points": 20
         },
         {
           "categories": [
@@ -1980,8 +1864,7 @@
           "completed": false,
           "label": "Log Kernel Module Loading Events",
           "optional": false,
-          "points": 20,
-          "id": "ex_node_jb8x2cn_1"
+          "points": 20
         },
         {
           "categories": [
@@ -1991,8 +1874,7 @@
           "completed": false,
           "label": " Detect and Log Attempts to Load Unsigned Kernel Modules",
           "optional": false,
-          "points": 20,
-          "id": "ex_node_ocv075j_2"
+          "points": 20
         }
       ],
       "pdf_link": "md/4kernel.md",
@@ -2023,8 +1905,7 @@
           "completed": false,
           "label": "Track Login/Logout Times per User; Detect Unusual Activity Hours",
           "optional": false,
-          "points": 10,
-          "id": "ex_node_p8jq629_0"
+          "points": 10
         },
         {
           "categories": [
@@ -2034,8 +1915,7 @@
           "completed": false,
           "label": "Detect Abnormal Shell Command Patterns Using Frequency Analysis",
           "optional": false,
-          "points": 10,
-          "id": "ex_node_32mobik_1"
+          "points": 10
         },
         {
           "categories": [
@@ -2046,8 +1926,7 @@
           "completed": false,
           "label": "Project: Create Automated Alerts for Abnormal User Activities",
           "optional": false,
-          "points": 40,
-          "id": "ex_node_enoivyw_2"
+          "points": 40
         }
       ],
       "pdf_link": "md/4uba.md",
@@ -2078,8 +1957,7 @@
           "completed": false,
           "label": "Interrogate a Dirty Bash History File",
           "optional": false,
-          "points": 15,
-          "id": "ex_node_vbqdysy_0"
+          "points": 15
         },
         {
           "categories": [
@@ -2088,8 +1966,7 @@
           "completed": false,
           "label": "Track Suspicious Time Gaps in Command Execution",
           "optional": false,
-          "points": 15,
-          "id": "ex_node_ylnj235_1"
+          "points": 15
         },
         {
           "categories": [
@@ -2099,8 +1976,7 @@
           "completed": false,
           "label": "Recover a Missing Session Using System Logs",
           "optional": false,
-          "points": 20,
-          "id": "ex_node_i6vfs22_2"
+          "points": 20
         },
         {
           "categories": [
@@ -2111,8 +1987,7 @@
           "completed": false,
           "label": "Build a Suspicious Command Extractor",
           "optional": true,
-          "points": 30,
-          "id": "ex_node_nn6jyz6_3"
+          "points": 30
         }
       ],
       "pdf_link": "md/5bash.md",
@@ -2143,8 +2018,7 @@
           "completed": false,
           "label": "Analyze Active Processes via /proc Filesystem",
           "optional": false,
-          "points": 10,
-          "id": "ex_node_8mnei2a_0"
+          "points": 10
         },
         {
           "categories": [
@@ -2154,8 +2028,7 @@
           "completed": false,
           "label": "Search for Sensitive Data (Passwords) in Memory Snapshots",
           "optional": false,
-          "points": 20,
-          "id": "ex_node_sxghsqn_1"
+          "points": 20
         },
         {
           "categories": [
@@ -2164,8 +2037,7 @@
           "completed": false,
           "label": "Detect Anomalies in Swap Files Using Volatility",
           "optional": false,
-          "points": 30,
-          "id": "ex_node_sqrq002_2"
+          "points": 30
         }
       ],
       "pdf_link": "md/5memory.md",
