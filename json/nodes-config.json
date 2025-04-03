@@ -9,7 +9,7 @@
       "node_ifiqoh9"
     ],
     "id": "node_q621mlv",
-    "percent": 36,
+    "percent": 4,
     "popup": {
       "exercises": [],
       "text": ""
@@ -53,7 +53,11 @@
   },
   {
     "children": [
-      "node_jxw74io"
+      "node_jxw74io",
+      "node_alg5ws9",
+      "node_k9deygd",
+      "node_54s5q7c",
+      "node_wzhe305"
     ],
     "id": "node_57wryy8",
     "percent": 0,
@@ -68,7 +72,11 @@
     "type": "main"
   },
   {
-    "children": [],
+    "children": [
+      "node_tzwknln",
+      "node_8a6z8ga",
+      "node_hat6ch4"
+    ],
     "id": "node_jxw74io",
     "percent": 0,
     "popup": {
@@ -82,7 +90,11 @@
     "type": "main"
   },
   {
-    "children": [],
+    "children": [
+      "node_g7xwbrr",
+      "node_0b9cs3r",
+      "node_5kkzh07"
+    ],
     "id": "node_t7i2kgi",
     "percent": 0,
     "popup": {
@@ -101,7 +113,7 @@
       "node_1zw69d0"
     ],
     "id": "node_68wxk65",
-    "percent": 100,
+    "percent": 25,
     "popup": {
       "exercises": [
         {
@@ -109,7 +121,7 @@
             "Scripting and Automation",
             "Web and Network Analysis"
           ],
-          "completed": true,
+          "completed": false,
           "id": "ex_node_mrtqozb",
           "label": "Connect and Grab a Banner",
           "optional": false,
@@ -120,7 +132,7 @@
             "Scripting and Automation",
             "Web and Network Analysis"
           ],
-          "completed": true,
+          "completed": false,
           "id": "ex_node_8uzhwzb",
           "label": "Fetch HTTP Headers with `requests`",
           "optional": false,
@@ -131,7 +143,7 @@
             "Scripting and Automation",
             "Web and Network Analysis"
           ],
-          "completed": true,
+          "completed": false,
           "id": "ex_node_rxz0nxm",
           "label": "Simple Port Check",
           "optional": false,
@@ -142,7 +154,7 @@
             "Scripting and Automation",
             "Web and Network Analysis"
           ],
-          "completed": true,
+          "completed": false,
           "id": "ex_node_79nchty",
           "label": "Project: Host Service Identifier",
           "optional": false,
@@ -163,7 +175,7 @@
       "node_7b3idd6"
     ],
     "id": "node_whz0rp1",
-    "percent": 50,
+    "percent": 0,
     "popup": {
       "exercises": [
         {
@@ -171,7 +183,7 @@
             "Scripting and Automation",
             "Web and Network Analysis"
           ],
-          "completed": true,
+          "completed": false,
           "id": "ex_node_9fxicgh",
           "label": "TCP Echo Client",
           "optional": false,
@@ -182,7 +194,7 @@
             "Scripting and Automation",
             "Web and Network Analysis"
           ],
-          "completed": true,
+          "completed": false,
           "id": "ex_node_lw9ny4q",
           "label": "TCP Echo Server (Single Connection)",
           "optional": false,
@@ -253,7 +265,7 @@
             "Scripting and Automation",
             "Web and Network Analysis"
           ],
-          "completed": true,
+          "completed": false,
           "id": "ex_node_3khvwrp",
           "label": "Sniffing Network Traffic",
           "optional": true,
@@ -264,7 +276,7 @@
             "Scripting and Automation",
             "Web and Network Analysis"
           ],
-          "completed": true,
+          "completed": false,
           "id": "ex_node_z04wyj7",
           "label": "Crafting and Sending ICMP (Ping)",
           "optional": true,
@@ -275,7 +287,7 @@
             "Scripting and Automation",
             "Web and Network Analysis"
           ],
-          "completed": true,
+          "completed": false,
           "id": "ex_node_km47fvl",
           "label": "Basic TCP SYN Scan Packet",
           "optional": true,
@@ -305,7 +317,7 @@
   {
     "children": [],
     "id": "node_1zw69d0",
-    "percent": 100,
+    "percent": 0,
     "popup": {
       "exercises": [
         {
@@ -313,7 +325,7 @@
             "Scripting and Automation",
             "Web and Network Analysis"
           ],
-          "completed": true,
+          "completed": false,
           "id": "ex_node_5cms18r",
           "label": "Exploring HTTP Methods",
           "optional": false,
@@ -324,7 +336,7 @@
             "Scripting and Automation",
             "Web and Network Analysis"
           ],
-          "completed": true,
+          "completed": false,
           "id": "ex_node_tllj5kz",
           "label": "Handling Sessions with Cookies",
           "optional": false,
@@ -335,7 +347,7 @@
             "Scripting and Automation",
             "Web and Network Analysis"
           ],
-          "completed": true,
+          "completed": false,
           "id": "ex_node_cg41bfx",
           "label": "Basic Authentication",
           "optional": false,
@@ -343,7 +355,7 @@
         },
         {
           "categories": [],
-          "completed": true,
+          "completed": false,
           "id": "ex_node_khd5pvh",
           "label": "Robust Error Handling",
           "optional": false,
@@ -354,7 +366,7 @@
             "Scripting and Automation",
             "Web and Network Analysis"
           ],
-          "completed": true,
+          "completed": false,
           "id": "ex_node_vss4dq7",
           "label": "Project: Simple Website Link Crawler",
           "optional": false,
@@ -586,8 +598,60 @@
     "id": "node_rabfglx",
     "percent": 0,
     "popup": {
-      "exercises": [],
-      "text": ""
+      "exercises": [
+        {
+          "id": "ex_node_mm6j9fx",
+          "label": "Layer Mapping",
+          "categories": [
+            "Web and Network Analysis"
+          ],
+          "completed": false,
+          "optional": false,
+          "points": 20
+        },
+        {
+          "id": "ex_node_m6hf2rj",
+          "label": "Subnet Calculations",
+          "categories": [
+            "Web and Network Analysis"
+          ],
+          "completed": false,
+          "optional": false,
+          "points": 15
+        },
+        {
+          "id": "ex_node_5zgu62j",
+          "label": "Understanding Encapsulation",
+          "categories": [
+            "Web and Network Analysis"
+          ],
+          "completed": false,
+          "optional": false,
+          "points": 20
+        },
+        {
+          "id": "ex_node_7tlhvhc",
+          "label": "Public vs. Private IP Addresses",
+          "categories": [
+            "Web and Network Analysis"
+          ],
+          "completed": false,
+          "optional": false,
+          "points": 14
+        },
+        {
+          "id": "ex_node_2rwtbnc",
+          "label": "Lab: Foundational Networking Theory",
+          "categories": [
+            "Web and Network Analysis"
+          ],
+          "completed": false,
+          "optional": true,
+          "points": 30
+        }
+      ],
+      "text": "",
+      "pdf_link": "md/2tcp_osi.md"
     },
     "prerequisites": [
       "node_hkf54bc"
@@ -600,8 +664,52 @@
     "id": "node_hgyrfac",
     "percent": 0,
     "popup": {
-      "exercises": [],
-      "text": ""
+      "exercises": [
+        {
+          "id": "ex_node_qibh8hd",
+          "label": "DNS Deep Dive with `dig`",
+          "categories": [
+            "Web and Network Analysis"
+          ],
+          "completed": false,
+          "optional": false,
+          "points": 15
+        },
+        {
+          "id": "ex_node_pslru2b",
+          "label": "Decoding a DHCP Exchange",
+          "categories": [
+            "Web and Network Analysis"
+          ],
+          "completed": false,
+          "optional": false,
+          "points": 15
+        },
+        {
+          "id": "ex_node_j6yihp8",
+          "label": "ARP Cache Investigation",
+          "categories": [
+            "Web and Network Analysis"
+          ],
+          "completed": false,
+          "optional": false,
+          "points": 20
+        },
+        {
+          "id": "ex_node_os73qmx",
+          "label": "DNS Zone Transfer Attempt (Ethical)",
+          "categories": [
+            "Web and Network Analysis",
+            "Scripting and Automation",
+            "Offensive Techniques"
+          ],
+          "completed": false,
+          "optional": true,
+          "points": 40
+        }
+      ],
+      "text": "",
+      "pdf_link": "md/2essential.md"
     },
     "prerequisites": [
       "node_rabfglx"
@@ -614,8 +722,60 @@
     "id": "node_1gk1yqp",
     "percent": 0,
     "popup": {
-      "exercises": [],
-      "text": ""
+      "exercises": [
+        {
+          "id": "ex_node_9d9ycvh",
+          "label": "Capture, Filter, Isolate",
+          "categories": [
+            "Web and Network Analysis"
+          ],
+          "completed": false,
+          "optional": false,
+          "points": 10
+        },
+        {
+          "id": "ex_node_psat41p",
+          "label": "Dissecting the TCP Handshake",
+          "categories": [
+            "Web and Network Analysis"
+          ],
+          "completed": false,
+          "optional": false,
+          "points": 20
+        },
+        {
+          "id": "ex_node_boov8bh",
+          "label": "Following Conversations",
+          "categories": [
+            "Web and Network Analysis"
+          ],
+          "completed": false,
+          "optional": false,
+          "points": 10
+        },
+        {
+          "id": "ex_node_70v59ws",
+          "label": "Exporting Transferred Files",
+          "categories": [
+            "Web and Network Analysis"
+          ],
+          "completed": false,
+          "optional": false,
+          "points": 10
+        },
+        {
+          "id": "ex_node_16y27ol",
+          "label": "Lab: Wireshark Fundamentals",
+          "categories": [
+            "Web and Network Analysis"
+          ],
+          "completed": false,
+          "optional": true,
+          "points": 30
+        }
+      ],
+      "text": "",
+      "pdf_link": "md/2packet.md"
     },
     "prerequisites": [
       "node_rabfglx"
@@ -630,8 +790,64 @@
     "id": "node_01n53da",
     "percent": 0,
     "popup": {
-      "exercises": [],
-      "text": ""
+      "exercises": [
+        {
+          "id": "ex_node_seo2oup",
+          "label": "Domain Ownership Trail",
+          "categories": [
+            "Web and Network Analysis"
+          ],
+          "completed": false,
+          "optional": false,
+          "points": 10
+        },
+        {
+          "id": "ex_node_7e783jt",
+          "label": "Google Fu for Secrets",
+          "categories": [
+            "Web and Network Analysis",
+            "Offensive Techniques"
+          ],
+          "completed": false,
+          "optional": false,
+          "points": 15
+        },
+        {
+          "id": "ex_node_3zkolgj",
+          "label": "Peeking with Shodan",
+          "categories": [
+            "Web and Network Analysis",
+            "Offensive Techniques"
+          ],
+          "completed": false,
+          "optional": false,
+          "points": 15
+        },
+        {
+          "id": "ex_node_xhsfwfs",
+          "label": "Passive Subdomain Discovery",
+          "categories": [
+            "Web and Network Analysis"
+          ],
+          "completed": false,
+          "optional": false,
+          "points": 10
+        },
+        {
+          "id": "ex_node_bw0uxjw",
+          "label": "Project: OSINT Profile Compilation",
+          "categories": [
+            "Scripting and Automation",
+            "Web and Network Analysis",
+            "Offensive Techniques"
+          ],
+          "completed": false,
+          "optional": false,
+          "points": 40
+        }
+      ],
+      "text": "",
+      "pdf_link": "md/2osint.md"
     },
     "prerequisites": [
       "node_rabfglx"
@@ -646,8 +862,62 @@
     "id": "node_bddzop4",
     "percent": 0,
     "popup": {
-      "exercises": [],
-      "text": ""
+      "exercises": [
+        {
+          "id": "ex_node_tiw3877",
+          "label": "First Scans with Nmap",
+          "categories": [
+            "Web and Network Analysis"
+          ],
+          "completed": false,
+          "optional": false,
+          "points": 10
+        },
+        {
+          "id": "ex_node_t7zs7c0",
+          "label": "Refining Scan Scope & Detecting Services",
+          "categories": [
+            "Web and Network Analysis"
+          ],
+          "completed": false,
+          "optional": false,
+          "points": 15
+        },
+        {
+          "id": "ex_node_n539qyi",
+          "label": "OS Detection and Scan Timing",
+          "categories": [
+            "Web and Network Analysis",
+            "System Analysis"
+          ],
+          "completed": false,
+          "optional": false,
+          "points": 15
+        },
+        {
+          "id": "ex_node_ltkvrhm",
+          "label": "Managing Nmap Output",
+          "categories": [
+            "Web and Network Analysis",
+            "Scripting and Automation"
+          ],
+          "completed": false,
+          "optional": false,
+          "points": 15
+        },
+        {
+          "id": "ex_node_b4m67pa",
+          "label": "Lab: Nmap Practice",
+          "categories": [
+            "Web and Network Analysis"
+          ],
+          "completed": false,
+          "optional": false,
+          "points": 30
+        }
+      ],
+      "text": "",
+      "pdf_link": "md/2active.md"
     },
     "prerequisites": [
       "node_01n53da"
@@ -660,8 +930,68 @@
     "id": "node_ornbq0j",
     "percent": 0,
     "popup": {
-      "exercises": [],
-      "text": ""
+      "exercises": [
+        {
+          "id": "ex_node_n5a5ij7",
+          "label": "Python Banner Grabbing Scanner",
+          "categories": [
+            "Scripting and Automation",
+            "Web and Network Analysis"
+          ],
+          "completed": false,
+          "optional": false,
+          "points": 15
+        },
+        {
+          "id": "ex_node_vvzfil8",
+          "label": "Automated Subdomain Enumerator",
+          "categories": [
+            "Scripting and Automation",
+            "Web and Network Analysis",
+            "Offensive Techniques"
+          ],
+          "completed": false,
+          "optional": false,
+          "points": 15
+        },
+        {
+          "id": "ex_node_ej9v0sj",
+          "label": "Parsing Nmap XML Outputs",
+          "categories": [
+            "Scripting and Automation",
+            "Web and Network Analysis"
+          ],
+          "completed": false,
+          "optional": false,
+          "points": 10
+        },
+        {
+          "id": "ex_node_om3d5gz",
+          "label": "Interacting with Shodan API",
+          "categories": [
+            "Scripting and Automation",
+            "Offensive Techniques",
+            "Web and Network Analysis"
+          ],
+          "completed": false,
+          "optional": true,
+          "points": 20
+        },
+        {
+          "id": "ex_node_qz5jpx9",
+          "label": "Project: Comprehensive Recon Script",
+          "categories": [
+            "Scripting and Automation",
+            "Offensive Techniques",
+            "Web and Network Analysis"
+          ],
+          "completed": false,
+          "optional": false,
+          "points": 40
+        }
+      ],
+      "text": "",
+      "pdf_link": "md/2python.md"
     },
     "prerequisites": [
       "node_bddzop4"
@@ -674,8 +1004,52 @@
     "id": "node_h93bdzk",
     "percent": 0,
     "popup": {
-      "exercises": [],
-      "text": ""
+      "exercises": [
+        {
+          "id": "ex_node_vsmhbf1",
+          "label": "WiFi Security Theory Comparison",
+          "categories": [
+            "Web and Network Analysis"
+          ],
+          "completed": false,
+          "optional": false,
+          "points": 20
+        },
+        {
+          "id": "ex_node_7w77s25",
+          "label": "Discovering Local WiFi Networks",
+          "categories": [
+            "Web and Network Analysis"
+          ],
+          "completed": false,
+          "optional": false,
+          "points": 10
+        },
+        {
+          "id": "ex_node_73elvop",
+          "label": "Scanning with `airodump-ng`",
+          "categories": [
+            "Web and Network Analysis",
+            "System Analysis"
+          ],
+          "completed": false,
+          "optional": false,
+          "points": 15
+        },
+        {
+          "id": "ex_node_0qi0ovy",
+          "label": "Targeting a Specific Network",
+          "categories": [
+            "Web and Network Analysis",
+            "Offensive Techniques"
+          ],
+          "completed": false,
+          "optional": false,
+          "points": 15
+        }
+      ],
+      "text": "",
+      "pdf_link": "md/2wireless.md"
     },
     "prerequisites": [
       "node_rabfglx"
@@ -693,8 +1067,60 @@
     "id": "node_c3tzzq0",
     "percent": 0,
     "popup": {
-      "exercises": [],
-      "text": ""
+      "exercises": [
+        {
+          "id": "ex_node_xnvqns2",
+          "label": "Crafting Raw HTTP",
+          "categories": [
+            "Web and Network Analysis"
+          ],
+          "completed": false,
+          "optional": false,
+          "points": 15
+        },
+        {
+          "id": "ex_node_09ggq28",
+          "label": "Header Investigation",
+          "categories": [
+            "Web and Network Analysis"
+          ],
+          "completed": false,
+          "optional": false,
+          "points": 10
+        },
+        {
+          "id": "ex_node_cw53z6x",
+          "label": "Decoding Status Codes",
+          "categories": [
+            "Web and Network Analysis"
+          ],
+          "completed": false,
+          "optional": false,
+          "points": 10
+        },
+        {
+          "id": "ex_node_4rmpmzs",
+          "label": "Cookie Security Attributes",
+          "categories": [
+            "Web and Network Analysis"
+          ],
+          "completed": false,
+          "optional": false,
+          "points": 20
+        },
+        {
+          "id": "ex_node_8ih93vg",
+          "label": "Observing the HTTPS Handshake",
+          "categories": [
+            "Web and Network Analysis"
+          ],
+          "completed": false,
+          "optional": true,
+          "points": 30
+        }
+      ],
+      "text": "",
+      "pdf_link": "md/3https.md"
     },
     "prerequisites": [
       "node_944o537"
@@ -709,8 +1135,60 @@
     "id": "node_3oub0rk",
     "percent": 0,
     "popup": {
-      "exercises": [],
-      "text": ""
+      "exercises": [
+        {
+          "id": "ex_node_9xwf9nb",
+          "label": "Manipulating the DOM Live",
+          "categories": [
+            "Web and Network Analysis"
+          ],
+          "completed": false,
+          "optional": false,
+          "points": 10
+        },
+        {
+          "id": "ex_node_5e9qkw7",
+          "label": "Dissecting Network Requests",
+          "categories": [
+            "Web and Network Analysis"
+          ],
+          "completed": false,
+          "optional": false,
+          "points": 10
+        },
+        {
+          "id": "ex_node_f2eocnz",
+          "label": "Interacting via the Console",
+          "categories": [
+            "Web and Network Analysis"
+          ],
+          "completed": false,
+          "optional": false,
+          "points": 10
+        },
+        {
+          "id": "ex_node_rgctdk9",
+          "label": "Basic JavaScript Debugging",
+          "categories": [
+            "Web and Network Analysis"
+          ],
+          "completed": false,
+          "optional": false,
+          "points": 20
+        },
+        {
+          "id": "ex_node_v4hdco1",
+          "label": "Client-Side Storage Inspection",
+          "categories": [
+            "Web and Network Analysis"
+          ],
+          "completed": false,
+          "optional": true,
+          "points": 20
+        }
+      ],
+      "text": "",
+      "pdf_link": "md/3browser_server.md"
     },
     "prerequisites": [
       "node_c3tzzq0"
@@ -789,5 +1267,310 @@
     ],
     "title": "Authentication & Session Management Flaws",
     "type": "sub"
+  },
+  {
+    "children": [],
+    "id": "Start",
+    "percent": 100,
+    "popup": {
+      "exercises": [],
+      "text": "Start."
+    },
+    "prerequisites": [],
+    "title": "Start",
+    "type": "start"
+  },
+  {
+    "id": "node_alg5ws9",
+    "title": "Core OS Security Principles & Attack Surface",
+    "type": "sub",
+    "prerequisites": [
+      "node_57wryy8"
+    ],
+    "children": [],
+    "popup": {
+      "text": "",
+      "exercises": []
+    }
+  },
+  {
+    "id": "node_k9deygd",
+    "title": "Linux Filesystem Permissions & ACLs",
+    "type": "sub",
+    "prerequisites": [
+      "node_57wryy8"
+    ],
+    "children": [
+      "node_rs791ot",
+      "node_r50b8kl"
+    ],
+    "popup": {
+      "text": "",
+      "exercises": []
+    }
+  },
+  {
+    "id": "node_rs791ot",
+    "title": "Linux Privilege Management",
+    "type": "sub",
+    "prerequisites": [
+      "node_k9deygd"
+    ],
+    "children": [],
+    "popup": {
+      "text": "",
+      "exercises": []
+    }
+  },
+  {
+    "id": "node_r50b8kl",
+    "title": "Linux Auditing Configuration",
+    "type": "sub",
+    "prerequisites": [
+      "node_k9deygd"
+    ],
+    "children": [],
+    "popup": {
+      "text": "",
+      "exercises": []
+    }
+  },
+  {
+    "id": "node_54s5q7c",
+    "title": "Windows File/Share Permissions & UAC",
+    "type": "sub",
+    "prerequisites": [
+      "node_57wryy8"
+    ],
+    "children": [
+      "node_abeifbq"
+    ],
+    "popup": {
+      "text": "",
+      "exercises": []
+    }
+  },
+  {
+    "id": "node_abeifbq",
+    "title": "Windows Security Policy & Auditing Config",
+    "type": "sub",
+    "prerequisites": [
+      "node_54s5q7c"
+    ],
+    "children": [],
+    "popup": {
+      "text": "",
+      "exercises": []
+    }
+  },
+  {
+    "id": "node_wzhe305",
+    "title": "OS Hardening Baselines & Automation",
+    "type": "sub",
+    "prerequisites": [
+      "node_57wryy8"
+    ],
+    "children": [],
+    "popup": {
+      "text": "",
+      "exercises": []
+    }
+  },
+  {
+    "id": "node_g7xwbrr",
+    "title": "Logging Strategy & Key Data Sources",
+    "type": "sub",
+    "prerequisites": [
+      "node_t7i2kgi"
+    ],
+    "children": [],
+    "popup": {
+      "text": "",
+      "exercises": []
+    }
+  },
+  {
+    "id": "node_0b9cs3r",
+    "title": "Log Collection, Forwarding & Shipping",
+    "type": "sub",
+    "prerequisites": [
+      "node_t7i2kgi"
+    ],
+    "children": [
+      "node_5040xtf"
+    ],
+    "popup": {
+      "text": "",
+      "exercises": []
+    }
+  },
+  {
+    "id": "node_5040xtf",
+    "title": "Basic Centralized Logging Platform Setup",
+    "type": "sub",
+    "prerequisites": [
+      "node_0b9cs3r"
+    ],
+    "children": [
+      "node_j86db1k"
+    ],
+    "popup": {
+      "text": "",
+      "exercises": []
+    }
+  },
+  {
+    "id": "node_j86db1k",
+    "title": "Log Parsing & Normalization (Grok/JSON)",
+    "type": "sub",
+    "prerequisites": [
+      "node_5040xtf"
+    ],
+    "children": [
+      "node_5skkdjj"
+    ],
+    "popup": {
+      "text": "",
+      "exercises": []
+    }
+  },
+  {
+    "id": "node_5skkdjj",
+    "title": "Log Querying & Analysis Fundamentals",
+    "type": "sub",
+    "prerequisites": [
+      "node_j86db1k"
+    ],
+    "children": [
+      "node_beyjwdw"
+    ],
+    "popup": {
+      "text": "",
+      "exercises": []
+    }
+  },
+  {
+    "id": "node_beyjwdw",
+    "title": "Intro to SIEM Alerting & Basic Rules",
+    "type": "sub",
+    "prerequisites": [
+      "node_5skkdjj"
+    ],
+    "children": [],
+    "popup": {
+      "text": "",
+      "exercises": []
+    }
+  },
+  {
+    "id": "node_5kkzh07",
+    "title": "Endpoint Event Monitoring with Sysmon",
+    "type": "sub",
+    "prerequisites": [
+      "node_t7i2kgi"
+    ],
+    "children": [],
+    "popup": {
+      "text": "",
+      "exercises": []
+    }
+  },
+  {
+    "id": "node_tzwknln",
+    "title": "Hashing for Integrity & Passwords",
+    "type": "sub",
+    "prerequisites": [
+      "node_jxw74io"
+    ],
+    "children": [],
+    "popup": {
+      "text": "",
+      "exercises": []
+    }
+  },
+  {
+    "id": "node_8a6z8ga",
+    "title": "Symmetric Encryption in Practice",
+    "type": "sub",
+    "prerequisites": [
+      "node_jxw74io"
+    ],
+    "children": [
+      "node_kvajol5"
+    ],
+    "popup": {
+      "text": "",
+      "exercises": []
+    }
+  },
+  {
+    "id": "node_kvajol5",
+    "title": "Techniques for Data-at-Rest Encryption",
+    "type": "sub",
+    "prerequisites": [
+      "node_8a6z8ga"
+    ],
+    "children": [],
+    "popup": {
+      "text": "",
+      "exercises": []
+    }
+  },
+  {
+    "id": "node_hat6ch4",
+    "title": "Asymmetric (Public-Key) Cryptography Concepts",
+    "type": "sub",
+    "prerequisites": [
+      "node_jxw74io"
+    ],
+    "children": [
+      "node_mfsdgdu",
+      "node_0i6ir88"
+    ],
+    "popup": {
+      "text": "",
+      "exercises": []
+    }
+  },
+  {
+    "id": "node_mfsdgdu",
+    "title": "Digital Signatures for Authenticity & Integrity",
+    "type": "sub",
+    "prerequisites": [
+      "node_hat6ch4"
+    ],
+    "children": [],
+    "popup": {
+      "text": "",
+      "exercises": []
+    }
+  },
+  {
+    "id": "node_0i6ir88",
+    "title": "Public Key Infrastructure (PKI) & X.509 Certificates",
+    "type": "sub",
+    "prerequisites": [
+      "node_hat6ch4"
+    ],
+    "children": [
+      "node_zb98b8j"
+    ],
+    "popup": {
+      "text": "",
+      "exercises": []
+    }
+  },
+  {
+    "id": "node_zb98b8j",
+    "title": "Analyzing TLS/SSL & SSH Handshakes",
+    "type": "sub",
+    "prerequisites": [
+      "node_0i6ir88"
+    ],
+    "children": [],
+    "popup": {
+      "text": "",
+      "exercises": []
+    }
   }
 ]

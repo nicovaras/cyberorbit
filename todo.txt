@@ -1,6 +1,7 @@
 arreglar css de las abilities/badges
 agregar una posibilidad de subir scripts y asociarlos a cada ejercicio
 progreso por ejercicios, no por puntaje
+probar que siga andando docker...
 
 Pasar a DB
 CVE pokedex
