@@ -9,7 +9,7 @@
       "node_ifiqoh9"
     ],
     "id": "node_q621mlv",
-    "percent": 49,
+    "percent": 36,
     "popup": {
       "exercises": [],
       "text": ""
@@ -163,7 +163,7 @@
       "node_7b3idd6"
     ],
     "id": "node_whz0rp1",
-    "percent": 40,
+    "percent": 50,
     "popup": {
       "exercises": [
         {
@@ -375,14 +375,14 @@
       "node_njpq828"
     ],
     "id": "node_tpmios3",
-    "percent": 100,
+    "percent": 0,
     "popup": {
       "exercises": [
         {
           "categories": [
             "Scripting and Automation"
           ],
-          "completed": true,
+          "completed": false,
           "id": "ex_node_hq36o7x",
           "label": "Wordlist Processing",
           "optional": false,
@@ -392,7 +392,7 @@
           "categories": [
             "Scripting and Automation"
           ],
-          "completed": true,
+          "completed": false,
           "id": "ex_node_hbbaomg",
           "label": "Parsing CSV Data",
           "optional": false,
@@ -402,7 +402,7 @@
           "categories": [
             "Scripting and Automation"
           ],
-          "completed": true,
+          "completed": false,
           "id": "ex_node_os5q55s",
           "label": "Navigating JSON Data",
           "optional": false,
@@ -413,7 +413,7 @@
             "Scripting and Automation",
             "Web and Network Analysis"
           ],
-          "completed": true,
+          "completed": false,
           "id": "ex_node_wrlrrc0",
           "label": "Extracting IPs with Regex",
           "optional": false,
@@ -424,7 +424,7 @@
             "Scripting and Automation",
             "System Analysis"
           ],
-          "completed": true,
+          "completed": false,
           "id": "ex_node_txw9rc2",
           "label": "Project: Log File IP Extractor",
           "optional": false,
@@ -450,7 +450,7 @@
           "categories": [
             "Scripting and Automation"
           ],
-          "completed": true,
+          "completed": false,
           "id": "ex_node_puyuo7l",
           "label": "Base64 Playground",
           "optional": false,
@@ -789,17 +789,5 @@
     ],
     "title": "Authentication & Session Management Flaws",
     "type": "sub"
-  },
-  {
-    "children": [],
-    "id": "Start",
-    "percent": 100,
-    "popup": {
-      "exercises": [],
-      "text": "Start."
-    },
-    "prerequisites": [],
-    "title": "Start",
-    "type": "start"
   }
 ]

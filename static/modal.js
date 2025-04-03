@@ -99,7 +99,7 @@ export function initModal(nodes, unlocked) {
 
               // Add checkbox listeners
               modalDynamicBody.querySelectorAll('input[type=checkbox]').forEach(input => {
-                input.replaceWith(input.cloneNode(true));
+                // input.replaceWith(input.cloneNode(true));
                 input.addEventListener('change', handleCheckboxChange);
               });
 
