@@ -6,7 +6,7 @@ UNLOCK_PERCENT = 50
 def compute_node_states(data):
     """
     Computes node percentages and unlocked status.
-    - Sub-node percent = based on completed non-optional exercises.
+    - Sub-node percent = based on count of completed exercises / total exercises. (NEW)
     - Main-node percent = average percent of all descendant sub-nodes *within its branch*
                          (traversal stops at the next main node).
     - Unlock logic:
@@ -20,22 +20,29 @@ def compute_node_states(data):
         "children": [], "prerequisites": []
     }
 
-    # Step 1: Calculate sub-node percentages (same as before)
+    # --- Step 1: Calculate sub-node percentages (REVISED LOGIC) ---
     for node_id, node in id_to_node.items():
         if node["type"] == "sub":
             exercises = node.get("popup", {}).get("exercises", [])
-            required_exercises = [e for e in exercises if not e.get("optional")]
-            if not required_exercises:
+            total_exercises = len(exercises)
+
+            if total_exercises == 0:
+                # If a sub-node has no exercises, its completion is 0%
+                # (or arguably 100%? Setting to 0 seems safer)
                 node["percent"] = 0
                 continue
-            total_possible_points = sum(e.get("points", 10) for e in required_exercises)
-            earned_points = sum(e.get("points", 10) for e in required_exercises if e.get("completed"))
-            node["percent"] = round((earned_points / total_possible_points) * 100) if total_possible_points else (100 if all(e.get("completed") for e in required_exercises) else 0)
+
+            # Count completed exercises regardless of points or optional status
+            completed_exercises = sum(1 for e in exercises if e.get("completed"))
+
+            # Calculate percentage based on count
+            node["percent"] = round((completed_exercises / total_exercises) * 100)
+
 
     # Step 2: Build child map (same as before)
     child_map = build_child_map(id_to_node.values())
 
-    # Step 3: Calculate main node percentages (BFS stopping at main nodes)
+    # Step 3: Calculate main node percentages (BFS stopping at main nodes - same as before)
     for node_id, node in id_to_node.items():
         if node["type"] == "main":
             total_percent = 0
@@ -49,15 +56,17 @@ def compute_node_states(data):
                 descendant_node = id_to_node.get(descendant_id)
                 if not descendant_node: continue
                 if descendant_node["type"] == "sub":
+                    # Use the percentage calculated in Step 1
                     total_percent += descendant_node.get("percent", 0)
                     sub_node_count += 1
                     for child_id in child_map.get(descendant_id, []):
                         if child_id not in visited_in_calc: queue.append(child_id)
                 elif descendant_node["type"] == "main":
-                    continue
+                    continue # Stop traversal at main nodes
+            # Average the percentages of the descendant sub-nodes found
             node["percent"] = round(total_percent / sub_node_count) if sub_node_count else 0
 
-    # --- Step 4: Determine unlocked status (REVISED LOGIC v4) ---
+    # Step 4: Determine unlocked status (Using logic from previous working version - v6)
     unlocked = {"Start": True}
     changed_in_pass = True
     max_passes = len(id_to_node) + 1
@@ -86,7 +95,7 @@ def compute_node_states(data):
                 else:
                     for prereq_id in prereq_ids:
                         prereq_node = id_to_node.get(prereq_id)
-                        # *** Must exist, be unlocked, AND meet percentage ***
+                        # Must exist, be unlocked, AND meet percentage
                         if not prereq_node or not unlocked.get(prereq_id, False) or prereq_node.get("percent", 0) < UNLOCK_PERCENT:
                             prereqs_met = False
                             break
@@ -102,16 +111,13 @@ def compute_node_states(data):
                 else:
                     for prereq_id in prereq_ids:
                         prereq_node = id_to_node.get(prereq_id)
-
                         # Basic check: Prerequisite must exist and be unlocked
                         if not prereq_node or not unlocked.get(prereq_id, False):
                             prereqs_met = False
                             break
-
                         # Percentage Check: Required ONLY if the prerequisite is NOT a direct main-node parent
                         is_direct_parent = prereq_id in parent_ids
                         prereq_is_main = prereq_node.get("type") == "main"
-
                         # Check percentage ONLY if it's NOT (a direct parent AND that parent is main)
                         if not (is_direct_parent and prereq_is_main):
                             if prereq_node.get("percent", 0) < UNLOCK_PERCENT:
@@ -164,7 +170,6 @@ def compute_abilities(data, ctfs):
                     abilities[cat] += 1
     abilities["CTFs"] = sum(c.get("completed", 0) for c in ctfs)
     return dict(abilities)
-
 
 def compute_discovered_nodes(unlocked, links):
     # ... (same as before) ...

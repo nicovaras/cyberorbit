@@ -9,7 +9,7 @@
       "node_ifiqoh9"
     ],
     "id": "node_q621mlv",
-    "percent": 49,
+    "percent": 4,
     "popup": {
       "exercises": [],
       "text": ""
@@ -101,7 +101,7 @@
       "node_1zw69d0"
     ],
     "id": "node_68wxk65",
-    "percent": 100,
+    "percent": 25,
     "popup": {
       "exercises": [
         {
@@ -109,7 +109,7 @@
             "Scripting and Automation",
             "Web and Network Analysis"
           ],
-          "completed": true,
+          "completed": false,
           "id": "ex_node_mrtqozb",
           "label": "Connect and Grab a Banner",
           "optional": false,
@@ -120,7 +120,7 @@
             "Scripting and Automation",
             "Web and Network Analysis"
           ],
-          "completed": true,
+          "completed": false,
           "id": "ex_node_8uzhwzb",
           "label": "Fetch HTTP Headers with `requests`",
           "optional": false,
@@ -131,7 +131,7 @@
             "Scripting and Automation",
             "Web and Network Analysis"
           ],
-          "completed": true,
+          "completed": false,
           "id": "ex_node_rxz0nxm",
           "label": "Simple Port Check",
           "optional": false,
@@ -142,7 +142,7 @@
             "Scripting and Automation",
             "Web and Network Analysis"
           ],
-          "completed": true,
+          "completed": false,
           "id": "ex_node_79nchty",
           "label": "Project: Host Service Identifier",
           "optional": false,
@@ -163,7 +163,7 @@
       "node_7b3idd6"
     ],
     "id": "node_whz0rp1",
-    "percent": 40,
+    "percent": 0,
     "popup": {
       "exercises": [
         {
@@ -171,7 +171,7 @@
             "Scripting and Automation",
             "Web and Network Analysis"
           ],
-          "completed": true,
+          "completed": false,
           "id": "ex_node_9fxicgh",
           "label": "TCP Echo Client",
           "optional": false,
@@ -182,7 +182,7 @@
             "Scripting and Automation",
             "Web and Network Analysis"
           ],
-          "completed": true,
+          "completed": false,
           "id": "ex_node_lw9ny4q",
           "label": "TCP Echo Server (Single Connection)",
           "optional": false,
@@ -253,7 +253,7 @@
             "Scripting and Automation",
             "Web and Network Analysis"
           ],
-          "completed": true,
+          "completed": false,
           "id": "ex_node_3khvwrp",
           "label": "Sniffing Network Traffic",
           "optional": true,
@@ -264,7 +264,7 @@
             "Scripting and Automation",
             "Web and Network Analysis"
           ],
-          "completed": true,
+          "completed": false,
           "id": "ex_node_z04wyj7",
           "label": "Crafting and Sending ICMP (Ping)",
           "optional": true,
@@ -275,7 +275,7 @@
             "Scripting and Automation",
             "Web and Network Analysis"
           ],
-          "completed": true,
+          "completed": false,
           "id": "ex_node_km47fvl",
           "label": "Basic TCP SYN Scan Packet",
           "optional": true,
@@ -305,7 +305,7 @@
   {
     "children": [],
     "id": "node_1zw69d0",
-    "percent": 100,
+    "percent": 0,
     "popup": {
       "exercises": [
         {
@@ -313,7 +313,7 @@
             "Scripting and Automation",
             "Web and Network Analysis"
           ],
-          "completed": true,
+          "completed": false,
           "id": "ex_node_5cms18r",
           "label": "Exploring HTTP Methods",
           "optional": false,
@@ -324,7 +324,7 @@
             "Scripting and Automation",
             "Web and Network Analysis"
           ],
-          "completed": true,
+          "completed": false,
           "id": "ex_node_tllj5kz",
           "label": "Handling Sessions with Cookies",
           "optional": false,
@@ -335,7 +335,7 @@
             "Scripting and Automation",
             "Web and Network Analysis"
           ],
-          "completed": true,
+          "completed": false,
           "id": "ex_node_cg41bfx",
           "label": "Basic Authentication",
           "optional": false,
@@ -343,7 +343,7 @@
         },
         {
           "categories": [],
-          "completed": true,
+          "completed": false,
           "id": "ex_node_khd5pvh",
           "label": "Robust Error Handling",
           "optional": false,
@@ -354,7 +354,7 @@
             "Scripting and Automation",
             "Web and Network Analysis"
           ],
-          "completed": true,
+          "completed": false,
           "id": "ex_node_vss4dq7",
           "label": "Project: Simple Website Link Crawler",
           "optional": false,
@@ -375,14 +375,14 @@
       "node_njpq828"
     ],
     "id": "node_tpmios3",
-    "percent": 100,
+    "percent": 0,
     "popup": {
       "exercises": [
         {
           "categories": [
             "Scripting and Automation"
           ],
-          "completed": true,
+          "completed": false,
           "id": "ex_node_hq36o7x",
           "label": "Wordlist Processing",
           "optional": false,
@@ -392,7 +392,7 @@
           "categories": [
             "Scripting and Automation"
           ],
-          "completed": true,
+          "completed": false,
           "id": "ex_node_hbbaomg",
           "label": "Parsing CSV Data",
           "optional": false,
@@ -402,7 +402,7 @@
           "categories": [
             "Scripting and Automation"
           ],
-          "completed": true,
+          "completed": false,
           "id": "ex_node_os5q55s",
           "label": "Navigating JSON Data",
           "optional": false,
@@ -413,7 +413,7 @@
             "Scripting and Automation",
             "Web and Network Analysis"
           ],
-          "completed": true,
+          "completed": false,
           "id": "ex_node_wrlrrc0",
           "label": "Extracting IPs with Regex",
           "optional": false,
@@ -424,7 +424,7 @@
             "Scripting and Automation",
             "System Analysis"
           ],
-          "completed": true,
+          "completed": false,
           "id": "ex_node_txw9rc2",
           "label": "Project: Log File IP Extractor",
           "optional": false,
@@ -450,7 +450,7 @@
           "categories": [
             "Scripting and Automation"
           ],
-          "completed": true,
+          "completed": false,
           "id": "ex_node_puyuo7l",
           "label": "Base64 Playground",
           "optional": false,

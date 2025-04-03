@@ -1,8 +1,6 @@
-arreglar badges imagenes...
-que el node editor mantenga el progreso
 arreglar css de las abilities/badges
-hacer zoom de badges mas rgande
 agregar una posibilidad de subir scripts y asociarlos a cada ejercicio
+progreso por ejercicios, no por puntaje
 
 Pasar a DB
 CVE pokedex

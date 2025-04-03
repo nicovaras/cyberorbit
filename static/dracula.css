@@ -370,7 +370,7 @@ svg {
 .badge-item img {
   width: 100%; max-width: 60px; height: 60px; object-fit: contain; border-radius: 4px;
 }
-.badge-item:hover { transform: scale(1.1); box-shadow: 0 0 15px var(--green); }
+.badge-item:hover { transform: scale(2.0); box-shadow: 0 0 15px var(--green); }
 .badge-label {
     font-size: 10px; color: var(--pink); text-align: center; margin-top: 4px;
     line-height: 1.2; text-shadow: none;

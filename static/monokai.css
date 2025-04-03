@@ -205,7 +205,7 @@ svg {
 }
 
 .badge-item:hover {
-  transform: scale(1.2);
+  transform: scale(2.0);
   box-shadow: 0 0 20px #ff00ff44;
 }
 
