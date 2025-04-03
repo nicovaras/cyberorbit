@@ -9,6 +9,7 @@ import markdown
 import os
 from markupsafe import Markup
 from core.s3sync import sync_down
+from werkzeug.exceptions import HTTPException
 
 # --- Initial Setup ---
 for f in ["json/ctfs.json", "json/x.json", "json/streak.json", "json/badges.json"]:
@@ -161,12 +162,18 @@ def serve_markdown(filename):
           <body>{Markup(html)}</body> 
         </html>
         """)
-    except FileNotFoundError:
+    # --- MODIFIED EXCEPTION HANDLING ---
+    except FileNotFoundError: # Keep specific FileNotFoundError handling if needed elsewhere
         print(f"Caught FileNotFoundError for: {filename}")
         abort(404)
+    except HTTPException as e:
+        # If abort() was called, re-raise the HTTP exception it generated
+        raise e
     except Exception as e:
+        # Catch other unexpected errors (e.g., markdown processing, file reading issues)
         print(f"Error rendering markdown {filename}: {e}")
-        abort(500)
+        abort(500) # Return 500 for truly unexpected errors
+    # --- END MODIFIED EXCEPTION HANDLING ---
 
 
 @app.route("/update_badges", methods=["POST"])

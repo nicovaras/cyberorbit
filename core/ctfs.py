@@ -5,7 +5,10 @@ from core.s3sync import sync_down, sync_up
 CTF_PATH = "json/ctfs.json"
 
 def load_ctfs():
-    sync_down(CTF_PATH)
+    try:
+        sync_down(CTF_PATH)
+    except Exception as e:
+        print(e)
     if not os.path.exists(CTF_PATH):
         return []
     with open(CTF_PATH, "r") as f:

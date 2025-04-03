@@ -7,17 +7,35 @@ BADGES_PATH = "json/badges.json"
 
 
 def load_badges():
-    sync_down(BADGES_PATH)
+    # --- ADDED try...except block ---
+    try:
+        sync_down(BADGES_PATH)
+    except Exception as e:
+        # Log the error or handle specific exceptions if needed
+        print(f"Warning: Failed to sync_down {BADGES_PATH}. Error: {e}")
+        # Continue execution to check for a local file or return default
+    # --- END ADDED block ---
+
     if not os.path.exists(BADGES_PATH):
         return []
-    with open(BADGES_PATH, "r") as f:
-        return json.load(f)
+    try: # Add try/except around file reading too for robustness
+        with open(BADGES_PATH, "r") as f:
+            return json.load(f)
+    except (json.JSONDecodeError, IOError) as e:
+        print(f"Error reading or parsing local badges file {BADGES_PATH}: {e}")
+        return [] # Return default if local file is corrupt or unreadable
 
 
 def save_badges(badges):
-    with open(BADGES_PATH, "w") as f:
-        json.dump(badges, f, indent=2)
-    sync_up(BADGES_PATH)        
+    try: # Add try/except for saving robustness
+        with open(BADGES_PATH, "w") as f:
+            json.dump(badges, f, indent=2)
+        sync_up(BADGES_PATH)
+    except IOError as e:
+        print(f"Error writing local badges file {BADGES_PATH}: {e}")
+    except Exception as e:
+        # Catch potential sync_up errors if it were implemented
+        print(f"Error during badges save/sync: {e}")    
 
 
 def calculate_level(xp):

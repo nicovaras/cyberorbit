@@ -6,7 +6,10 @@ from core.s3sync import sync_down, sync_up
 STREAK_PATH = "json/streak.json"
 
 def load_streak():
-    sync_down(STREAK_PATH)
+    try:
+        sync_down(STREAK_PATH)
+    except Exception as e:
+        print(e)
     if not os.path.exists(STREAK_PATH):
         return {"streak": 0, "last_used": ""}
     with open(STREAK_PATH, "r") as f:
