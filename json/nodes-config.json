@@ -1550,8 +1550,53 @@
     "id": "node_alg5ws9",
     "percent": 0,
     "popup": {
-      "exercises": [],
-      "text": ""
+      "exercises": [
+        {
+          "id": "ex_node_ume1op7",
+          "label": "Least Privilege Scenario Analysis",
+          "categories": [
+            "System Analysis",
+            "Offensive Techniques"
+          ],
+          "completed": false,
+          "optional": false,
+          "points": 10
+        },
+        {
+          "id": "ex_node_uy70ubt",
+          "label": "Mapping the Attack Surface",
+          "categories": [
+            "System Analysis",
+            "Offensive Techniques"
+          ],
+          "completed": false,
+          "optional": false,
+          "points": 15
+        },
+        {
+          "id": "ex_node_pn2evln",
+          "label": "Designing Defense in Depth",
+          "categories": [
+            "System Analysis",
+            "Defensive Techniques"
+          ],
+          "completed": false,
+          "optional": false,
+          "points": 20
+        },
+        {
+          "id": "ex_node_2yt0zna",
+          "label": "CVE Analysis",
+          "categories": [
+            "System Analysis"
+          ],
+          "completed": false,
+          "optional": false,
+          "points": 25
+        }
+      ],
+      "text": "",
+      "pdf_link": "md/4core.md"
     },
     "prerequisites": [
       "node_57wryy8"
@@ -1567,8 +1612,60 @@
     "id": "node_k9deygd",
     "percent": 0,
     "popup": {
-      "exercises": [],
-      "text": ""
+      "exercises": [
+        {
+          "id": "ex_node_r5gcz2w",
+          "label": "Decoding `ls -l` and Basic `chmod`",
+          "categories": [],
+          "completed": false,
+          "optional": false,
+          "points": 5
+        },
+        {
+          "id": "ex_node_8oir3xr",
+          "label": "Understanding Special Permissions (SUID, SGID, Sticky)",
+          "categories": [
+            "System Analysis"
+          ],
+          "completed": false,
+          "optional": false,
+          "points": 10
+        },
+        {
+          "id": "ex_node_fj4sorm",
+          "label": "Controlling Default Permissions with `umask`",
+          "categories": [
+            "System Analysis"
+          ],
+          "completed": false,
+          "optional": false,
+          "points": 10
+        },
+        {
+          "id": "ex_node_rv7ciew",
+          "label": "Implementing Fine-Grained Access with ACLs",
+          "categories": [
+            "Defensive Techniques",
+            "System Analysis"
+          ],
+          "completed": false,
+          "optional": false,
+          "points": 15
+        },
+        {
+          "id": "ex_node_j6cowwq",
+          "label": "Project: Secure File Area Setup",
+          "categories": [
+            "System Analysis",
+            "Defensive Techniques"
+          ],
+          "completed": false,
+          "optional": false,
+          "points": 35
+        }
+      ],
+      "text": "",
+      "pdf_link": "md/4linux_filesystem.md"
     },
     "prerequisites": [
       "node_57wryy8"
@@ -1581,8 +1678,61 @@
     "id": "node_rs791ot",
     "percent": 0,
     "popup": {
-      "exercises": [],
-      "text": ""
+      "exercises": [
+        {
+          "id": "ex_node_7xxi8xy",
+          "label": "Basic `sudoers` Grant via `visudo`",
+          "categories": [
+            "System Analysis"
+          ],
+          "completed": false,
+          "optional": false,
+          "points": 10
+        },
+        {
+          "id": "ex_node_grbbqf5",
+          "label": "Leveraging Aliases (User, Host, Command)",
+          "categories": [
+            "System Analysis"
+          ],
+          "completed": false,
+          "optional": false,
+          "points": 15
+        },
+        {
+          "id": "ex_node_7a9atiq",
+          "label": "Restricting Commands & Preventing Shell Escapes",
+          "categories": [
+            "System Analysis",
+            "Defensive Techniques"
+          ],
+          "completed": false,
+          "optional": false,
+          "points": 20
+        },
+        {
+          "id": "ex_node_a2lfsby",
+          "label": "Logging, Timeouts, and `NOPASSWD` Risks",
+          "categories": [
+            "System Analysis"
+          ],
+          "completed": false,
+          "optional": false,
+          "points": 15
+        },
+        {
+          "id": "ex_node_2lr7wut",
+          "label": "Sudoedit for Secure File Editing",
+          "categories": [
+            "System Analysis"
+          ],
+          "completed": false,
+          "optional": true,
+          "points": 15
+        }
+      ],
+      "text": "",
+      "pdf_link": "md/4linux_sudo.md"
     },
     "prerequisites": [
       "node_k9deygd"
@@ -1595,8 +1745,65 @@
     "id": "node_r50b8kl",
     "percent": 0,
     "popup": {
-      "exercises": [],
-      "text": ""
+      "exercises": [
+        {
+          "id": "ex_node_y7ygktv",
+          "label": "`auditd` Service and Configuration",
+          "categories": [
+            "System Analysis",
+            "Defensive Techniques"
+          ],
+          "completed": false,
+          "optional": false,
+          "points": 10
+        },
+        {
+          "id": "ex_node_zwzr53e",
+          "label": "Watching Files and Directories (`auditctl -w`)",
+          "categories": [
+            "System Analysis",
+            "Defensive Techniques"
+          ],
+          "completed": false,
+          "optional": false,
+          "points": 15
+        },
+        {
+          "id": "ex_node_j8w9qtp",
+          "label": "Effective Audit Log Searching (`ausearch`)",
+          "categories": [
+            "System Analysis",
+            "Defensive Techniques"
+          ],
+          "completed": false,
+          "optional": false,
+          "points": 10
+        },
+        {
+          "id": "ex_node_abl6jiv",
+          "label": "Auditing System Calls (`auditctl -S`)",
+          "categories": [
+            "System Analysis",
+            "Defensive Techniques"
+          ],
+          "completed": false,
+          "optional": false,
+          "points": 15
+        },
+        {
+          "id": "ex_node_ud02dmn",
+          "label": "Generating Summary Reports (`aureport`)",
+          "categories": [
+            "System Analysis",
+            "Defensive Techniques"
+          ],
+          "completed": false,
+          "optional": false,
+          "points": 20
+        }
+      ],
+      "text": "",
+      "pdf_link": "md/4linux_audit.md"
     },
     "prerequisites": [
       "node_k9deygd"
@@ -1611,8 +1818,62 @@
     "id": "node_54s5q7c",
     "percent": 0,
     "popup": {
-      "exercises": [],
-      "text": ""
+      "exercises": [
+        {
+          "id": "ex_node_72c98vp",
+          "label": "NTFS vs. Share Permission Interaction",
+          "categories": [
+            "System Analysis"
+          ],
+          "completed": false,
+          "optional": false,
+          "points": 15
+        },
+        {
+          "id": "ex_node_3kzn6gb",
+          "label": "Managing NTFS Inheritance",
+          "categories": [
+            "System Analysis"
+          ],
+          "completed": false,
+          "optional": false,
+          "points": 15
+        },
+        {
+          "id": "ex_node_7sk6c64",
+          "label": "Exploring UAC Behavior",
+          "categories": [
+            "System Analysis"
+          ],
+          "completed": false,
+          "optional": false,
+          "points": 20
+        },
+        {
+          "id": "ex_node_p93jcqz",
+          "label": "Command-Line Permissions with `icacls`",
+          "categories": [
+            "System Analysis",
+            "Defensive Techniques"
+          ],
+          "completed": false,
+          "optional": false,
+          "points": 20
+        },
+        {
+          "id": "ex_node_29w4lye",
+          "label": "Researching UAC Bypass Techniques",
+          "categories": [
+            "System Analysis",
+            "Offensive Techniques"
+          ],
+          "completed": false,
+          "optional": true,
+          "points": 30
+        }
+      ],
+      "text": "",
+      "pdf_link": "md/4windows_perm.md"
     },
     "prerequisites": [
       "node_57wryy8"
@@ -1625,8 +1886,65 @@
     "id": "node_abeifbq",
     "percent": 0,
     "popup": {
-      "exercises": [],
-      "text": ""
+      "exercises": [
+        {
+          "id": "ex_node_gikvham",
+          "label": "Enforcing Strong Password Policies",
+          "categories": [
+            "System Analysis",
+            "Defensive Techniques"
+          ],
+          "completed": false,
+          "optional": false,
+          "points": 15
+        },
+        {
+          "id": "ex_node_2fnkkm2",
+          "label": "Managing User Rights Assignments",
+          "categories": [
+            "System Analysis",
+            "Defensive Techniques"
+          ],
+          "completed": false,
+          "optional": false,
+          "points": 10
+        },
+        {
+          "id": "ex_node_tp2eowi",
+          "label": "Configuring Auditing with `auditpol.exe`",
+          "categories": [
+            "System Analysis",
+            "Defensive Techniques"
+          ],
+          "completed": false,
+          "optional": false,
+          "points": 15
+        },
+        {
+          "id": "ex_node_nki18tp",
+          "label": "Implementing File System Auditing (SACL)",
+          "categories": [
+            "System Analysis",
+            "Defensive Techniques"
+          ],
+          "completed": false,
+          "optional": false,
+          "points": 15
+        },
+        {
+          "id": "ex_node_s8dha0v",
+          "label": "Analyzing Security Event Logs",
+          "categories": [
+            "System Analysis",
+            "Defensive Techniques"
+          ],
+          "completed": false,
+          "optional": false,
+          "points": 20
+        }
+      ],
+      "text": "",
+      "pdf_link": "md/4win_sec.md"
     },
     "prerequisites": [
       "node_54s5q7c"
@@ -1639,8 +1957,66 @@
     "id": "node_wzhe305",
     "percent": 0,
     "popup": {
-      "exercises": [],
-      "text": ""
+      "exercises": [
+        {
+          "id": "ex_node_mg7hb2t",
+          "label": "Manual Hardening - Windows Services & Registry",
+          "categories": [
+            "System Analysis",
+            "Defensive Techniques"
+          ],
+          "completed": false,
+          "optional": false,
+          "points": 15
+        },
+        {
+          "id": "ex_node_h9sbvvp",
+          "label": "Linux Assessment with Lynis",
+          "categories": [
+            "System Analysis",
+            "Defensive Techniques"
+          ],
+          "completed": false,
+          "optional": false,
+          "points": 20
+        },
+        {
+          "id": "ex_node_56guwlv",
+          "label": "Linux Assessment with OpenSCAP",
+          "categories": [
+            "System Analysis"
+          ],
+          "completed": false,
+          "optional": false,
+          "points": 20
+        },
+        {
+          "id": "ex_node_boooqxx",
+          "label": "Scripting a Hardening Check (Linux Example)",
+          "categories": [
+            "System Analysis",
+            "Defensive Techniques",
+            "Scripting and Automation"
+          ],
+          "completed": false,
+          "optional": false,
+          "points": 30
+        },
+        {
+          "id": "ex_node_ktdyl2n",
+          "label": "Project: Automated Hardening Checks",
+          "categories": [
+            "Scripting and Automation",
+            "Defensive Techniques",
+            "System Analysis"
+          ],
+          "completed": false,
+          "optional": false,
+          "points": 50
+        }
+      ],
+      "text": "",
+      "pdf_link": "md/4os_hard.md"
     },
     "prerequisites": [
       "node_57wryy8"
