@@ -1,39 +1,43 @@
 [
   {
+    "id": "node_5kk0017",
+    "title": "Advanced Model Evaluation & Selection",
+    "type": "main",
+    "prerequisites": [],
     "children": [
       "node_yyqhaal",
       "node_9upb0ah"
     ],
-    "id": "node_5kk0017",
-    "percent": 4,
     "popup": {
-      "exercises": [],
-      "text": ""
-    },
-    "prerequisites": [],
-    "title": "Advanced Model Evaluation & Selection",
-    "type": "main"
+      "text": "",
+      "exercises": []
+    }
   },
   {
+    "id": "node_yyqhaal",
+    "title": "Optimization Techniques for Large Models",
+    "type": "main",
+    "prerequisites": [
+      "node_5kk0017"
+    ],
     "children": [
       "node_xf36mlz",
       "node_sjsg46u",
       "node_sm10pzt",
       "node_4ylx8i2"
     ],
-    "id": "node_yyqhaal",
-    "percent": 0,
     "popup": {
-      "exercises": [],
-      "text": ""
-    },
-    "prerequisites": [
-      "node_5kk0017"
-    ],
-    "title": "Optimization Techniques for Large Models",
-    "type": "main"
+      "text": "",
+      "exercises": []
+    }
   },
   {
+    "id": "node_xf36mlz",
+    "title": "Advanced Deep Learning Architectures",
+    "type": "main",
+    "prerequisites": [
+      "node_yyqhaal"
+    ],
     "children": [
       "node_zyda767",
       "node_5r90sg2",
@@ -46,1344 +50,1274 @@
       "node_2s691zj",
       "node_yas8uf0"
     ],
-    "id": "node_xf36mlz",
-    "percent": 0,
     "popup": {
-      "exercises": [],
-      "text": ""
-    },
-    "prerequisites": [
-      "node_yyqhaal"
-    ],
-    "title": "Advanced Deep Learning Architectures",
-    "type": "main"
+      "text": "",
+      "exercises": []
+    }
   },
   {
-    "children": [],
     "id": "node_zyda767",
-    "percent": 0,
-    "popup": {
-      "exercises": [],
-      "text": ""
-    },
-    "prerequisites": [
-      "node_xf36mlz"
-    ],
     "title": "Generative Adversarial Networks (GANs)",
-    "type": "main"
+    "type": "main",
+    "prerequisites": [
+      "node_xf36mlz"
+    ],
+    "children": [],
+    "popup": {
+      "text": "",
+      "exercises": []
+    }
   },
   {
-    "children": [],
     "id": "node_5r90sg2",
-    "percent": 0,
-    "popup": {
-      "exercises": [],
-      "text": ""
-    },
-    "prerequisites": [
-      "node_xf36mlz"
-    ],
     "title": "Advanced NLP with Transformers",
-    "type": "main"
+    "type": "main",
+    "prerequisites": [
+      "node_xf36mlz"
+    ],
+    "children": [],
+    "popup": {
+      "text": "",
+      "exercises": []
+    }
   },
   {
-    "children": [],
     "id": "node_t62yr5c",
-    "percent": 0,
-    "popup": {
-      "exercises": [],
-      "text": ""
-    },
-    "prerequisites": [
-      "node_xf36mlz"
-    ],
     "title": "Advanced Computer Vision",
-    "type": "main"
+    "type": "main",
+    "prerequisites": [
+      "node_xf36mlz"
+    ],
+    "children": [],
+    "popup": {
+      "text": "",
+      "exercises": []
+    }
   },
   {
-    "children": [],
     "id": "node_7svex7t",
-    "percent": 0,
-    "popup": {
-      "exercises": [],
-      "text": ""
-    },
-    "prerequisites": [
-      "node_xf36mlz"
-    ],
     "title": "Self-Supervised Learning",
-    "type": "main"
+    "type": "main",
+    "prerequisites": [
+      "node_xf36mlz"
+    ],
+    "children": [],
+    "popup": {
+      "text": "",
+      "exercises": []
+    }
   },
   {
-    "children": [],
     "id": "node_w1chp9g",
-    "percent": 0,
-    "popup": {
-      "exercises": [],
-      "text": ""
-    },
-    "prerequisites": [
-      "node_xf36mlz"
-    ],
     "title": "Probabilistic Deep Learning",
-    "type": "main"
+    "type": "main",
+    "prerequisites": [
+      "node_xf36mlz"
+    ],
+    "children": [],
+    "popup": {
+      "text": "",
+      "exercises": []
+    }
   },
   {
-    "children": [],
     "id": "node_thw0zy1",
-    "percent": 0,
-    "popup": {
-      "exercises": [],
-      "text": ""
-    },
-    "prerequisites": [
-      "node_xf36mlz"
-    ],
     "title": "Reinforcement Learning",
-    "type": "main"
+    "type": "main",
+    "prerequisites": [
+      "node_xf36mlz"
+    ],
+    "children": [],
+    "popup": {
+      "text": "",
+      "exercises": []
+    }
   },
   {
-    "children": [],
     "id": "node_0ials3f",
-    "percent": 0,
-    "popup": {
-      "exercises": [],
-      "text": ""
-    },
-    "prerequisites": [
-      "node_xf36mlz"
-    ],
     "title": "Graph Neural Networks (GNNs)",
-    "type": "main"
-  },
-  {
-    "children": [],
-    "id": "node_7fh05h0",
-    "percent": 0,
-    "popup": {
-      "exercises": [],
-      "text": ""
-    },
+    "type": "main",
     "prerequisites": [
       "node_xf36mlz"
     ],
-    "title": "Time Series Analysis at Scale",
-    "type": "main"
+    "children": [],
+    "popup": {
+      "text": "",
+      "exercises": []
+    }
   },
   {
+    "id": "node_7fh05h0",
+    "title": "Time Series Analysis at Scale",
+    "type": "main",
+    "prerequisites": [
+      "node_xf36mlz"
+    ],
+    "children": [],
+    "popup": {
+      "text": "",
+      "exercises": []
+    }
+  },
+  {
+    "id": "node_2s691zj",
+    "title": "Recommender Systems at Scale",
+    "type": "main",
+    "prerequisites": [
+      "node_xf36mlz"
+    ],
     "children": [
       "node_q8ktu96"
     ],
-    "id": "node_2s691zj",
-    "percent": 0,
     "popup": {
-      "exercises": [],
-      "text": ""
-    },
-    "prerequisites": [
-      "node_xf36mlz"
-    ],
-    "title": "Recommender Systems at Scale",
-    "type": "main"
+      "text": "",
+      "exercises": []
+    }
   },
   {
-    "children": [
-      "node_062xmcx"
-    ],
     "id": "node_q8ktu96",
-    "percent": 0,
-    "popup": {
-      "exercises": [],
-      "text": ""
-    },
+    "title": "Explainable AI (XAI) & Interpretability",
+    "type": "main",
     "prerequisites": [
       "node_2s691zj"
     ],
-    "title": "Explainable AI (XAI) & Interpretability",
-    "type": "main"
+    "children": [
+      "node_062xmcx"
+    ],
+    "popup": {
+      "text": "",
+      "exercises": []
+    }
   },
   {
-    "children": [
-      "node_r64y9m9"
-    ],
     "id": "node_062xmcx",
-    "percent": 0,
-    "popup": {
-      "exercises": [],
-      "text": ""
-    },
+    "title": "MLOps: Production ML Pipelines & Monitoring",
+    "type": "main",
     "prerequisites": [
       "node_q8ktu96"
     ],
-    "title": "MLOps: Production ML Pipelines & Monitoring",
-    "type": "main"
+    "children": [
+      "node_r64y9m9"
+    ],
+    "popup": {
+      "text": "",
+      "exercises": []
+    }
   },
   {
-    "children": [
-      "node_vcs3smc"
-    ],
     "id": "node_r64y9m9",
-    "percent": 0,
-    "popup": {
-      "exercises": [],
-      "text": ""
-    },
+    "title": "Data Science for Business Impact",
+    "type": "main",
     "prerequisites": [
       "node_062xmcx"
     ],
-    "title": "Data Science for Business Impact",
-    "type": "main"
+    "children": [
+      "node_vcs3smc"
+    ],
+    "popup": {
+      "text": "",
+      "exercises": []
+    }
   },
   {
-    "children": [],
     "id": "node_vcs3smc",
-    "percent": 0,
-    "popup": {
-      "exercises": [],
-      "text": ""
-    },
+    "title": "Strategic ML Leadership & Career Progression",
+    "type": "main",
     "prerequisites": [
       "node_r64y9m9"
     ],
-    "title": "Strategic ML Leadership & Career Progression",
-    "type": "main"
+    "children": [],
+    "popup": {
+      "text": "",
+      "exercises": []
+    }
   },
   {
+    "id": "node_sjsg46u",
+    "title": "Bayesian Machine Learning",
+    "type": "main",
+    "prerequisites": [
+      "node_yyqhaal"
+    ],
     "children": [
       "node_5vp1hl2",
       "node_m6w21jk"
     ],
-    "id": "node_sjsg46u",
-    "percent": 0,
     "popup": {
-      "exercises": [],
-      "text": ""
-    },
-    "prerequisites": [
-      "node_yyqhaal"
-    ],
-    "title": "Bayesian Machine Learning",
-    "type": "main"
+      "text": "",
+      "exercises": []
+    }
   },
   {
-    "children": [],
     "id": "node_5vp1hl2",
-    "percent": 0,
-    "popup": {
-      "exercises": [],
-      "text": ""
-    },
+    "title": "Causal Inference for Machine Learning",
+    "type": "main",
     "prerequisites": [
       "node_sjsg46u"
     ],
-    "title": "Causal Inference for Machine Learning",
-    "type": "main"
+    "children": [],
+    "popup": {
+      "text": "",
+      "exercises": []
+    }
   },
   {
+    "id": "node_9upb0ah",
+    "title": "Statistical Foundations for Model Comparison",
+    "type": "sub",
+    "prerequisites": [
+      "node_5kk0017"
+    ],
     "children": [
       "node_5l0yawa",
       "node_5dbibgn",
       "node_etrm0ra",
       "node_4v89qfm"
     ],
-    "id": "node_9upb0ah",
-    "percent": 25,
     "popup": {
+      "text": "",
       "exercises": [
         {
-          "categories": [],
-          "completed": false,
           "id": "ex_node_9i37s3r",
           "label": "Confidence Intervals for Accuracy",
+          "categories": [],
+          "completed": false,
           "optional": false,
           "points": 0
         },
         {
-          "categories": [],
-          "completed": false,
           "id": "ex_node_y3ua3tj",
           "label": "Comparing Two Models with Paired t-test",
+          "categories": [],
+          "completed": false,
           "optional": false,
           "points": 0
         },
         {
-          "categories": [],
-          "completed": false,
           "id": "ex_node_thsnt29",
           "label": "Understanding p-value Pitfalls",
+          "categories": [],
+          "completed": false,
           "optional": false,
           "points": 0
         },
         {
-          "categories": [],
-          "completed": false,
           "id": "ex_node_m4rawne",
           "label": "Statistical Power Estimation (Conceptual)",
+          "categories": [],
+          "completed": false,
           "optional": false,
           "points": 0
         }
       ],
-      "pdf_link": "mdml/1stats.md",
-      "text": ""
-    },
-    "prerequisites": [
-      "node_5kk0017"
-    ],
-    "title": "Statistical Foundations for Model Comparison",
-    "type": "sub"
+      "pdf_link": "mdml/1stats.md"
+    }
   },
   {
+    "id": "node_5l0yawa",
+    "title": "Metrics for Imbalanced Data Deep Dive",
+    "type": "sub",
+    "prerequisites": [
+      "node_9upb0ah"
+    ],
     "children": [
       "node_oz6jq06"
     ],
-    "id": "node_5l0yawa",
-    "percent": 0,
     "popup": {
+      "text": "",
       "exercises": [
         {
-          "categories": [],
-          "completed": false,
           "id": "ex_node_3y5694y",
           "label": "Accuracy vs. Precision/Recall/F1",
+          "categories": [],
+          "completed": false,
           "optional": false,
           "points": 0
         },
         {
-          "categories": [],
-          "completed": false,
           "id": "ex_node_001ix7t",
           "label": "Plotting and Interpreting Precision-Recall Curves",
+          "categories": [],
+          "completed": false,
           "optional": false,
           "points": 0
         },
         {
-          "categories": [],
-          "completed": false,
           "id": "ex_node_f43hpxf",
           "label": "Calculating Balanced Accuracy and MCC",
+          "categories": [],
+          "completed": false,
           "optional": false,
           "points": 0
         },
         {
-          "categories": [],
-          "completed": false,
           "id": "ex_node_9qcqsij",
           "label": "Using the F-beta Score",
+          "categories": [],
+          "completed": false,
           "optional": false,
           "points": 0
         }
       ],
-      "pdf_link": "mdml/1metrics.md",
-      "text": ""
-    },
-    "prerequisites": [
-      "node_9upb0ah"
-    ],
-    "title": "Metrics for Imbalanced Data Deep Dive",
-    "type": "sub"
+      "pdf_link": "mdml/1metrics.md"
+    }
   },
   {
-    "children": [],
     "id": "node_oz6jq06",
-    "percent": 0,
-    "popup": {
-      "exercises": [
-        {
-          "categories": [],
-          "completed": false,
-          "id": "ex_node_y4tediv",
-          "label": "Defining and Using a Cost Matrix",
-          "optional": false,
-          "points": 0
-        },
-        {
-          "categories": [],
-          "completed": false,
-          "id": "ex_node_9lelqi4",
-          "label": "Weighted Metrics based on Cost",
-          "optional": false,
-          "points": 0
-        },
-        {
-          "categories": [],
-          "completed": false,
-          "id": "ex_node_oqldy27",
-          "label": "Evaluating with Expected Cost",
-          "optional": false,
-          "points": 0
-        },
-        {
-          "categories": [],
-          "completed": false,
-          "id": "ex_node_eqnmek7",
-          "label": "Visualizing Cost on ROC/PR Curves",
-          "optional": false,
-          "points": 0
-        }
-      ],
-      "pdf_link": "mdml/1cost.md",
-      "text": ""
-    },
+    "title": "Cost-Sensitive Learning Evaluation",
+    "type": "sub",
     "prerequisites": [
       "node_5l0yawa"
     ],
-    "title": "Cost-Sensitive Learning Evaluation",
-    "type": "sub"
+    "children": [],
+    "popup": {
+      "text": "",
+      "exercises": [
+        {
+          "id": "ex_node_y4tediv",
+          "label": "Defining and Using a Cost Matrix",
+          "categories": [],
+          "completed": false,
+          "optional": false,
+          "points": 0
+        },
+        {
+          "id": "ex_node_9lelqi4",
+          "label": "Weighted Metrics based on Cost",
+          "categories": [],
+          "completed": false,
+          "optional": false,
+          "points": 0
+        },
+        {
+          "id": "ex_node_oqldy27",
+          "label": "Evaluating with Expected Cost",
+          "categories": [],
+          "completed": false,
+          "optional": false,
+          "points": 0
+        },
+        {
+          "id": "ex_node_eqnmek7",
+          "label": "Visualizing Cost on ROC/PR Curves",
+          "categories": [],
+          "completed": false,
+          "optional": false,
+          "points": 0
+        }
+      ],
+      "pdf_link": "mdml/1cost.md"
+    }
   },
   {
+    "id": "node_5dbibgn",
+    "title": "Calibration of Probabilistic Models",
+    "type": "sub",
+    "prerequisites": [
+      "node_9upb0ah"
+    ],
     "children": [
       "node_owg1znz"
     ],
-    "id": "node_5dbibgn",
-    "percent": 0,
     "popup": {
+      "text": "",
       "exercises": [
         {
-          "categories": [],
-          "completed": false,
           "id": "ex_node_1xs11px",
           "label": "Visualizing Calibration with Reliability Diagrams",
+          "categories": [],
+          "completed": false,
           "optional": false,
           "points": 0
         },
         {
-          "categories": [],
-          "completed": false,
           "id": "ex_node_j9uyozh",
           "label": "Quantifying Calibration with ECE",
+          "categories": [],
+          "completed": false,
           "optional": false,
           "points": 0
         },
         {
-          "categories": [],
-          "completed": false,
           "id": "ex_node_a69a3tw",
           "label": "Calculating the Brier Score",
+          "categories": [],
+          "completed": false,
           "optional": false,
           "points": 0
         },
         {
-          "categories": [],
-          "completed": false,
           "id": "ex_node_hjcktrn",
           "label": "Brier Score Decomposition (Conceptual)",
+          "categories": [],
+          "completed": false,
           "optional": false,
           "points": 0
         }
       ],
-      "pdf_link": "mdml/1calib.md",
-      "text": ""
-    },
-    "prerequisites": [
-      "node_9upb0ah"
-    ],
-    "title": "Calibration of Probabilistic Models",
-    "type": "sub"
+      "pdf_link": "mdml/1calib.md"
+    }
   },
   {
-    "children": [],
     "id": "node_owg1znz",
-    "percent": 0,
-    "popup": {
-      "exercises": [
-        {
-          "categories": [],
-          "completed": false,
-          "id": "ex_node_3n74sgi",
-          "label": "Platt Scaling (Sigmoid Calibration)",
-          "optional": false,
-          "points": 0
-        },
-        {
-          "categories": [],
-          "completed": false,
-          "id": "ex_node_o16xcxw",
-          "label": "Isotonic Regression Calibration",
-          "optional": false,
-          "points": 0
-        },
-        {
-          "categories": [],
-          "completed": false,
-          "id": "ex_node_vdscdeq",
-          "label": "Temperature Scaling for Neural Networks",
-          "optional": false,
-          "points": 0
-        },
-        {
-          "categories": [],
-          "completed": false,
-          "id": "ex_node_3w3hqi5",
-          "label": "Comparing Calibration Methods",
-          "optional": false,
-          "points": 0
-        }
-      ],
-      "pdf_link": "mdml/1calib2.md",
-      "text": ""
-    },
+    "title": "Calibration Methods Implementation",
+    "type": "sub",
     "prerequisites": [
       "node_5dbibgn"
     ],
-    "title": "Calibration Methods Implementation",
-    "type": "sub"
-  },
-  {
     "children": [],
-    "id": "node_etrm0ra",
-    "percent": 0,
     "popup": {
+      "text": "",
       "exercises": [
         {
+          "id": "ex_node_3n74sgi",
+          "label": "Platt Scaling (Sigmoid Calibration)",
           "categories": [],
           "completed": false,
+          "optional": false,
+          "points": 0
+        },
+        {
+          "id": "ex_node_o16xcxw",
+          "label": "Isotonic Regression Calibration",
+          "categories": [],
+          "completed": false,
+          "optional": false,
+          "points": 0
+        },
+        {
+          "id": "ex_node_vdscdeq",
+          "label": "Temperature Scaling for Neural Networks",
+          "categories": [],
+          "completed": false,
+          "optional": false,
+          "points": 0
+        },
+        {
+          "id": "ex_node_3w3hqi5",
+          "label": "Comparing Calibration Methods",
+          "categories": [],
+          "completed": false,
+          "optional": false,
+          "points": 0
+        }
+      ],
+      "pdf_link": "mdml/1calib2.md"
+    }
+  },
+  {
+    "id": "node_etrm0ra",
+    "title": "Evaluating Ranking & Recommendation Systems",
+    "type": "sub",
+    "prerequisites": [
+      "node_9upb0ah"
+    ],
+    "children": [],
+    "popup": {
+      "text": "",
+      "exercises": [
+        {
           "id": "ex_node_o4elcql",
           "label": "Mean Reciprocal Rank (MRR)",
+          "categories": [],
+          "completed": false,
           "optional": false,
           "points": 0
         },
         {
-          "categories": [],
-          "completed": false,
           "id": "ex_node_awxgf0w",
           "label": "Mean Average Precision (MAP)",
+          "categories": [],
+          "completed": false,
           "optional": false,
           "points": 0
         },
         {
-          "categories": [],
-          "completed": false,
           "id": "ex_node_bkq9hd4",
           "label": "Normalized Discounted Cumulative Gain (nDCG)",
+          "categories": [],
+          "completed": false,
           "optional": false,
           "points": 0
         },
         {
-          "categories": [],
-          "completed": false,
           "id": "ex_node_w2s2idl",
           "label": "Beyond Accuracy - Coverage, Personalization, Serendipity (Conceptual)",
+          "categories": [],
+          "completed": false,
           "optional": false,
           "points": 0
         }
       ],
-      "pdf_link": "mdml/1ranking.md",
-      "text": ""
-    },
+      "pdf_link": "mdml/1ranking.md"
+    }
+  },
+  {
+    "id": "node_4v89qfm",
+    "title": "Model Selection Strategies Beyond Grid/Random Search",
+    "type": "sub",
     "prerequisites": [
       "node_9upb0ah"
     ],
-    "title": "Evaluating Ranking & Recommendation Systems",
-    "type": "sub"
-  },
-  {
     "children": [],
-    "id": "node_4v89qfm",
-    "percent": 0,
     "popup": {
+      "text": "",
       "exercises": [
         {
-          "categories": [],
-          "completed": false,
           "id": "ex_node_ixzk6o0",
           "label": "Implementing Nested Cross-Validation",
+          "categories": [],
+          "completed": false,
           "optional": false,
           "points": 0
         },
         {
-          "categories": [],
-          "completed": false,
           "id": "ex_node_xqxg2na",
           "label": "Introduction to Bayesian Optimization with Optuna/Hyperopt",
+          "categories": [],
+          "completed": false,
           "optional": false,
           "points": 0
         },
         {
-          "categories": [],
-          "completed": false,
           "id": "ex_node_fk6jjnt",
           "label": "Defining and Evaluating Custom Business KPIs",
+          "categories": [],
+          "completed": false,
           "optional": false,
           "points": 0
         },
         {
-          "categories": [],
-          "completed": false,
           "id": "ex_node_ucj322b",
           "label": "Project: Automated Model Selection Framework",
+          "categories": [],
+          "completed": false,
           "optional": false,
           "points": 0
         }
       ],
-      "pdf_link": "mdml/1selection.md",
-      "text": ""
-    },
-    "prerequisites": [
-      "node_9upb0ah"
-    ],
-    "title": "Model Selection Strategies Beyond Grid/Random Search",
-    "type": "sub"
+      "pdf_link": "mdml/1selection.md"
+    }
   },
   {
-    "children": [
-      "node_i4hwamw"
-    ],
     "id": "node_sm10pzt",
-    "percent": 0,
-    "popup": {
-      "exercises": [],
-      "text": ""
-    },
+    "title": "Competitive Machine Learning",
+    "type": "main",
     "prerequisites": [
       "node_yyqhaal"
     ],
-    "title": "Competitive Machine Learning",
-    "type": "main"
+    "children": [
+      "node_i4hwamw"
+    ],
+    "popup": {
+      "text": "",
+      "exercises": []
+    }
   },
   {
+    "id": "node_4ylx8i2",
+    "title": "Advanced Gradient Descent Variants & Dynamics",
+    "type": "sub",
+    "prerequisites": [
+      "node_yyqhaal"
+    ],
     "children": [
       "node_kb67vbi",
       "node_ef5jllq",
       "node_int493e",
       "node_63uwxwm"
     ],
-    "id": "node_4ylx8i2",
-    "percent": 0,
     "popup": {
+      "text": "",
       "exercises": [
         {
-          "categories": [],
-          "completed": false,
           "id": "ex_node_debyy50",
           "label": "Momentum vs NAG Visualization",
+          "categories": [],
+          "completed": false,
           "optional": false,
           "points": 0
         },
         {
-          "categories": [],
-          "completed": false,
           "id": "ex_node_9q8aon1",
           "label": "Adam/AdamW Deep Dive & Weight Decay",
+          "categories": [],
+          "completed": false,
           "optional": false,
           "points": 0
         },
         {
-          "categories": [],
-          "completed": false,
           "id": "ex_node_63qfvf1",
           "label": "RMSprop Implementation & Comparison",
+          "categories": [],
+          "completed": false,
           "optional": false,
           "points": 0
         },
         {
-          "categories": [],
-          "completed": false,
           "id": "ex_node_ykc11eq",
           "label": "Optimizer Stability on Noisy Data",
+          "categories": [],
+          "completed": false,
           "optional": false,
           "points": 0
         },
         {
-          "categories": [],
-          "completed": false,
           "id": "ex_node_zkdpdel",
           "label": "Loss Landscape Visualization (Conceptual & Tool-Based)",
+          "categories": [],
+          "completed": false,
           "optional": false,
           "points": 0
         }
       ],
-      "pdf_link": "mdml/2gradient.md",
-      "text": ""
-    },
-    "prerequisites": [
-      "node_yyqhaal"
-    ],
-    "title": "Advanced Gradient Descent Variants & Dynamics",
-    "type": "sub"
+      "pdf_link": "mdml/2gradient.md"
+    }
   },
   {
+    "id": "node_kb67vbi",
+    "title": "Learning Rate Scheduling Strategies",
+    "type": "sub",
+    "prerequisites": [
+      "node_4ylx8i2"
+    ],
     "children": [
       "node_9wmoors"
     ],
-    "id": "node_kb67vbi",
-    "percent": 0,
     "popup": {
+      "text": "",
       "exercises": [
         {
-          "categories": [],
-          "completed": false,
           "id": "ex_node_2ohj7hu",
           "label": "Step Decay Implementation & Tuning",
+          "categories": [],
+          "completed": false,
           "optional": false,
           "points": 0
         },
         {
-          "categories": [],
-          "completed": false,
           "id": "ex_node_cxkucw8",
           "label": "Cosine Annealing Schedule",
+          "categories": [],
+          "completed": false,
           "optional": false,
           "points": 0
         },
         {
-          "categories": [],
-          "completed": false,
           "id": "ex_node_x7wgarr",
           "label": "Linear and Polynomial Decay",
+          "categories": [],
+          "completed": false,
           "optional": false,
           "points": 0
         },
         {
-          "categories": [],
-          "completed": false,
           "id": "ex_node_eeh0c1o",
           "label": "Learning Rate Warmup",
+          "categories": [],
+          "completed": false,
           "optional": false,
           "points": 0
         }
       ],
-      "pdf_link": "mdml/2lr.md",
-      "text": ""
-    },
-    "prerequisites": [
-      "node_4ylx8i2"
-    ],
-    "title": "Learning Rate Scheduling Strategies",
-    "type": "sub"
+      "pdf_link": "mdml/2lr.md"
+    }
   },
   {
-    "children": [],
     "id": "node_9wmoors",
-    "percent": 0,
-    "popup": {
-      "exercises": [
-        {
-          "categories": [],
-          "completed": false,
-          "id": "ex_node_m45eex3",
-          "label": "Cyclical Learning Rates (CLR)",
-          "optional": false,
-          "points": 0
-        },
-        {
-          "categories": [],
-          "completed": false,
-          "id": "ex_node_0a8h243",
-          "label": "The One-Cycle Policy",
-          "optional": false,
-          "points": 0
-        },
-        {
-          "categories": [],
-          "completed": false,
-          "id": "ex_node_pb5ep3i",
-          "label": "ReduceLROnPlateau",
-          "optional": false,
-          "points": 0
-        },
-        {
-          "categories": [],
-          "completed": false,
-          "id": "ex_node_ua7tl84",
-          "label": "Adaptive Optimizers and Scheduling",
-          "optional": false,
-          "points": 0
-        }
-      ],
-      "pdf_link": "mdml/2lr_sched.md",
-      "text": ""
-    },
+    "title": "Advanced & Adaptive LR Schedulers",
+    "type": "sub",
     "prerequisites": [
       "node_kb67vbi"
     ],
-    "title": "Advanced & Adaptive LR Schedulers",
-    "type": "sub"
+    "children": [],
+    "popup": {
+      "text": "",
+      "exercises": [
+        {
+          "id": "ex_node_m45eex3",
+          "label": "Cyclical Learning Rates (CLR)",
+          "categories": [],
+          "completed": false,
+          "optional": false,
+          "points": 0
+        },
+        {
+          "id": "ex_node_0a8h243",
+          "label": "The One-Cycle Policy",
+          "categories": [],
+          "completed": false,
+          "optional": false,
+          "points": 0
+        },
+        {
+          "id": "ex_node_pb5ep3i",
+          "label": "ReduceLROnPlateau",
+          "categories": [],
+          "completed": false,
+          "optional": false,
+          "points": 0
+        },
+        {
+          "id": "ex_node_ua7tl84",
+          "label": "Adaptive Optimizers and Scheduling",
+          "categories": [],
+          "completed": false,
+          "optional": false,
+          "points": 0
+        }
+      ],
+      "pdf_link": "mdml/2lr_sched.md"
+    }
   },
   {
+    "id": "node_ef5jllq",
+    "title": "Regularization Techniques Deep Dive",
+    "type": "sub",
+    "prerequisites": [
+      "node_4ylx8i2"
+    ],
     "children": [
       "node_mur9y7g"
     ],
-    "id": "node_ef5jllq",
-    "percent": 0,
     "popup": {
+      "text": "",
       "exercises": [
         {
-          "categories": [],
-          "completed": false,
           "id": "ex_node_w4v7tue",
           "label": "L1 vs L2 Regularization Effects",
+          "categories": [],
+          "completed": false,
           "optional": false,
           "points": 0
         },
         {
-          "categories": [],
-          "completed": false,
           "id": "ex_node_qc6tkbz",
           "label": "Weight Decay Implementation Nuances",
+          "categories": [],
+          "completed": false,
           "optional": false,
           "points": 0
         },
         {
-          "categories": [],
-          "completed": false,
           "id": "ex_node_i45q56w",
           "label": "Implementing and Evaluating Standard Dropout",
+          "categories": [],
+          "completed": false,
           "optional": false,
           "points": 0
         },
         {
-          "categories": [],
-          "completed": false,
           "id": "ex_node_k45z8eu",
           "label": "Spatial Dropout (Dropout2d)",
+          "categories": [],
+          "completed": false,
           "optional": false,
           "points": 0
         },
         {
-          "categories": [],
-          "completed": false,
           "id": "ex_node_h39472a",
           "label": "Exploring DropConnect",
+          "categories": [],
+          "completed": false,
           "optional": false,
           "points": 0
         }
       ],
-      "pdf_link": "mdml/2reg.md",
-      "text": ""
-    },
-    "prerequisites": [
-      "node_4ylx8i2"
-    ],
-    "title": "Regularization Techniques Deep Dive",
-    "type": "sub"
+      "pdf_link": "mdml/2reg.md"
+    }
   },
   {
-    "children": [],
     "id": "node_mur9y7g",
-    "percent": 0,
-    "popup": {
-      "exercises": [
-        {
-          "categories": [],
-          "completed": false,
-          "id": "ex_node_qjfnahz",
-          "label": "Implementing Batch Normalization",
-          "optional": false,
-          "points": 0
-        },
-        {
-          "categories": [],
-          "completed": false,
-          "id": "ex_node_hs59zyo",
-          "label": "Batch Norm's Regularization Effect",
-          "optional": false,
-          "points": 0
-        },
-        {
-          "categories": [],
-          "completed": false,
-          "id": "ex_node_dnw7kch",
-          "label": "Batch Norm and Batch Size Sensitivity",
-          "optional": false,
-          "points": 0
-        },
-        {
-          "categories": [],
-          "completed": false,
-          "id": "ex_node_m595fge",
-          "label": "Layer Normalization Implementation",
-          "optional": false,
-          "points": 0
-        },
-        {
-          "categories": [],
-          "completed": false,
-          "id": "ex_node_cewmfo1",
-          "label": "Group Norm & Instance Norm (Conceptual & Use Cases)",
-          "optional": false,
-          "points": 0
-        }
-      ],
-      "pdf_link": "mdml/2norm.md",
-      "text": ""
-    },
+    "title": "Normalization Layers as Implicit Regularizers",
+    "type": "sub",
     "prerequisites": [
       "node_ef5jllq"
     ],
-    "title": "Normalization Layers as Implicit Regularizers",
-    "type": "sub"
+    "children": [],
+    "popup": {
+      "text": "",
+      "exercises": [
+        {
+          "id": "ex_node_qjfnahz",
+          "label": "Implementing Batch Normalization",
+          "categories": [],
+          "completed": false,
+          "optional": false,
+          "points": 0
+        },
+        {
+          "id": "ex_node_hs59zyo",
+          "label": "Batch Norm's Regularization Effect",
+          "categories": [],
+          "completed": false,
+          "optional": false,
+          "points": 0
+        },
+        {
+          "id": "ex_node_dnw7kch",
+          "label": "Batch Norm and Batch Size Sensitivity",
+          "categories": [],
+          "completed": false,
+          "optional": false,
+          "points": 0
+        },
+        {
+          "id": "ex_node_m595fge",
+          "label": "Layer Normalization Implementation",
+          "categories": [],
+          "completed": false,
+          "optional": false,
+          "points": 0
+        },
+        {
+          "id": "ex_node_cewmfo1",
+          "label": "Group Norm & Instance Norm (Conceptual & Use Cases)",
+          "categories": [],
+          "completed": false,
+          "optional": false,
+          "points": 0
+        }
+      ],
+      "pdf_link": "mdml/2norm.md"
+    }
   },
   {
+    "id": "node_int493e",
+    "title": "Gradient Manipulation & Memory Efficiency",
+    "type": "sub",
+    "prerequisites": [
+      "node_4ylx8i2"
+    ],
     "children": [
       "node_gzeo6p0"
     ],
-    "id": "node_int493e",
-    "percent": 0,
     "popup": {
+      "text": "",
       "exercises": [
         {
-          "categories": [],
-          "completed": false,
           "id": "ex_node_as9trv0",
           "label": "Implementing Gradient Norm Clipping",
+          "categories": [],
+          "completed": false,
           "optional": false,
           "points": 0
         },
         {
-          "categories": [],
-          "completed": false,
           "id": "ex_node_zka8x48",
           "label": "Gradient Clipping by Value",
+          "categories": [],
+          "completed": false,
           "optional": false,
           "points": 0
         },
         {
-          "categories": [],
-          "completed": false,
           "id": "ex_node_qidpv5q",
           "label": "Implementing Gradient Accumulation",
+          "categories": [],
+          "completed": false,
           "optional": false,
           "points": 0
         },
         {
-          "categories": [],
-          "completed": false,
           "id": "ex_node_elw4siv",
           "label": "Combining Gradient Accumulation and Clipping",
+          "categories": [],
+          "completed": false,
           "optional": false,
           "points": 0
         }
       ],
-      "pdf_link": "mdml/2grad_memory.md",
-      "text": ""
-    },
-    "prerequisites": [
-      "node_4ylx8i2"
-    ],
-    "title": "Gradient Manipulation & Memory Efficiency",
-    "type": "sub"
+      "pdf_link": "mdml/2grad_memory.md"
+    }
   },
   {
-    "children": [],
     "id": "node_gzeo6p0",
-    "percent": 0,
-    "popup": {
-      "exercises": [
-        {
-          "categories": [],
-          "completed": false,
-          "id": "ex_node_404jec8",
-          "label": "Enabling Automatic Mixed Precision (AMP)",
-          "optional": false,
-          "points": 0
-        },
-        {
-          "categories": [],
-          "completed": false,
-          "id": "ex_node_h3j3su4",
-          "label": "Understanding Loss Scaling",
-          "optional": false,
-          "points": 0
-        },
-        {
-          "categories": [],
-          "completed": false,
-          "id": "ex_node_ev51684",
-          "label": "Identifying Numerically Sensitive Operations",
-          "optional": false,
-          "points": 0
-        },
-        {
-          "categories": [],
-          "completed": false,
-          "id": "ex_node_0p81s5f",
-          "label": "Debugging Mixed Precision Issues",
-          "optional": false,
-          "points": 0
-        }
-      ],
-      "pdf_link": "mdml/2mixed.md",
-      "text": ""
-    },
+    "title": "Mixed-Precision Training",
+    "type": "sub",
     "prerequisites": [
       "node_int493e"
     ],
-    "title": "Mixed-Precision Training",
-    "type": "sub"
-  },
-  {
     "children": [],
-    "id": "node_63uwxwm",
-    "percent": 0,
     "popup": {
+      "text": "",
       "exercises": [
         {
+          "id": "ex_node_404jec8",
+          "label": "Enabling Automatic Mixed Precision (AMP)",
           "categories": [],
           "completed": false,
-          "id": "ex_node_a61mwyl",
-          "label": "Motivation for Distributed Training",
           "optional": false,
           "points": 0
         },
         {
+          "id": "ex_node_h3j3su4",
+          "label": "Understanding Loss Scaling",
           "categories": [],
           "completed": false,
-          "id": "ex_node_iqo5zk7",
-          "label": "Data Parallelism Workflow",
           "optional": false,
           "points": 0
         },
         {
+          "id": "ex_node_ev51684",
+          "label": "Identifying Numerically Sensitive Operations",
           "categories": [],
           "completed": false,
-          "id": "ex_node_83xf096",
-          "label": "Using Framework Data Parallel Utilities (Conceptual/Code Structure)",
           "optional": false,
           "points": 0
         },
         {
+          "id": "ex_node_0p81s5f",
+          "label": "Debugging Mixed Precision Issues",
           "categories": [],
           "completed": false,
-          "id": "ex_node_h59vkhz",
-          "label": "Model Parallelism Concepts",
-          "optional": false,
-          "points": 0
-        },
-        {
-          "categories": [],
-          "completed": false,
-          "id": "ex_node_kla7z0x",
-          "label": "Exploring Horovod",
           "optional": false,
           "points": 0
         }
       ],
-      "pdf_link": "mdml/2distr.md",
-      "text": ""
-    },
+      "pdf_link": "mdml/2mixed.md"
+    }
+  },
+  {
+    "id": "node_63uwxwm",
+    "title": "Introduction to Distributed Training Paradigms",
+    "type": "sub",
     "prerequisites": [
       "node_4ylx8i2"
     ],
-    "title": "Introduction to Distributed Training Paradigms",
-    "type": "sub"
+    "children": [],
+    "popup": {
+      "text": "",
+      "exercises": [
+        {
+          "id": "ex_node_a61mwyl",
+          "label": "Motivation for Distributed Training",
+          "categories": [],
+          "completed": false,
+          "optional": false,
+          "points": 0
+        },
+        {
+          "id": "ex_node_iqo5zk7",
+          "label": "Data Parallelism Workflow",
+          "categories": [],
+          "completed": false,
+          "optional": false,
+          "points": 0
+        },
+        {
+          "id": "ex_node_83xf096",
+          "label": "Using Framework Data Parallel Utilities (Conceptual/Code Structure)",
+          "categories": [],
+          "completed": false,
+          "optional": false,
+          "points": 0
+        },
+        {
+          "id": "ex_node_h59vkhz",
+          "label": "Model Parallelism Concepts",
+          "categories": [],
+          "completed": false,
+          "optional": false,
+          "points": 0
+        },
+        {
+          "id": "ex_node_kla7z0x",
+          "label": "Exploring Horovod",
+          "categories": [],
+          "completed": false,
+          "optional": false,
+          "points": 0
+        }
+      ],
+      "pdf_link": "mdml/2distr.md"
+    }
   },
   {
+    "id": "node_yas8uf0",
+    "title": "Convolutional Neural Networks (CNNs) Deep Dive",
+    "type": "sub",
+    "prerequisites": [
+      "node_xf36mlz"
+    ],
     "children": [
       "node_xe50udc",
       "node_aezxs8m",
       "node_5bxa39m"
     ],
-    "id": "node_yas8uf0",
-    "percent": 0,
     "popup": {
-      "exercises": [],
-      "text": ""
-    },
-    "prerequisites": [
-      "node_xf36mlz"
-    ],
-    "title": "Convolutional Neural Networks (CNNs) Deep Dive",
-    "type": "sub"
+      "text": "",
+      "exercises": []
+    }
   },
   {
+    "id": "node_xe50udc",
+    "title": "Efficient CNN Architectures",
+    "type": "sub",
+    "prerequisites": [
+      "node_yas8uf0"
+    ],
     "children": [
       "node_l7aatna"
     ],
-    "id": "node_xe50udc",
-    "percent": 0,
     "popup": {
-      "exercises": [],
-      "text": ""
-    },
-    "prerequisites": [
-      "node_yas8uf0"
-    ],
-    "title": "Efficient CNN Architectures",
-    "type": "sub"
+      "text": "",
+      "exercises": []
+    }
   },
   {
-    "children": [],
     "id": "node_l7aatna",
-    "percent": 0,
-    "popup": {
-      "exercises": [],
-      "text": ""
-    },
+    "title": "Network Design Principles",
+    "type": "sub",
     "prerequisites": [
       "node_xe50udc"
     ],
-    "title": "Network Design Principles",
-    "type": "sub"
+    "children": [],
+    "popup": {
+      "text": "",
+      "exercises": []
+    }
   },
   {
+    "id": "node_aezxs8m",
+    "title": "Residual Networks (ResNets) & Skip Connections",
+    "type": "sub",
+    "prerequisites": [
+      "node_yas8uf0"
+    ],
     "children": [
       "node_td6j4dg"
     ],
-    "id": "node_aezxs8m",
-    "percent": 0,
     "popup": {
-      "exercises": [],
-      "text": ""
-    },
-    "prerequisites": [
-      "node_yas8uf0"
-    ],
-    "title": "Residual Networks (ResNets) & Skip Connections",
-    "type": "sub"
+      "text": "",
+      "exercises": []
+    }
   },
   {
-    "children": [],
     "id": "node_td6j4dg",
-    "percent": 0,
-    "popup": {
-      "exercises": [],
-      "text": ""
-    },
+    "title": "Variants & Successors",
+    "type": "sub",
     "prerequisites": [
       "node_aezxs8m"
     ],
-    "title": "Variants & Successors",
-    "type": "sub"
+    "children": [],
+    "popup": {
+      "text": "",
+      "exercises": []
+    }
   },
   {
-    "children": [],
     "id": "node_5bxa39m",
-    "percent": 0,
-    "popup": {
-      "exercises": [],
-      "text": ""
-    },
+    "title": "Attention Mechanisms: The Foundation",
+    "type": "sub",
     "prerequisites": [
       "node_yas8uf0"
     ],
-    "title": "Attention Mechanisms: The Foundation",
-    "type": "sub"
+    "children": [],
+    "popup": {
+      "text": "",
+      "exercises": []
+    }
   },
   {
+    "id": "node_m6w21jk",
+    "title": "Fundamentals of Bayesian Inference",
+    "type": "sub",
+    "prerequisites": [
+      "node_sjsg46u"
+    ],
     "children": [
       "node_su657qt",
       "node_kpoj6oz",
       "node_urro9o9",
       "node_r90mura"
     ],
-    "id": "node_m6w21jk",
-    "percent": 0,
     "popup": {
-      "exercises": [],
-      "text": ""
-    },
-    "prerequisites": [
-      "node_sjsg46u"
-    ],
-    "title": "Fundamentals of Bayesian Inference",
-    "type": "sub"
+      "text": "",
+      "exercises": []
+    }
   },
   {
+    "id": "node_su657qt",
+    "title": "Markov Chain Monte Carlo (MCMC) Methods",
+    "type": "sub",
+    "prerequisites": [
+      "node_m6w21jk"
+    ],
     "children": [
       "node_d0lwzkx"
     ],
-    "id": "node_su657qt",
-    "percent": 0,
     "popup": {
-      "exercises": [],
-      "text": ""
-    },
-    "prerequisites": [
-      "node_m6w21jk"
-    ],
-    "title": "Markov Chain Monte Carlo (MCMC) Methods",
-    "type": "sub"
+      "text": "",
+      "exercises": []
+    }
   },
   {
-    "children": [],
     "id": "node_d0lwzkx",
-    "percent": 0,
-    "popup": {
-      "exercises": [],
-      "text": ""
-    },
+    "title": "Advanced MCMC & Diagnostics",
+    "type": "sub",
     "prerequisites": [
       "node_su657qt"
     ],
-    "title": "Advanced MCMC & Diagnostics",
-    "type": "sub"
+    "children": [],
+    "popup": {
+      "text": "",
+      "exercises": []
+    }
   },
   {
+    "id": "node_kpoj6oz",
+    "title": "Variational Inference (VI)",
+    "type": "sub",
+    "prerequisites": [
+      "node_m6w21jk"
+    ],
     "children": [
       "node_9xfy6wo"
     ],
-    "id": "node_kpoj6oz",
-    "percent": 0,
     "popup": {
-      "exercises": [],
-      "text": ""
-    },
-    "prerequisites": [
-      "node_m6w21jk"
-    ],
-    "title": "Variational Inference (VI)",
-    "type": "sub"
+      "text": "",
+      "exercises": []
+    }
   },
   {
-    "children": [],
     "id": "node_9xfy6wo",
-    "percent": 0,
-    "popup": {
-      "exercises": [],
-      "text": ""
-    },
+    "title": "VI Implementation Techniques",
+    "type": "sub",
     "prerequisites": [
       "node_kpoj6oz"
     ],
-    "title": "VI Implementation Techniques",
-    "type": "sub"
+    "children": [],
+    "popup": {
+      "text": "",
+      "exercises": []
+    }
   },
   {
-    "children": [],
     "id": "node_urro9o9",
-    "percent": 0,
-    "popup": {
-      "exercises": [],
-      "text": ""
-    },
-    "prerequisites": [
-      "node_m6w21jk"
-    ],
     "title": "Bayesian Approaches to Core ML Models",
-    "type": "sub"
-  },
-  {
-    "children": [],
-    "id": "node_r90mura",
-    "percent": 0,
-    "popup": {
-      "exercises": [],
-      "text": ""
-    },
+    "type": "sub",
     "prerequisites": [
       "node_m6w21jk"
     ],
-    "title": "Bayesian Model Checking & Selection",
-    "type": "sub"
+    "children": [],
+    "popup": {
+      "text": "",
+      "exercises": []
+    }
   },
   {
+    "id": "node_r90mura",
+    "title": "Bayesian Model Checking & Selection",
+    "type": "sub",
+    "prerequisites": [
+      "node_m6w21jk"
+    ],
+    "children": [],
+    "popup": {
+      "text": "",
+      "exercises": []
+    }
+  },
+  {
+    "id": "node_i4hwamw",
+    "title": "Robust Cross-Validation & Leakage Detection",
+    "type": "sub",
+    "prerequisites": [
+      "node_sm10pzt"
+    ],
     "children": [
       "node_negctiu",
       "node_dhc1y84",
       "node_feu8oy5"
     ],
-    "id": "node_i4hwamw",
-    "percent": 0,
     "popup": {
-      "exercises": [],
-      "text": ""
-    },
-    "prerequisites": [
-      "node_sm10pzt"
-    ],
-    "title": "Robust Cross-Validation & Leakage Detection",
-    "type": "sub"
+      "text": "",
+      "exercises": []
+    }
   },
   {
+    "id": "node_negctiu",
+    "title": "Advanced Feature Engineering Techniques",
+    "type": "sub",
+    "prerequisites": [
+      "node_i4hwamw"
+    ],
     "children": [
       "node_e65i5n6"
     ],
-    "id": "node_negctiu",
-    "percent": 0,
     "popup": {
-      "exercises": [],
-      "text": ""
-    },
-    "prerequisites": [
-      "node_i4hwamw"
-    ],
-    "title": "Advanced Feature Engineering Techniques",
-    "type": "sub"
+      "text": "",
+      "exercises": []
+    }
   },
   {
-    "children": [],
     "id": "node_e65i5n6",
-    "percent": 0,
-    "popup": {
-      "exercises": [],
-      "text": ""
-    },
+    "title": "Feature Engineering for Specific Data Types",
+    "type": "sub",
     "prerequisites": [
       "node_negctiu"
     ],
-    "title": "Feature Engineering for Specific Data Types",
-    "type": "sub"
+    "children": [],
+    "popup": {
+      "text": "",
+      "exercises": []
+    }
   },
   {
-    "children": [],
     "id": "node_dhc1y84",
-    "percent": 0,
-    "popup": {
-      "exercises": [],
-      "text": ""
-    },
+    "title": "Hyperparameter Optimization Strategies",
+    "type": "sub",
     "prerequisites": [
       "node_i4hwamw"
     ],
-    "title": "Hyperparameter Optimization Strategies",
-    "type": "sub"
+    "children": [],
+    "popup": {
+      "text": "",
+      "exercises": []
+    }
   },
   {
+    "id": "node_feu8oy5",
+    "title": "Ensemble Methods: Bagging & Boosting Deep Dive",
+    "type": "sub",
+    "prerequisites": [
+      "node_i4hwamw"
+    ],
     "children": [
       "node_tgc6i5f"
     ],
-    "id": "node_feu8oy5",
-    "percent": 0,
     "popup": {
-      "exercises": [],
-      "text": ""
-    },
-    "prerequisites": [
-      "node_i4hwamw"
-    ],
-    "title": "Ensemble Methods: Bagging & Boosting Deep Dive",
-    "type": "sub"
+      "text": "",
+      "exercises": []
+    }
   },
   {
-    "children": [
-      "node_rxftkpc"
-    ],
     "id": "node_tgc6i5f",
-    "percent": 0,
-    "popup": {
-      "exercises": [],
-      "text": ""
-    },
+    "title": "Ensemble Methods: Stacking & Blending",
+    "type": "sub",
     "prerequisites": [
       "node_feu8oy5"
     ],
-    "title": "Ensemble Methods: Stacking & Blending",
-    "type": "sub"
+    "children": [
+      "node_rxftkpc"
+    ],
+    "popup": {
+      "text": "",
+      "exercises": []
+    }
   },
   {
-    "children": [],
     "id": "node_rxftkpc",
-    "percent": 0,
-    "popup": {
-      "exercises": [],
-      "text": ""
-    },
+    "title": "Post-Processing & Platform Strategies",
+    "type": "sub",
     "prerequisites": [
       "node_tgc6i5f"
     ],
-    "title": "Post-Processing & Platform Strategies",
-    "type": "sub"
-  },
-  {
     "children": [],
-    "id": "Start",
-    "percent": 100,
     "popup": {
-      "exercises": [],
-      "text": "Start."
-    },
-    "prerequisites": [],
-    "title": "Start",
-    "type": "start"
+      "text": "",
+      "exercises": []
+    }
   }
 ]

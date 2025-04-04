@@ -1,10 +1,17 @@
-export function initModal(nodes, unlocked) {
+const urlParams = new URLSearchParams(window.location.search);
+let selectedGraph = urlParams.get('graph') || 'x'; // Get from URL or default to 'x'
+// Basic validation
+if (!['x', 'y'].includes(selectedGraph)) { // Add other valid graph codes here (e.g., 'z')
+    selectedGraph = 'x';
+}
+console.log(`Loading graph: ${selectedGraph}.json`);
 
+export function initModal(nodes, unlocked) {
   // Use D3 to handle node clicks consistently
   d3.selectAll("g.node")
     .on("click", function(event, d) {
       // Fetch fresh data to check lock status
-      fetch('/data').then(res => {
+      fetch(`/data?graph=${selectedGraph}`).then(res => {
            if (!res.ok) throw new Error(`HTTP error checking lock status! Status: ${res.status}`);
            return res.json();
           })
@@ -116,7 +123,7 @@ export function initModal(nodes, unlocked) {
 
 
                       // Fetch current state, update notes, POST back
-                      fetch('/data')
+                      fetch(`/data?graph=${selectedGraph}`)
                           .then(res => { if (!res.ok) throw new Error(`HTTP error! Status: ${res.status}`); return res.json(); })
                           .then(currentState => {
                               const nodeToUpdate = currentState.nodes.find(n => n.id === currentNodeId);
@@ -127,7 +134,7 @@ export function initModal(nodes, unlocked) {
                                   nodeToUpdate.popup.userNotes = currentNotes;
 
                                   // Send the ENTIRE updated nodes list back
-                                  return fetch('/data', {
+                                  return fetch(`/data?graph=${selectedGraph}`, {
                                       method: 'POST',
                                       headers: { 'Content-Type': 'application/json' },
                                       body: JSON.stringify(currentState.nodes)
@@ -173,13 +180,13 @@ function handleCheckboxChange(event) {
 
   console.log(`Checkbox change: Node ${nodeId}, Index ${exerciseIndex}, Completed: ${isCompleted}`);
 
-  fetch('/data')
+  fetch(`/data?graph=${selectedGraph}`)
     .then(res => { if (!res.ok) throw new Error(`HTTP error! Status: ${res.status}`); return res.json(); })
     .then(currentState => {
       const nodeToUpdate = currentState.nodes.find(n => n.id === nodeId);
       if (nodeToUpdate?.popup?.exercises?.[exerciseIndex]) {
         nodeToUpdate.popup.exercises[exerciseIndex].completed = isCompleted;
-        return fetch('/data', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(currentState.nodes) });
+        return fetch(`/data?graph=${selectedGraph}`, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(currentState.nodes) });
       } else { throw new Error(`Node or exercise not found for update: Node ${nodeId}, Index ${exerciseIndex}`); }
     })
     .then(res => { if (!res.ok) throw new Error(`POST error! Status: ${res.status}`); return res.json(); })

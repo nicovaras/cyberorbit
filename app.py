@@ -149,10 +149,18 @@ def static_files(path):
 
 
 @app.route("/md/<path:filename>")
-def serve_markdown(filename):
+def serve_markdown_md(filename):
+    return serve_markdown(filename, "md")
+
+@app.route("/mdml/<path:filename>")
+def serve_markdown_mdml(filename):
+    return serve_markdown(filename, "mdml")
+
+
+def serve_markdown(filename, folder):
     """Serves markdown files from the static/md directory rendered as HTML."""
     # Define the directory where markdown files are stored, relative to app's root path
-    markdown_dir = os.path.join(app.root_path, app.static_folder, "md")
+    markdown_dir = os.path.join(app.root_path, app.static_folder, folder)
     try:
         # Securely join the directory and filename
         filepath = safe_join(markdown_dir, filename)
