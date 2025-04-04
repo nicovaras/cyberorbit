@@ -1,0 +1,259 @@
+[
+  {
+    "id": "node_5kk0017",
+    "title": "Advanced Model Evaluation & Selection",
+    "type": "main",
+    "prerequisites": [],
+    "children": [
+      "node_yyqhaal"
+    ],
+    "popup": {
+      "text": "",
+      "exercises": []
+    }
+  },
+  {
+    "id": "node_yyqhaal",
+    "title": "Optimization Techniques for Large Models",
+    "type": "main",
+    "prerequisites": [
+      "node_5kk0017"
+    ],
+    "children": [
+      "node_xf36mlz",
+      "node_sjsg46u"
+    ],
+    "popup": {
+      "text": "",
+      "exercises": []
+    }
+  },
+  {
+    "id": "node_xf36mlz",
+    "title": "Advanced Deep Learning Architectures",
+    "type": "main",
+    "prerequisites": [
+      "node_yyqhaal"
+    ],
+    "children": [
+      "node_zyda767",
+      "node_5r90sg2",
+      "node_t62yr5c",
+      "node_7svex7t",
+      "node_w1chp9g",
+      "node_thw0zy1",
+      "node_0ials3f",
+      "node_7fh05h0",
+      "node_2s691zj"
+    ],
+    "popup": {
+      "text": "",
+      "exercises": []
+    }
+  },
+  {
+    "id": "node_zyda767",
+    "title": "Generative Adversarial Networks (GANs)",
+    "type": "main",
+    "prerequisites": [
+      "node_xf36mlz"
+    ],
+    "children": [],
+    "popup": {
+      "text": "",
+      "exercises": []
+    }
+  },
+  {
+    "id": "node_5r90sg2",
+    "title": "Advanced NLP with Transformers",
+    "type": "main",
+    "prerequisites": [
+      "node_xf36mlz"
+    ],
+    "children": [],
+    "popup": {
+      "text": "",
+      "exercises": []
+    }
+  },
+  {
+    "id": "node_t62yr5c",
+    "title": "Advanced Computer Vision",
+    "type": "main",
+    "prerequisites": [
+      "node_xf36mlz"
+    ],
+    "children": [],
+    "popup": {
+      "text": "",
+      "exercises": []
+    }
+  },
+  {
+    "id": "node_7svex7t",
+    "title": "Self-Supervised Learning",
+    "type": "main",
+    "prerequisites": [
+      "node_xf36mlz"
+    ],
+    "children": [],
+    "popup": {
+      "text": "",
+      "exercises": []
+    }
+  },
+  {
+    "id": "node_w1chp9g",
+    "title": "Probabilistic Deep Learning",
+    "type": "main",
+    "prerequisites": [
+      "node_xf36mlz"
+    ],
+    "children": [],
+    "popup": {
+      "text": "",
+      "exercises": []
+    }
+  },
+  {
+    "id": "node_thw0zy1",
+    "title": "Reinforcement Learning",
+    "type": "main",
+    "prerequisites": [
+      "node_xf36mlz"
+    ],
+    "children": [],
+    "popup": {
+      "text": "",
+      "exercises": []
+    }
+  },
+  {
+    "id": "node_0ials3f",
+    "title": "Graph Neural Networks (GNNs)",
+    "type": "main",
+    "prerequisites": [
+      "node_xf36mlz"
+    ],
+    "children": [],
+    "popup": {
+      "text": "",
+      "exercises": []
+    }
+  },
+  {
+    "id": "node_7fh05h0",
+    "title": "Time Series Analysis at Scale",
+    "type": "main",
+    "prerequisites": [
+      "node_xf36mlz"
+    ],
+    "children": [],
+    "popup": {
+      "text": "",
+      "exercises": []
+    }
+  },
+  {
+    "id": "node_2s691zj",
+    "title": "Recommender Systems at Scale",
+    "type": "main",
+    "prerequisites": [
+      "node_xf36mlz"
+    ],
+    "children": [
+      "node_q8ktu96"
+    ],
+    "popup": {
+      "text": "",
+      "exercises": []
+    }
+  },
+  {
+    "id": "node_q8ktu96",
+    "title": "Explainable AI (XAI) & Interpretability",
+    "type": "main",
+    "prerequisites": [
+      "node_2s691zj"
+    ],
+    "children": [
+      "node_062xmcx"
+    ],
+    "popup": {
+      "text": "",
+      "exercises": []
+    }
+  },
+  {
+    "id": "node_062xmcx",
+    "title": "MLOps: Production ML Pipelines & Monitoring",
+    "type": "main",
+    "prerequisites": [
+      "node_q8ktu96"
+    ],
+    "children": [
+      "node_r64y9m9"
+    ],
+    "popup": {
+      "text": "",
+      "exercises": []
+    }
+  },
+  {
+    "id": "node_r64y9m9",
+    "title": "Data Science for Business Impact",
+    "type": "main",
+    "prerequisites": [
+      "node_062xmcx"
+    ],
+    "children": [
+      "node_vcs3smc"
+    ],
+    "popup": {
+      "text": "",
+      "exercises": []
+    }
+  },
+  {
+    "id": "node_vcs3smc",
+    "title": "Strategic ML Leadership & Career Progression",
+    "type": "main",
+    "prerequisites": [
+      "node_r64y9m9"
+    ],
+    "children": [],
+    "popup": {
+      "text": "",
+      "exercises": []
+    }
+  },
+  {
+    "id": "node_sjsg46u",
+    "title": "Bayesian Machine Learning",
+    "type": "main",
+    "prerequisites": [
+      "node_yyqhaal"
+    ],
+    "children": [
+      "node_5vp1hl2"
+    ],
+    "popup": {
+      "text": "",
+      "exercises": []
+    }
+  },
+  {
+    "id": "node_5vp1hl2",
+    "title": "Causal Inference for Machine Learning",
+    "type": "main",
+    "prerequisites": [
+      "node_sjsg46u"
+    ],
+    "children": [],
+    "popup": {
+      "text": "",
+      "exercises": []
+    }
+  }
+]

@@ -1,61 +1,128 @@
 # tests/test_data.py
 import json
+import os
 import pytest
+# Import the functions to test
 from core.data import load_data, save_data
-from core.s3sync import sync_up, sync_down # Import mocked functions
 
-# Mock s3 interactions (though already mocked in conftest)
+# Mock s3 interactions - Applying universally to all tests in this file
 @pytest.fixture(autouse=True)
 def mock_s3(mocker):
+    """Mocks s3 sync functions and os.makedirs for all tests in this module."""
     mocker.patch('core.data.sync_down', return_value=None)
     mocker.patch('core.data.sync_up', return_value=None)
+    mocker.patch('os.makedirs', return_value=None) # Prevent creating real 'json' dir
 
-def test_load_data(manage_test_json_files):
-    """Test loading data from the temporary JSON file."""
-    data = load_data()
-    assert isinstance(data, list)
-    assert len(data) > 0
-    assert data[0]['id'] == "n_test_1"
-    # Check if sync_down was called (implicitly tested by mock)
+def test_load_data_success(tmp_path, mocker):
+    """Test loading data successfully from a temporary JSON file."""
+    json_dir = tmp_path / "json"
+    # <<< Use exist_ok=True >>>
+    json_dir.mkdir(parents=True, exist_ok=True)
+    test_file = json_dir / "x.json"
+    test_data = [{"id": "n_test_1", "title": "Test Node 1"}]
+    test_file.write_text(json.dumps(test_data))
 
-def test_save_data(manage_test_json_files):
-    """Test saving data to the temporary JSON file."""
-    file_path = manage_test_json_files["x.json"]
-    original_data = load_data()
-    new_node = {"id": "n_test_new", "title": "New Test Node", "type": "main", "percent": 0, "popup": {}, "children": [], "prerequisites": []}
-    original_data.append(new_node)
+    mocker.patch('os.path.join', return_value=str(test_file))
 
-    save_data(original_data)
+    data = load_data("x.json")
+    assert data == test_data
+    # core.data.sync_down.assert_called_once_with(str(test_file)) # Optional check
 
-    # Verify file content directly
-    with open(file_path, 'r') as f:
-        saved_data_raw = json.load(f)
+def test_save_data_updates_file(tmp_path, mocker):
+    """Test saving data updates the temporary JSON file."""
+    json_dir = tmp_path / "json"
+    # <<< Use exist_ok=True >>>
+    json_dir.mkdir(parents=True, exist_ok=True)
+    test_file = json_dir / "x.json"
+    initial_data = [{"id": "n_orig_1", "title": "Original"}]
+    test_file.write_text(json.dumps(initial_data))
 
-    assert isinstance(saved_data_raw, list)
-    assert len(saved_data_raw) == len(original_data)
-    assert any(node['id'] == "n_test_new" for node in saved_data_raw)
-    # Check if sync_up was called (implicitly tested by mock)
+    mocker.patch('os.path.join', return_value=str(test_file))
 
-def test_load_data_file_not_found(mocker, tmp_path):
-    """Test load_data behavior when the file doesn't exist initially."""
-    # Ensure sync_down doesn't create the file if it fails
-    mocker.patch('core.data.sync_down', side_effect=FileNotFoundError)
-    # Point to a non-existent file within tmp_path
-    non_existent_path = tmp_path / "non_existent.json"
-    mocker.patch('core.data.JSON_PATH', str(non_existent_path))
+    data_to_modify = load_data("x.json")
+    new_node = {"id": "n_new_1", "title": "New Node"}
+    data_to_modify.append(new_node)
+    save_data(data_to_modify, "x.json")
 
-    with pytest.raises(FileNotFoundError):
-        load_data()
+    saved_data_raw = json.loads(test_file.read_text())
+    assert saved_data_raw == data_to_modify
+    assert any(node['id'] == "n_new_1" for node in saved_data_raw)
+    # core.data.sync_up.assert_called_once_with(str(test_file)) # Optional check
 
-def test_save_data_creates_file(manage_test_json_files, tmp_path):
+def test_load_data_file_not_found(tmp_path, mocker):
+    """Test load_data returns empty list when the file doesn't exist."""
+    json_dir = tmp_path / "json"
+    # Directory might not exist, file definitely won't
+    test_file = json_dir / "nonexistent.json"
+
+    mocker.patch('os.path.join', return_value=str(test_file))
+    mocker.patch('core.data.sync_down', return_value=None)
+
+    data = load_data("nonexistent.json")
+    assert data == []
+
+def test_load_data_invalid_json(tmp_path, mocker):
+    """Test load_data returns empty list for invalid JSON."""
+    json_dir = tmp_path / "json"
+    # <<< Use exist_ok=True >>>
+    json_dir.mkdir(parents=True, exist_ok=True)
+    test_file = json_dir / "bad.json"
+    test_file.write_text("this is not json {") # Make it invalid
+
+    mocker.patch('os.path.join', return_value=str(test_file))
+
+    data = load_data("bad.json")
+    assert data == []
+
+
+def test_save_data_creates_file(tmp_path, mocker):
     """Test that save_data creates the file if it doesn't exist."""
-    new_file_path = tmp_path / "json" / "new_x.json"
-    pytest.importorskip('core.data').JSON_PATH = str(new_file_path) # Override path
+    json_dir = tmp_path / "json"
+    # <<< Create directory explicitly >>>
+    json_dir.mkdir(parents=True, exist_ok=True)
+    test_file = json_dir / "new_save.json"
 
-    test_data = [{"id": "only_node"}]
-    save_data(test_data)
+    mocker.patch('os.path.join', return_value=str(test_file))
+    # os.makedirs mock is handled by the fixture
 
-    assert new_file_path.exists()
-    with open(new_file_path, 'r') as f:
-        content = json.load(f)
+    test_data = [{"id": "created_node"}]
+    save_data(test_data, "new_save.json")
+
+    assert test_file.exists()
+    content = json.loads(test_file.read_text())
     assert content == test_data
+    # core.data.sync_up.assert_called_once_with(str(test_file)) # Optional check
+
+def test_load_data_uses_filename(tmp_path, mocker):
+    """Test that load_data loads 'y.json' when specified."""
+    json_dir = tmp_path / "json"
+    # <<< Use exist_ok=True >>>
+    json_dir.mkdir(parents=True, exist_ok=True)
+    x_file = json_dir / "x.json"
+    y_file = json_dir / "y.json"
+
+    x_data = [{"id": "node_x"}]
+    y_data = [{"id": "node_y"}]
+
+    x_file.write_text(json.dumps(x_data))
+    y_file.write_text(json.dumps(y_data))
+
+    # Mock os.path.join to return the correct temp path based on input filename
+    def side_effect_join(*args):
+        # args should be (JSON_DIR, filename) -> ('json', 'y.json') etc.
+        # Use the mocked JSON_DIR logic if needed, or simplify if path is consistent
+        base_dir = tmp_path / "json" # Use the tmp_path json dir
+        filename = args[-1]
+        return str(base_dir / filename)
+
+    mocker.patch('os.path.join', side_effect=side_effect_join)
+
+    # Load 'y.json'
+    data = load_data("y.json")
+    assert data == y_data
+
+    # Load default ('x.json')
+    data_x = load_data("x.json")
+    assert data_x == x_data
+    data_default = load_data() # Test default loads x.json via side effect logic
+    assert data_default == x_data

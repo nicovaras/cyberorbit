@@ -1,5 +1,5 @@
 // Import necessary functions
-import { initGraph, updateGraph } from './graph.js'; // Import both init and update
+import { initGraph, updateGraph } from './graph.js';
 import { initModal } from './modal.js';
 import { handleBadges, renderBadgeGallery } from './badges.js';
 import { setupCtfHandlers } from './ctf.js';
@@ -7,14 +7,18 @@ import { updateSidebar, renderOrUpdateHexChart } from './sidebar.js';
 
 // --- Global state (within module scope) ---
 let currentAppState = {
-    nodes: [],
-    links: [],
-    unlocked: {},
-    discovered: new Set(),
-    streak: {},
-    ctfs: [],
-    badges: []
+    nodes: [], links: [], unlocked: {}, discovered: new Set(),
+    streak: {}, ctfs: [], badges: [], current_graph: 'x.json' // <<< Default graph
 };
+
+const urlParams = new URLSearchParams(window.location.search);
+let selectedGraph = urlParams.get('graph') || 'x'; // Get from URL or default to 'x'
+// Basic validation
+if (!['x', 'y'].includes(selectedGraph)) { // Add other valid graph codes here (e.g., 'z')
+    selectedGraph = 'x';
+}
+console.log(`Loading graph: ${selectedGraph}.json`);
+
 function calculateAbilities(nodes, ctfs) {
   const abilities = {
       "Scripting and Automation": 0, "System Analysis": 0, "CTFs": 0,
@@ -80,7 +84,7 @@ function updateUI(newState, discoveredNodes) {
 
 
 // --- Fetch Initial Data and Initialize ---
-fetch('/data')
+fetch(`/data?graph=${selectedGraph}`)
   .then(res => {
     if (!res.ok) {
       throw new Error(`HTTP error! status: ${res.status}`);
@@ -115,6 +119,11 @@ fetch('/data')
     handleBadges(currentAppState.badges);
     renderBadgeGallery(currentAppState.badges);
     setupCtfHandlers(currentAppState.ctfs); // Sets up window.updateCtf
+    
+    const graphSelector = document.getElementById('graphSelector');
+    if (graphSelector) {
+        graphSelector.value = selectedGraph; // Set dropdown to reflect loaded graph
+    }
 
     // --- Add Global Event Listener for Data Updates ---
     document.addEventListener('appDataUpdated', (event) => {
@@ -124,7 +133,12 @@ fetch('/data')
         } else {
              console.warn("'appDataUpdated' event received without detail (newState).");
              // Optionally re-fetch data as a fallback
-             // fetch('/data').then(res => res.json()).then(updateUI);
+             // fetch('/data')
+             // .then(res => res.json()).then(updateUI);
+        }
+        if (graphSelector && event.detail?.current_graph) {
+            const graphName = event.detail.current_graph.replace('.json', '');
+            graphSelector.value = graphName;
         }
     });
 
@@ -161,6 +175,19 @@ if (toggleSidebarButton && sidebarElement) {
     });
 } else { console.warn("Sidebar elements not found."); }
 
+const graphSelector = document.getElementById('graphSelector');
+if (graphSelector) {
+    graphSelector.addEventListener('change', (event) => {
+        const newGraphValue = event.target.value;
+        console.log(`Graph selection changed to: ${newGraphValue}`);
+        // Construct the new URL and reload the page
+        const currentUrl = new URL(window.location.href);
+        currentUrl.searchParams.set('graph', newGraphValue); // Set or update the 'graph' parameter
+        window.location.href = currentUrl.toString(); // Reload page with new URL
+    });
+} else {
+    console.warn("Graph selector element (#graphSelector) not found.");
+}
 
 // --- Theme Selector Logic ---
 document.addEventListener('DOMContentLoaded', () => {

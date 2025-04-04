@@ -1,10 +1,12 @@
 from flask import Flask, jsonify, request, send_from_directory, render_template_string, abort
-from werkzeug.utils import safe_join 
+from werkzeug.utils import safe_join
+# Ensure load_data and save_data are imported correctly if they are not already
 from core.data import load_data, save_data
 from core.streak import update_streak
 from core.ctfs import load_ctfs, save_ctfs
 from core.badges import check_and_award_badges, load_badges, save_badges
-from core.nodes import compute_node_states, compute_abilities, compute_discovered_nodes
+from core.nodes import compute_node_states # Make sure compute_node_states is imported
+from core.nodes import compute_abilities, compute_discovered_nodes
 import markdown
 import os
 from markupsafe import Markup
@@ -32,30 +34,45 @@ except FileNotFoundError:
     print(f"Error: index.html not found at {index_path}. Serving basic error page.")
 
 # --- Helper function to get the full computed state ---
-def get_computed_state():
-    """Loads all data, computes derived states, and returns the full state object."""
+def get_computed_state(graph_filename="x.json"):
+    """Loads all data for the SPECIFIED graph, computes derived states, and returns the full state object."""
     try:
-        data = load_data() # Load nodes data (x.json)
-        nodes, links, unlocked = compute_node_states(data)
-        streak = update_streak() # Update and load streak
-        ctfs = load_ctfs() # Load CTFs
-        abilities = compute_abilities(data, ctfs)
-        badges = load_badges() # Load current badges
+        # <<< Pass filename to load_data >>>
+        data = load_data(graph_filename) # Load specified nodes data
+        if not data: # Handle case where data file is empty or missing
+             print(f"Warning: No data loaded from {graph_filename}, returning empty state.")
+             return {
+                 "nodes": [], "links": [], "unlocked": {}, "discovered": [],
+                 "streak": {}, "ctfs": [], "abilities": {}, "badges": []
+             }
+    
+        # Compute states based on the loaded data
+        nodes, links, unlocked = compute_node_states(data) # compute_node_states uses the data passed in
+
+        # Other computations remain the same (streak, ctfs, badges are likely global)
+        streak = update_streak()
+        ctfs = load_ctfs()
+        abilities = compute_abilities(nodes, ctfs) # Use computed nodes
+        badges = load_badges()
         updated_badges = check_and_award_badges(nodes, ctfs, streak, badges)
         if badges != updated_badges:
              save_badges(updated_badges)
              badges = updated_badges
         discovered = compute_discovered_nodes(unlocked, links)
+
+        # Include the current graph filename in the state for the frontend
         return {
             "nodes": nodes, "links": links, "unlocked": unlocked,
             "discovered": list(discovered), "streak": streak, "ctfs": ctfs,
-            "abilities": abilities, "badges": badges
+            "abilities": abilities, "badges": badges,
+            "current_graph": graph_filename # <<< Add current graph info
         }
     except Exception as e:
-        print(f"Error computing application state: {e}")
+        print(f"Error computing application state for {graph_filename}: {e}")
+        # Consider more specific error handling if needed
         return { # Return empty state on error
              "nodes": [], "links": [], "unlocked": {}, "discovered": [],
-             "streak": {}, "ctfs": [], "abilities": {}, "badges": []
+             "streak": {}, "ctfs": [], "abilities": {}, "badges": [], "current_graph": graph_filename
         }
 
 # --- Routes ---
@@ -63,24 +80,41 @@ def get_computed_state():
 @app.route("/")
 def index():
     """Serves the main index.html page."""
+    # No change needed here if using query parameters for graph selection
     return render_template_string(INDEX_HTML)
 
 @app.route("/data", methods=["GET"])
 def get_data():
-    """Handles initial data load request from frontend."""
-    state = get_computed_state()
+    """Handles initial data load request from frontend, selecting graph via query param."""
+    # <<< Get graph selection from query parameter >>>
+    selected_graph = request.args.get('graph', 'x') # Default to 'x'
+    graph_filename = f"{selected_graph}.json"
+    if graph_filename not in ["x.json", "y.json"]: # Validate
+         graph_filename = "x.json"
+
+    # <<< Pass filename to state computation >>>
+    state = get_computed_state(graph_filename)
     return jsonify(state)
 
 @app.route("/data", methods=["POST"])
 def post_data():
-    """Handles updates to the main node data (e.g., exercise completion)."""
+    """Handles updates to the main node data (e.g., exercise completion) for the specified graph."""
+    # <<< Get graph selection from query parameter >>>
+    selected_graph = request.args.get('graph', 'x') # Default to 'x'
+    graph_filename = f"{selected_graph}.json"
+    if graph_filename not in ["x.json", "y.json"]: # Validate
+         graph_filename = "x.json"
+
     try:
-        save_data(request.json)
-        updated_state = get_computed_state()
+        # <<< Pass filename to save_data >>>
+        save_data(request.json, graph_filename) # Save nodes data to the correct file
+        # <<< Pass filename to state computation >>>
+        updated_state = get_computed_state(graph_filename) # Recompute state for the saved graph
         return jsonify(updated_state)
     except Exception as e:
-        print(f"Error processing POST /data: {e}")
+        print(f"Error processing POST /data for {graph_filename}: {e}")
         return jsonify({"error": "Failed to process node data update", "details": str(e)}), 500
+
 
 @app.route("/ctfs", methods=["POST"])
 def post_ctfs():
