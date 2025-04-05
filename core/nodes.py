@@ -1,12 +1,12 @@
-# cyberorbit/core/nodes.py
+
 import collections
-from models import db, Node, NodeRelationship, UserNodeStatus, UserExerciseCompletion, Exercise # Import necessary models
-from core import data as core_data # Still needed for update_user_node_status_bulk
-from core.utils import build_child_map # Keep utility if still needed
+from models import db, Node, NodeRelationship, UserNodeStatus, UserExerciseCompletion, Exercise 
+from core import data as core_data 
+from core.utils import build_child_map 
 
 UNLOCK_PERCENT = 50
 
-# --- Refactored User-Specific State Computation ---
+
 
 def compute_user_graph_state(user_id, graph_id, static_nodes_list, static_links_list, user_node_status_map, completed_exercise_ids):
     """
@@ -34,9 +34,9 @@ def compute_user_graph_state(user_id, graph_id, static_nodes_list, static_links_
             print(f"Warning: No static nodes provided for graph_id {graph_id}")
             return [], [], {}, set()
 
-        # Build helper maps from static data
+        
         static_node_map = {node['id']: node for node in static_nodes_list}
-        # Build parent/prereq maps from relationships
+        
         child_map = collections.defaultdict(list)
         prereq_map = collections.defaultdict(list)
         node_parents = collections.defaultdict(list)
@@ -47,17 +47,17 @@ def compute_user_graph_state(user_id, graph_id, static_nodes_list, static_links_
             elif link['type'] == 'PREREQUISITE':
                 prereq_map[link['target']].append(link['source'])
 
-        # Add Start node conceptually for calculations
+        
         static_node_map["Start"] = {"id": "Start", "type": "start", "title": "Start"}
-        # User status map already fetched, add Start conceptually if needed
-        # (Ensure Start node handling doesn't rely on DB UserNodeStatus)
+        
+        
 
-        # --- 1. Calculate user-specific percentages ---
-        node_percentages = {} # node_id -> calculated percentage for this user
+        
+        node_percentages = {} 
 
-        # Calculate sub-node percentages using provided completed_exercise_ids
+        
         for node_id, node_data in static_node_map.items():
-            if node_data.get('type') == 'sub': # Check type safely
+            if node_data.get('type') == 'sub': 
                 exercises = node_data.get('popup', {}).get('exercises', [])
                 total_exercises = len(exercises)
                 if total_exercises == 0:
@@ -66,10 +66,10 @@ def compute_user_graph_state(user_id, graph_id, static_nodes_list, static_links_
                     completed_count = sum(1 for ex in exercises if ex['id'] in completed_exercise_ids)
                     node_percentages[node_id] = round((completed_count / total_exercises) * 100)
 
-        # Calculate main-node percentages using calculated sub-node percentages
+        
         for node_id, node_data in static_node_map.items():
              if node_data.get('type') == 'main':
-                # ... (BFS logic for main node percentage calculation remains the same, using node_percentages map) ...
+                
                 total_percent_sum = 0; sub_node_count = 0
                 queue = collections.deque(child_map.get(node_id, [])); visited_in_calc = {node_id}
                 while queue:
@@ -87,14 +87,14 @@ def compute_user_graph_state(user_id, graph_id, static_nodes_list, static_links_
                 node_percentages[node_id] = round(total_percent_sum / sub_node_count) if sub_node_count else 0
 
 
-        # --- 2. Determine user-specific unlocked status iteratively ---
+        
         unlocked_map = {"Start": True}
         changed_in_pass = True
         max_passes = len(static_node_map) + 1
         current_pass = 0
 
         while changed_in_pass and current_pass < max_passes:
-             # ... (Unlock logic from previous step, using node_percentages map) ...
+             
             changed_in_pass = False; current_pass += 1
             for node_id, node_data in static_node_map.items():
                 if node_id == "Start": continue
@@ -123,25 +123,25 @@ def compute_user_graph_state(user_id, graph_id, static_nodes_list, static_links_
                     new_status = parents_unlocked and prereqs_ok_for_sub
 
                 if new_status != current_status: unlocked_map[node_id] = new_status; changed_in_pass = True
-            # Check for stabilization failure
+            
             if current_pass == max_passes and changed_in_pass: print(f"Warning: User {user_id} unlock status did not stabilize.")
 
 
-        # --- 3. Determine user-specific discovered status ---
-        # Use the provided static_links_list (contains all relationship types)
+        
+        
         discovered_ids = compute_discovered_nodes(unlocked_map, static_links_list)
 
-        # --- 4. Prepare & execute DB updates for node status ---
+        
         node_status_updates = {}
         for node_id in static_node_map:
             if node_id == "Start": continue
 
-            current_db_status = user_node_status_map.get(node_id) # Use map passed as arg
+            current_db_status = user_node_status_map.get(node_id) 
             new_percent = node_percentages.get(node_id, 0)
             new_unlocked = unlocked_map.get(node_id, False)
             new_discovered = node_id in discovered_ids
 
-            # Check if an update is needed compared to the status fetched at the start
+            
             needs_update = False
             if not current_db_status: needs_update = True
             elif (current_db_status.percent_complete != new_percent or
@@ -156,30 +156,30 @@ def compute_user_graph_state(user_id, graph_id, static_nodes_list, static_links_
                     'discovered': new_discovered
                  }
 
-        # Bulk update user node status in DB if changes occurred
+        
         if node_status_updates:
              print(f"Updating node statuses for user {user_id}: {node_status_updates}")
              update_success = core_data.update_user_node_status_bulk(user_id, node_status_updates)
              if not update_success:
                  print(f"ERROR: Failed to update node statuses for user {user_id}")
-             # Refresh user_node_status_map locally *after* update for consistent return value
-             # This requires another DB call, alternatively update the local map directly
+             
+             
              user_node_status_map, _ = core_data.get_user_progress(user_id, graph_id)
 
 
-        # --- 5. Format the final state for the frontend ---
+        
         final_nodes = []
-        final_links = [] # Links based only on CHILD relationships for graph drawing
+        final_links = [] 
 
-        # Use the static_nodes_list passed in, includes exercise structure
+        
         all_nodes_to_process = list(static_nodes_list)
-        all_nodes_to_process.append(static_node_map["Start"]) # Add Start node
+        all_nodes_to_process.append(static_node_map["Start"]) 
 
         for node_data in all_nodes_to_process:
             node_id = node_data['id']
-            user_status = user_node_status_map.get(node_id) # Use potentially updated map
+            user_status = user_node_status_map.get(node_id) 
 
-            # Node status values from computed maps/sets or defaults
+            
             percent = node_percentages.get(node_id, 0) if node_id != "Start" else 100
             notes = user_status.user_notes if user_status else ''
             is_unlocked = unlocked_map.get(node_id, False)
@@ -188,13 +188,13 @@ def compute_user_graph_state(user_id, graph_id, static_nodes_list, static_links_
             final_node = {
                 'id': node_id, 'title': node_data['title'], 'type': node_data.get('type','sub'),
                 'percent': percent,
-                'unlocked': is_unlocked,     # Include computed unlock status
-                'discovered': is_discovered, # Include computed discovered status
+                'unlocked': is_unlocked,     
+                'discovered': is_discovered, 
                 'popup': {
                     'text': node_data.get('popup',{}).get('text',''),
                     'pdf_link': node_data.get('popup',{}).get('pdf_link',''),
                     'userNotes': notes,
-                    'exercises': [ # Add user completion status
+                    'exercises': [ 
                         {**ex, 'completed': ex['id'] in completed_exercise_ids}
                         for ex in node_data.get('popup', {}).get('exercises', [])
                     ]
@@ -202,15 +202,15 @@ def compute_user_graph_state(user_id, graph_id, static_nodes_list, static_links_
             }
             final_nodes.append(final_node)
 
-        # Format links for d3 (only CHILD type) using provided static_links_list
+        
         for link in static_links_list:
             if link['type'] == 'CHILD':
                 final_links.append({'source': link['source'], 'target': link['target']})
 
-        # Add links from Start (ensure root node calculation is robust if needed)
+        
         root_nodes = {n['id'] for n in static_nodes_list if not node_parents.get(n['id']) and not prereq_map.get(n['id'])}
         for root_id in root_nodes: final_links.append({'source': 'Start', 'target': root_id})
-        final_links = [dict(t) for t in {tuple(d.items()) for d in final_links}] # De-duplicate
+        final_links = [dict(t) for t in {tuple(d.items()) for d in final_links}] 
 
 
         return final_nodes, final_links, unlocked_map, discovered_ids
@@ -218,21 +218,21 @@ def compute_user_graph_state(user_id, graph_id, static_nodes_list, static_links_
     except Exception as e:
         print(f"Error computing user graph state for user {user_id}, graph {graph_id}: {e}")
         db.session.rollback()
-        return [], [], {"Start": True}, {"Start"} # Return default empty state
+        return [], [], {"Start": True}, {"Start"} 
 
 
-# --- compute_abilities (Refactored Version) ---
+
 def compute_abilities(user_id, completed_exercise_ids, user_ctf_completions, exercises_with_cats):
     """Computes ability scores based *only* on provided arguments."""
     try:
         abilities = collections.defaultdict(int)
-        # Use PASSED-IN exercises_with_cats
+        
         for ex in exercises_with_cats:
             if ex.id in completed_exercise_ids and not ex.optional:
-                for cat in ex.categories: # Assumes categories were eager-loaded
+                for cat in ex.categories: 
                     abilities[cat.name] += 1
 
-        # Use PASSED-IN user_ctf_completions
+        
         abilities["CTFs"] = sum(user_ctf_completions.values())
         return dict(abilities)
     except Exception as e:
@@ -240,12 +240,12 @@ def compute_abilities(user_id, completed_exercise_ids, user_ctf_completions, exe
         return {"CTFs": 0}
 
 
-# --- compute_discovered_nodes (Remains the same) ---
+
 def compute_discovered_nodes(unlocked_map, links_list_of_dicts):
     """
     Determines all nodes reachable from the initially unlocked set.
     """
-    # ... (Implementation from previous step) ...
+    
     discovered = set(node_id for node_id, is_unlocked in unlocked_map.items() if is_unlocked)
     nodes_to_process = collections.deque(discovered)
     processed = set()
@@ -262,7 +262,7 @@ def compute_discovered_nodes(unlocked_map, links_list_of_dicts):
             if neighbor not in discovered:
                 discovered.add(neighbor)
                 nodes_to_process.append(neighbor)
-    # Add nodes that are prerequisites OF discovered nodes
+    
     nodes_to_check_prereqs = set(discovered)
     for node_id in nodes_to_check_prereqs:
         for link in links_list_of_dicts:

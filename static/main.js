@@ -44,7 +44,7 @@ function updateUI(newState) {
     console.log("Updating UI with new state...", newState);
 
     // Validate newState structure
-    if (!newState || !Array.isArray(newState.nodes) || !newState.unlocked || !Array.isArray(newState.discovered)) {
+    if (!newState || !Array.isArray(newState.nodes) || !newState.unlocked) {
         console.error("Received invalid state for UI update:", newState);
         return;
     }
@@ -120,7 +120,8 @@ fetch(`/data?graph=${selectedGraph}`)
     window.currentAppState = {
         ...initialData,
         discovered: new Set(initialData.discovered || []),
-        unlocked: initialData.unlocked || {}
+        unlocked: initialData.unlocked || {},
+        abilities: initialData.abilities || calculateAbilities(initialData.nodes, initialData.ctfs) // Ensure abilities are present initially
     };
 
     // Initial rendering
@@ -152,30 +153,40 @@ fetch(`/data?graph=${selectedGraph}`)
     // --- Add Global Event Listener for Data Updates ---
     document.addEventListener('appDataUpdated', (event) => {
         console.log("Event 'appDataUpdated' received.");
+
+        // Check if the event came with a full state update (e.g., initial load, or future GET refresh)
         if (event.detail) {
+            console.log("Event received with detail (full state update). Updating global state.");
             // Update the global state first
             window.currentAppState = {
                ...event.detail,
-               // Ensure unlocked is an object and discovered is a Set if needed globally
+               // Ensure correct types if needed
                unlocked: event.detail.unlocked || {},
-               discovered: new Set(event.detail.discovered || [])
+               discovered: new Set(event.detail.discovered || []),
+               // Ensure abilities are recalculated or taken from detail
+               abilities: event.detail.abilities || calculateAbilities(event.detail.nodes, event.detail.ctfs)
             };
-            // Pass the detail directly to updateUI
-            updateUI(event.detail);
         } else {
-             console.warn("'appDataUpdated' event received without detail (newState).");
-             // Optionally re-fetch data as a fallback?
+            // This case handles the optimistic updates from modal.js/ctf.js
+            // The global state (window.currentAppState) was *already updated* optimistically.
+            console.log("Event received without detail (optimistic update). UI will use current global state.");
+            // We might need to recalculate abilities based on the optimistically updated state
+            // Note: This assumes abilities change based on exercises/CTFs completions.
+            window.currentAppState.abilities = calculateAbilities(window.currentAppState.nodes, window.currentAppState.ctfs);
         }
+
+        // *** Always call updateUI with the current global state ***
+        updateUI(window.currentAppState);
+
         // Update graph selector dropdown if graph changed
         const graphSelector = document.getElementById('graphSelector');
-        if (graphSelector && event.detail?.current_graph) {
-            const graphName = event.detail.current_graph.replace('.json', '');
+        if (graphSelector && window.currentAppState.current_graph) {
+            const graphName = window.currentAppState.current_graph.replace('.json', '');
             if (graphSelector.value !== graphName) {
                 graphSelector.value = graphName;
             }
         }
     });
-
   })
   .catch(error => {
     console.error("Failed to fetch or initialize data:", error);
