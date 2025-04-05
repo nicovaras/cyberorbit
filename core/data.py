@@ -2,86 +2,120 @@
 import json
 import os
 from models import db, Node, Exercise, NodeRelationship, UserExerciseCompletion, UserNodeStatus # Import db and models
+from sqlalchemy.orm import joinedload, selectinload # Import selectinload
+
 # Remove s3sync imports if they are no longer needed globally here
 # from core.s3sync import sync_down, sync_up
 
 # Remove old JSON_DIR and file loading/saving functions (load_data, save_data)
 
 # --- New Database Interaction Functions ---
+from threading import Lock
+_static_cache = {}
+_cache_lock = Lock()
 
+def get_cached_static_graph_data(graph_id):
+    cache_key = f"graph_{graph_id}"
+    # Check cache first
+    if cache_key in _static_cache:
+        print(f"CACHE HIT for {cache_key}")
+        return _static_cache[cache_key]
+
+    # If not in cache, acquire lock, fetch from DB, store in cache
+    with _cache_lock:
+        # Double-check cache inside lock (another thread might have populated it)
+        if cache_key in _static_cache:
+            return _static_cache[cache_key]
+
+        print(f"CACHE MISS for {cache_key}. Fetching from DB...")
+        # Call the actual DB fetching function (use the optimized one)
+        # Ensure get_static_graph_data uses the optimized query with eager loading
+        nodes_list, links_list = get_static_graph_data(graph_id) # Assuming function is in 
+        if nodes_list: # Only cache if data was successfully fetched
+             _static_cache[cache_key] = (nodes_list, links_list)
+        return nodes_list, links_list
+    
 def get_static_graph_data(graph_id):
     """
     Fetches static data for a given graph_id from the database.
-    Returns nodes (including their exercises) and relationships.
+    Uses eager loading for exercises and categories.
     """
-    # Fetch nodes belonging to the specified graph, including their exercises
-    nodes_with_exercises = db.session.query(Node).options(
-        db.joinedload(Node.exercises).options(
-           db.joinedload(Exercise.categories) # Also load exercise categories if needed later
-        )
-    ).filter(Node.graph_id == graph_id).all()
+    try: # Wrap in try/except
+        nodes_with_exercises = db.session.query(Node).options(
+            selectinload(Node.exercises).options( # Use selectinload for Node->Exercises
+               selectinload(Exercise.categories) # Use selectinload for Exercise->Categories (many-to-many)
+            )
+        ).filter(Node.graph_id == graph_id).all()
 
-    # Fetch all relationships relevant to the nodes in this graph
-    node_ids = {node.id for node in nodes_with_exercises}
-    relationships = db.session.query(NodeRelationship).filter(
-        (NodeRelationship.parent_node_id.in_(node_ids)) |
-        (NodeRelationship.child_node_id.in_(node_ids))
-    ).all()
+        # Fetch relationships (query seems okay, ensure indexes exist on foreign keys)
+        node_ids = {node.id for node in nodes_with_exercises}
+        if not node_ids: return [], [] # Handle case where no nodes found for graph
 
-    # Convert node objects to dictionaries (similar to old JSON structure if needed by downstream logic)
-    # This might be adjusted depending on how core/nodes.py is refactored
-    nodes_dict_list = []
-    for node in nodes_with_exercises:
-        node_dict = {
-            'id': node.id,
-            'graph_id': node.graph_id,
-            'title': node.title,
-            'type': node.type,
-            'popup': { # Reconstruct popup structure
-                'text': node.popup_text,
-                'pdf_link': node.pdf_link,
-                'exercises': [
-                    {
-                        'id': ex.id,
-                        'label': ex.label,
-                        'points': ex.points,
-                        'optional': ex.optional,
-                        'categories': [cat.name for cat in ex.categories] # Assuming categories are loaded
-                    } for ex in node.exercises
-                ]
-            }
-            # Note: Children/Prerequisites are handled via relationships table now
-            # We might add them back here if needed, or handle in core/nodes.py
-        }
-        nodes_dict_list.append(node_dict)
+        relationships = db.session.query(NodeRelationship).filter(
+            (NodeRelationship.parent_node_id.in_(node_ids)) |
+            (NodeRelationship.child_node_id.in_(node_ids))
+        ).all()
 
-    # Convert relationships to simple source/target dictionaries if needed
-    links_dict_list = [
-        {'source': rel.parent_node_id, 'target': rel.child_node_id, 'type': rel.relationship_type}
-        for rel in relationships
-    ]
+        # Convert nodes to dicts (simplified, adapt if needed)
+        nodes_dict_list = []
+        for node in nodes_with_exercises:
+             node_dict = {
+                 'id': node.id, 'graph_id': node.graph_id, 'title': node.title,
+                 'type': node.type, 'popup_text': node.popup_text, 'pdf_link': node.pdf_link,
+                 # Embed exercises directly if structure is simple
+                 'popup': {
+                      'text': node.popup_text,
+                      'pdf_link': node.pdf_link,
+                      'exercises': [
+                           { 'id': ex.id, 'label': ex.label, 'points': ex.points,
+                             'optional': ex.optional,
+                             'categories': [cat.name for cat in ex.categories] # Categories are now loaded
+                           } for ex in node.exercises # Access directly
+                      ]
+                 }
+             }
+             nodes_dict_list.append(node_dict)
 
-    return nodes_dict_list, links_dict_list
+        # Convert relationships to simple source/target dictionaries
+        links_dict_list = [
+            {'source': rel.parent_node_id, 'target': rel.child_node_id, 'type': rel.relationship_type}
+            for rel in relationships
+        ]
+
+        return nodes_dict_list, links_dict_list
+    except Exception as e:
+        print(f"Error in get_static_graph_data for graph {graph_id}: {e}")
+        return [], [] # Return empty on error
 
 def get_user_progress(user_id, graph_id):
     """
-    Fetches all user-specific progress data for a given graph.
+    Fetches user-specific progress data for a given graph.
+    Loads related Node data for filtering.
     """
-    # Fetch node statuses (unlocked, discovered, percent, notes) for the user and graph
-    node_statuses = db.session.query(UserNodeStatus).join(Node).filter(
-        UserNodeStatus.user_id == user_id,
-        Node.graph_id == graph_id
-    ).all()
-    node_status_map = {status.node_id: status for status in node_statuses}
+    try: # Wrap in try/except
+        # Fetch node statuses, joining and loading Node to filter by graph_id
+        node_statuses = db.session.query(UserNodeStatus).options(
+            joinedload(UserNodeStatus.node) # Eager load the related Node
+        ).filter(UserNodeStatus.user_id == user_id).all() # Fetch all for user first
 
-    # Fetch completed exercise IDs for the user (can filter by graph indirectly via nodes later if needed)
-    completed_exercises = db.session.query(UserExerciseCompletion.exercise_id).filter(
-        UserExerciseCompletion.user_id == user_id
-    ).all()
-    # Convert list of tuples to a set for faster lookup
-    completed_exercise_ids = {ex_id[0] for ex_id in completed_exercises}
+        # Filter in Python (simpler than complex join filter if UserNodeStatus doesn't have graph_id)
+        node_status_map = {
+            status.node_id: status
+            for status in node_statuses
+            # Ensure status.node is not None before accessing graph_id
+            if status.node and status.node.graph_id == graph_id
+        }
 
-    return node_status_map, completed_exercise_ids
+        # Fetch completed exercise IDs (query is likely fine as is)
+        completed_exercises = db.session.query(UserExerciseCompletion.exercise_id).filter(
+            UserExerciseCompletion.user_id == user_id
+        ).all()
+        completed_exercise_ids = {ex_id[0] for ex_id in completed_exercises}
+
+        return node_status_map, completed_exercise_ids
+    except Exception as e:
+        print(f"Error in get_user_progress for user {user_id}, graph {graph_id}: {e}")
+        return {}, set() # Return defaults on error
 
 
 def update_user_exercise_completion(user_id, exercise_id, completed):

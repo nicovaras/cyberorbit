@@ -4,6 +4,9 @@ from models import db, Node, NodeRelationship, UserNodeStatus, UserExerciseCompl
 from core import data as core_data # Use functions from refactored core/data.py
 from core import ctfs as core_ctfs # Use functions from refactored core/ctfs.py
 from core.utils import build_child_map # Keep utility if still needed
+from core.data import get_cached_static_graph_data # Use function from refactored core/data.py
+from sqlalchemy.orm import joinedload, selectinload # Add selectinload
+
 
 UNLOCK_PERCENT = 50
 
@@ -17,7 +20,7 @@ def compute_user_graph_state(user_id, graph_id):
     """
     try:
         # 1. Fetch static graph structure and user progress
-        static_nodes_list, static_links_list = core_data.get_static_graph_data(graph_id)
+        static_nodes_list, static_links_list = get_cached_static_graph_data(graph_id)
         user_node_status_map, user_completed_exercise_ids = core_data.get_user_progress(user_id, graph_id)
 
         if not static_nodes_list:
@@ -254,29 +257,33 @@ def compute_abilities(user_id, graph_id):
     """Computes ability scores based on user's completed exercises and CTFs."""
     try:
         # Fetch user's completed exercise IDs
-        _, completed_exercise_ids = core_data.get_user_progress(user_id, graph_id) # Only need IDs
+        _, completed_exercise_ids = core_data.get_user_progress(user_id, graph_id)
 
-        # Fetch exercises with categories for the given graph
+        # Fetch exercises with categories for the given graph, using selectinload
         exercises_with_cats = db.session.query(Exercise).options(
-             db.joinedload(Exercise.categories),
-             db.joinedload(Exercise.node).load_only(Node.graph_id) # Load only graph_id
-        ).filter(Node.graph_id == graph_id).all()
+             selectinload(Exercise.categories), # Use selectinload
+             # No need to load node if only using graph_id in filter
+             # joinedload(Exercise.node).load_only(Node.graph_id) # Original - can simplify filter
+        ).join(Node).filter( # Join with Node to filter by graph_id
+            Node.graph_id == graph_id
+        ).all()
+
 
         abilities = collections.defaultdict(int)
         for ex in exercises_with_cats:
             # Only count non-optional completed exercises
             if ex.id in completed_exercise_ids and not ex.optional:
-                for cat in ex.categories:
-                    abilities[cat.name] += 1 # Add 1 point per category per completed exercise
+                for cat in ex.categories: # Categories are loaded due to selectinload
+                    abilities[cat.name] += 1
 
         # Fetch user's CTF completions
         user_ctf_completions = core_ctfs.get_user_ctf_completions(user_id)
-        abilities["CTFs"] = sum(user_ctf_completions.values()) # Sum of completed counts
+        abilities["CTFs"] = sum(user_ctf_completions.values())
 
         return dict(abilities)
     except Exception as e:
         print(f"Error computing abilities for user {user_id}: {e}")
-        return {"CTFs": 0} # Return default
+        return {"CTFs": 0}
 
 def compute_discovered_nodes(unlocked_map, links):
     """

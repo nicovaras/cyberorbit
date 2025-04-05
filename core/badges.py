@@ -6,6 +6,7 @@ from models import db, Badge, UserBadge, UserExerciseCompletion, UserCtfCompleti
 from core import streak as core_streak # Import the streak module
 from core import data as core_data # Keep existing imports if any
 from core import ctfs as core_ctfs # Keep existing imports if any
+from sqlalchemy.orm import joinedload
 
 # --- Database Functions ---
 
@@ -22,21 +23,25 @@ def get_all_badges():
         print(f"Error fetching all badges: {e}")
         return []
 
+
 def get_user_badges(user_id):
-    """Fetches all badges earned by a specific user."""
-    try:
-        user_badges = UserBadge.query.filter_by(user_id=user_id).all()
-        # Convert to dictionary list including earned_at and shown status
+    """Fetches all badges earned by a specific user, eager loading Badge details."""
+    try: # Wrap in try/except
+        user_badges = UserBadge.query.options(
+            joinedload(UserBadge.badge) # Eager load the Badge definition
+        ).filter_by(user_id=user_id).all()
+
+        # Convert to dictionary list
         return [
             {
-                'id': ub.badge_id,
-                'title': ub.badge.title, # Access title via relationship
+                'id': ub.badge.id, # Access via loaded relationship
+                'title': ub.badge.title,
                 'description': ub.badge.description,
-                'image': ub.badge.image_path, # Assuming 'image' is used in frontend
+                'image': ub.badge.image_path, # Use correct attribute name
                 'earnedAt': ub.earned_at.isoformat() if ub.earned_at else None,
                 'shown': ub.shown
             }
-            for ub in user_badges
+            for ub in user_badges if ub.badge # Check if badge relationship loaded correctly
         ]
     except Exception as e:
         print(f"Error fetching badges for user {user_id}: {e}")
