@@ -391,18 +391,58 @@ def serve_markdown_mdml(filename):
     return serve_markdown(filename, "mdml")
 
 def serve_markdown(filename, folder):
-    # ... (keep existing implementation, ensure it doesn't leak paths) ...
+    """Serves markdown files rendered as HTML with the correct theme."""
     markdown_dir = os.path.join(app.root_path, app.static_folder, folder)
     filepath = safe_join(markdown_dir, filename)
-    if filepath is None or not os.path.isfile(filepath): abort(404)
+    if filepath is None or not os.path.isfile(filepath):
+        print(f"Markdown file not found or path issue: {filename}")
+        abort(404)
+
     try:
-        with open(filepath, "r", encoding="utf-8") as f: content = f.read()
+        with open(filepath, "r", encoding="utf-8") as f:
+            content = f.read()
+
+        # Render markdown with code highlighting extensions
         html = markdown.markdown(content, extensions=['fenced_code', 'tables', 'codehilite'])
-        # Simplified layout string for brevity
-        layout_style = "body { padding: 20px; max-width: 800px; margin: auto; } img {max-width: 100%;}"
-        theme_css_path = "/static/dracula.css" # Example
-        return render_template_string(f"""...{Markup(html)}...""", filename=filename, theme_css_path=theme_css_path, layout_style=layout_style)
-    except Exception as e: print(f"Error rendering markdown {filename}: {e}"); abort(500)
+
+        # Define minimal layout styles
+        layout_style = """
+            body { padding: 30px 40px; max-width: 850px; margin: 20px auto; line-height: 1.7; overflow: auto !important; }
+            img { max-width: 100%; height: auto; margin: 1em 0; }
+            table { width: 100%; margin: 1.5em 0; border-collapse: collapse; } th, td { border: 1px solid var(--base01, #586e75); padding: 8px; } th { background-color: var(--base02, #073642); }
+            blockquote { border-left: 4px solid var(--base01, #586e75); padding-left: 15px; margin-left: 0; color: var(--base0, #839496); font-style: italic; }
+            hr { border: none; border-top: 1px solid var(--base01, #586e75); margin: 2em 0; }
+            a { border:none; color: var(--blue, #268bd2); text-decoration: underline; }
+            pre { border: 1px solid var(--base01, #586e75); border-radius: 4px; padding: 10px; overflow-x: auto; }
+            /* Add other specific styles as needed */
+        """
+
+        # --- CHANGE THIS LINE ---
+        # Use the desired theme CSS file
+        theme_css_path = "/static/solarized.css"
+        # --- END CHANGE ---
+
+        # Render using template string, linking the theme CSS
+        return render_template_string(f"""
+        <!DOCTYPE html>
+        <html>
+            <head>
+            <meta charset="UTF-8">
+            <title>{Markup.escape(filename)}</title>
+            <link rel="stylesheet" href="{theme_css_path}">
+            <link href="https://fonts.googleapis.com/css2?family=Fira+Code&family=Share+Tech+Mono&display=swap" rel="stylesheet">
+            <style>{layout_style}</style>
+            </head>
+            <body>
+                {Markup(html)}
+            </body>
+        </html>
+        """, filename=Markup.escape(filename), theme_css_path=theme_css_path, layout_style=layout_style) # Pass vars if needed by template
+
+    except Exception as e:
+        print(f"Error rendering markdown {filename}: {e}")
+        abort(500)
+
 
 
 # --- Optional DB Init Command (Keep as is) ---
