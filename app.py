@@ -1,30 +1,50 @@
-from flask import Flask, jsonify, request, send_from_directory, render_template_string, abort
-from werkzeug.utils import safe_join
-# Ensure load_data and save_data are imported correctly if they are not already
-from core.data import load_data, save_data
-from core.streak import update_streak
-from core.ctfs import load_ctfs, save_ctfs
-from core.badges import check_and_award_badges, load_badges, save_badges
-from core.nodes import compute_node_states # Make sure compute_node_states is imported
-from core.nodes import compute_abilities, compute_discovered_nodes
-import markdown
+# cyberorbit/app.py
 import os
+import markdown
+from flask import (Flask, jsonify, request, send_from_directory, render_template_string,
+                   abort, flash, redirect, url_for, render_template) # Added flash, redirect, url_for, render_template
+from werkzeug.utils import safe_join
 from markupsafe import Markup
-from core.s3sync import sync_down
-from werkzeug.exceptions import HTTPException, NotFound
+from flask_sqlalchemy import SQLAlchemy
+from flask_login import LoginManager, UserMixin, login_user, logout_user, login_required, current_user # Added login functions
+from dotenv import load_dotenv
 
-# --- Initial Setup ---
-for f in ["json/ctfs.json", "json/x.json", "json/streak.json", "json/badges.json"]:
-    try:
-        os.makedirs(os.path.dirname(f), exist_ok=True)
-        sync_down(f)
-    except Exception as e:
-        print(f"Warning: Failed initial sync for {f}. Error: {e}")
+# --- Load Environment Variables ---
+load_dotenv()
 
-app = Flask(__name__, static_folder="static") # Set static_folder to 'static' directly
-# Load index.html once
+# --- Initialize Flask App ---
+app = Flask(__name__, static_folder="static")
+
+# --- App Configuration ---
+app.config['SECRET_KEY'] = os.environ.get('SECRET_KEY', 'default-fallback-secret-key')
+app.config['SQLALCHEMY_DATABASE_URI'] = os.environ.get('DATABASE_URL')
+if not app.config['SQLALCHEMY_DATABASE_URI']:
+    raise ValueError("DATABASE_URL environment variable not set.")
+app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
+
+# --- Database Setup ---
+from models import db, User, Graph, Node, Exercise, Ctf, Badge # Import necessary models
+db.init_app(app)
+
+# --- Login Manager Setup ---
+login_manager = LoginManager()
+login_manager.init_app(app)
+login_manager.login_view = 'login' # Route name for the login page
+login_manager.login_message_category = 'info' # Optional: Category for flash messages
+
+@login_manager.user_loader
+def load_user(user_id):
+    return db.session.get(User, int(user_id))
+
+# --- Import Refactored Core Logic ---
+from core import nodes as core_nodes
+from core import data as core_data
+from core import ctfs as core_ctfs
+from core import badges as core_badges
+from core import streak as core_streak
+
+# --- Load index.html (Keep as is) ---
 try:
-    # Assuming index.html is in the root directory, adjacent to app.py
     app_dir = os.path.dirname(os.path.abspath(__file__))
     index_path = os.path.join(app_dir, "index.html")
     with open(index_path) as f:
@@ -33,244 +53,390 @@ except FileNotFoundError:
     INDEX_HTML = "<!DOCTYPE html><html><head><title>Error</title></head><body><h1>Error</h1><p>index.html not found.</p></body></html>"
     print(f"Error: index.html not found at {index_path}. Serving basic error page.")
 
-# --- Helper function to get the full computed state ---
-def get_computed_state(graph_filename="x.json"):
-    """Loads all data for the SPECIFIED graph, computes derived states, and returns the full state object."""
-    try:
-        # <<< Pass filename to load_data >>>
-        data = load_data(graph_filename) # Load specified nodes data
-        if not data: # Handle case where data file is empty or missing
-             print(f"Warning: No data loaded from {graph_filename}, returning empty state.")
-             return {
-                 "nodes": [], "links": [], "unlocked": {}, "discovered": [],
-                 "streak": {}, "ctfs": [], "abilities": {}, "badges": []
-             }
-    
-        # Compute states based on the loaded data
-        nodes, links, unlocked = compute_node_states(data) # compute_node_states uses the data passed in
+# --- Authentication Routes ---
 
-        # Other computations remain the same (streak, ctfs, badges are likely global)
-        streak = update_streak()
-        ctfs = load_ctfs()
-        abilities = compute_abilities(nodes, ctfs) # Use computed nodes
-        badges = load_badges()
-        updated_badges = check_and_award_badges(nodes, ctfs, streak, badges)
-        if badges != updated_badges:
-             save_badges(updated_badges)
-             badges = updated_badges
-        discovered = compute_discovered_nodes(unlocked, links)
+# Placeholder for registration form (can be expanded with Flask-WTF)
+REGISTER_HTML = """
+<!DOCTYPE html><html><head><title>Register</title></head><body>
+<h1>Register</h1><form method="post">
+Username: <input type="text" name="username" required><br>
+Email: <input type="email" name="email" required><br>
+Password: <input type="password" name="password" required><br>
+<button type="submit">Register</button></form>
+<p><a href="{{ url_for('login') }}">Already have an account? Login</a></p>
+{% with messages = get_flashed_messages(with_categories=true) %}
+  {% if messages %}
+    {% for category, message in messages %}
+      <div class="{{ category }}">{{ message }}</div>
+    {% endfor %}
+  {% endif %}
+{% endwith %}
+</body></html>
+"""
 
-        # Include the current graph filename in the state for the frontend
-        return {
-            "nodes": nodes, "links": links, "unlocked": unlocked,
-            "discovered": list(discovered), "streak": streak, "ctfs": ctfs,
-            "abilities": abilities, "badges": badges,
-            "current_graph": graph_filename # <<< Add current graph info
-        }
-    except Exception as e:
-        print(f"Error computing application state for {graph_filename}: {e}")
-        # Consider more specific error handling if needed
-        return { # Return empty state on error
-             "nodes": [], "links": [], "unlocked": {}, "discovered": [],
-             "streak": {}, "ctfs": [], "abilities": {}, "badges": [], "current_graph": graph_filename
-        }
+# Placeholder for login form
+LOGIN_HTML = """
+<!DOCTYPE html><html><head><title>Login</title></head><body>
+<h1>Login</h1><form method="post">
+Username: <input type="text" name="username" required><br>
+Password: <input type="password" name="password" required><br>
+<button type="submit">Login</button></form>
+<p><a href="{{ url_for('register') }}">Need an account? Register</a></p>
+{% with messages = get_flashed_messages(with_categories=true) %}
+  {% if messages %}
+    {% for category, message in messages %}
+      <div class="{{ category }}">{{ message }}</div>
+    {% endfor %}
+  {% endif %}
+{% endwith %}
+</body></html>
+"""
 
-# --- Routes ---
+@app.route('/register', methods=['GET', 'POST'])
+def register():
+    if current_user.is_authenticated:
+        return redirect(url_for('index'))
+    if request.method == 'POST':
+        username = request.form.get('username')
+        email = request.form.get('email')
+        password = request.form.get('password')
+
+        if not username or not email or not password:
+             flash('All fields are required.', 'warning')
+             return redirect(url_for('register'))
+
+        existing_user = User.query.filter((User.username == username) | (User.email == email)).first()
+        if existing_user:
+            flash('Username or email already exists.', 'danger')
+            return redirect(url_for('register'))
+
+        new_user = User(username=username, email=email)
+        new_user.set_password(password) # Hashes the password
+        try:
+            db.session.add(new_user)
+            db.session.commit()
+             # Optionally create initial streak record for new user
+            core_streak.update_user_streak(new_user.id)
+            flash('Registration successful! Please login.', 'success')
+            return redirect(url_for('login'))
+        except Exception as e:
+            db.session.rollback()
+            flash(f'Error during registration: {e}', 'danger')
+            print(f"Registration error: {e}")
+            return redirect(url_for('register'))
+
+    return render_template_string(REGISTER_HTML)
+
+@app.route('/login', methods=['GET', 'POST'])
+def login():
+    if current_user.is_authenticated:
+        return redirect(url_for('index'))
+    if request.method == 'POST':
+        username = request.form.get('username')
+        password = request.form.get('password')
+        user = User.query.filter_by(username=username).first()
+
+        if user and user.check_password(password):
+            login_user(user) # Handles session setup
+            # Update streak on successful login
+            core_streak.update_user_streak(user.id)
+            # Redirect to the page they were trying to access, or index
+            next_page = request.args.get('next')
+            return redirect(next_page or url_for('index'))
+        else:
+            flash('Invalid username or password.', 'danger')
+
+    return render_template_string(LOGIN_HTML)
+
+@app.route('/logout')
+@login_required
+def logout():
+    logout_user()
+    flash('You have been logged out.', 'info')
+    return redirect(url_for('login'))
+
+
+# --- Refactored Data Routes ---
 
 @app.route("/")
+@login_required # Require login to see the main app
 def index():
-    """Serves the main index.html page."""
-    # No change needed here if using query parameters for graph selection
-    return render_template_string(INDEX_HTML)
+    try:
+        app_dir = os.path.dirname(os.path.abspath(__file__))
+        index_path = os.path.join(app_dir, "index.html")
+        with open(index_path) as f:
+             # Render the string using Jinja context (includes current_user)
+             return render_template_string(f.read())
+    except FileNotFoundError:
+         abort(404) # Or render an error template
 
 @app.route("/data", methods=["GET"])
+@login_required
 def get_data():
-    """Handles initial data load request from frontend, selecting graph via query param."""
-    # <<< Get graph selection from query parameter >>>
-    selected_graph = request.args.get('graph', 'x') # Default to 'x'
-    graph_filename = f"{selected_graph}.json"
-    if graph_filename not in ["x.json", "y.json"]: # Validate
-         graph_filename = "x.json"
+    """Gets the full graph state for the logged-in user."""
+    try:
+        user_id = current_user.id
+        selected_graph_name = request.args.get('graph', 'x') # Default to 'x'
+        graph = Graph.query.filter_by(name=selected_graph_name).first()
 
-    # <<< Pass filename to state computation >>>
-    state = get_computed_state(graph_filename)
-    return jsonify(state)
+        if not graph:
+             print(f"Graph '{selected_graph_name}' not found in database.")
+             # Maybe load default graph 'x' if graph 1 exists?
+             graph = db.session.get(Graph, 1) # Assuming graph 'x' has id=1
+             if not graph:
+                 return jsonify({"error": f"Default graph not found"}), 404
+
+        print(f"Computing state for user {user_id}, graph {graph.id} ({graph.name})")
+        # Update streak *before* calculating state potentially involving badges
+        streak_data = core_streak.update_user_streak(user_id)
+
+        # Compute the state (this now also updates DB node status)
+        nodes, links, unlocked, discovered = core_nodes.compute_user_graph_state(user_id, graph.id)
+
+        # Fetch other user-specific data
+        ctfs = core_ctfs.get_combined_ctf_data_for_user(user_id)
+        abilities = core_nodes.compute_abilities(user_id, graph.id)
+        user_badges = core_badges.get_user_badges(user_id) # Fetches already earned badges
+
+        # Check for and award *new* badges after state computation
+        newly_awarded_badges_defs = core_badges.check_and_award_badges(user_id, graph.id)
+
+        # Combine existing and newly awarded for frontend display
+        all_display_badges = user_badges + [
+             {**badge_def.__dict__, 'image': badge_def.image_path} # Convert newly awarded model to dict
+             for badge_def in newly_awarded_badges_defs
+             if badge_def # Filter out None if badge def wasn't found
+        ]
+        # Remove potential internal SQLAlchemy state from dicts
+        for badge in all_display_badges:
+            badge.pop('_sa_instance_state', None)
+
+
+        state = {
+            "nodes": nodes,
+            "links": links,
+            "unlocked": {nid: status for nid, status in unlocked.items()}, # Convert set/map if needed by JS
+            "discovered": list(discovered), # Convert set to list for JSON
+            "streak": streak_data,
+            "ctfs": ctfs,
+            "abilities": abilities,
+            "badges": all_display_badges, # Combined list
+            "current_graph": graph.name # Send back the name of the graph used
+        }
+        return jsonify(state)
+
+    except Exception as e:
+        # Log the error
+        print(f"Error in GET /data for user {current_user.id}: {e}")
+        # Potentially rollback session if db operations were started
+        # db.session.rollback()
+        return jsonify({"error": "Failed to retrieve graph data", "details": str(e)}), 500
+
 
 @app.route("/data", methods=["POST"])
+@login_required
 def post_data():
-    """Handles updates to the main node data (e.g., exercise completion) for the specified graph."""
-    # <<< Get graph selection from query parameter >>>
-    selected_graph = request.args.get('graph', 'x') # Default to 'x'
-    graph_filename = f"{selected_graph}.json"
-    if graph_filename not in ["x.json", "y.json"]: # Validate
-         graph_filename = "x.json"
+    """Handles updates for exercises or node notes."""
+    user_id = current_user.id
+    payload = request.json
+    graph_name = request.args.get('graph', 'x') # Need graph context for recomputing state
+    graph = Graph.query.filter_by(name=graph_name).first()
+    graph_id = graph.id if graph else 1 # Default to graph 1 if not found
+
+    update_successful = True
+    update_type = payload.get('update_type') # Hypothetical field to differentiate updates
 
     try:
-        # <<< Pass filename to save_data >>>
-        save_data(request.json, graph_filename) # Save nodes data to the correct file
-        # <<< Pass filename to state computation >>>
-        updated_state = get_computed_state(graph_filename) # Recompute state for the saved graph
-        return jsonify(updated_state)
+        if 'exercise_update' in payload:
+            ex_data = payload['exercise_update']
+            exercise_id = ex_data.get('exercise_id')
+            is_completed = ex_data.get('completed')
+            if exercise_id is not None and is_completed is not None:
+                print(f"Updating exercise {exercise_id} for user {user_id} to {is_completed}")
+                update_successful &= core_data.update_user_exercise_completion(user_id, exercise_id, is_completed)
+            else: update_successful = False; print(f"Invalid exercise update payload")
+
+        elif 'notes_update' in payload: # Use elif if updates are mutually exclusive per request
+            notes_data = payload['notes_update']
+            node_id = notes_data.get('node_id')
+            notes = notes_data.get('notes')
+            if node_id is not None and notes is not None:
+                print(f"Updating notes for node {node_id} for user {user_id}")
+                update_successful &= core_data.update_user_node_notes(user_id, node_id, notes)
+            else: update_successful = False; print(f"Invalid notes update payload")
+        else:
+            # Handle unknown update type or disallow requests with no known update type
+            return jsonify({"error": "Unknown or missing update type in payload"}), 400
+
+        if not update_successful:
+            return jsonify({"error": "Failed to apply update"}), 400 # Or more specific error
+
+        # Recompute and return the full state after successful update
+        # (This logic duplicates GET /data - could be refactored into a helper)
+        streak_data = core_streak.update_user_streak(user_id) # Update streak on interaction
+        nodes, links, unlocked, discovered = core_nodes.compute_user_graph_state(user_id, graph_id)
+        ctfs = core_ctfs.get_combined_ctf_data_for_user(user_id)
+        abilities = core_nodes.compute_abilities(user_id, graph_id)
+        user_badges = core_badges.get_user_badges(user_id)
+        newly_awarded_badges_defs = core_badges.check_and_award_badges(user_id, graph_id)
+        all_display_badges = user_badges + [
+             {**badge_def.__dict__, 'image': badge_def.image_path}
+             for badge_def in newly_awarded_badges_defs if badge_def ]
+        for badge in all_display_badges: badge.pop('_sa_instance_state', None)
+
+        state = {
+            "nodes": nodes, "links": links, "unlocked": {nid: status for nid, status in unlocked.items()},
+            "discovered": list(discovered), "streak": streak_data, "ctfs": ctfs,
+            "abilities": abilities, "badges": all_display_badges, "current_graph": graph_name
+        }
+        return jsonify(state)
+
     except Exception as e:
-        print(f"Error processing POST /data for {graph_filename}: {e}")
-        return jsonify({"error": "Failed to process node data update", "details": str(e)}), 500
+        db.session.rollback() # Rollback on error during update
+        print(f"Error processing POST /data for user {user_id}: {e}")
+        return jsonify({"error": "Failed to process data update", "details": str(e)}), 500
 
 
 @app.route("/ctfs", methods=["POST"])
+@login_required
 def post_ctfs():
-    """Handles updates to CTF completion data."""
+    """Handles updates to user's CTF completion counts."""
+    user_id = current_user.id
+    # Assuming payload is the *full list* of CTFs from the frontend,
+    # where each item now includes 'id' and the new 'completed' count.
+    ctf_updates = request.json
+    graph_name = request.args.get('graph', 'x') # Need graph context for recomputing state
+    graph = Graph.query.filter_by(name=graph_name).first()
+    graph_id = graph.id if graph else 1 # Default to graph 1
+
+    if not isinstance(ctf_updates, list):
+        return jsonify({"error": "Invalid payload format, expected a list of CTFs"}), 400
+
     try:
-        save_ctfs(request.json)
-        updated_state = get_computed_state()
-        return jsonify(updated_state)
+        # Fetch current completions to calculate delta
+        current_completions = core_ctfs.get_user_ctf_completions(user_id)
+
+        for ctf_data in ctf_updates:
+            ctf_id = ctf_data.get('id')
+            new_count = ctf_data.get('completed')
+            if ctf_id is None or new_count is None:
+                print(f"Skipping invalid CTF update item for user {user_id}: {ctf_data}")
+                continue
+
+            current_count = current_completions.get(ctf_id, 0)
+            delta = new_count - current_count
+            if delta != 0:
+                print(f"Updating CTF {ctf_id} for user {user_id} by delta {delta}")
+                success = core_ctfs.update_user_ctf_completion(user_id, ctf_id, delta)
+                if not success:
+                    # Handle potential individual update failure if needed
+                    print(f"Warning: Failed to update completion for CTF {ctf_id}, user {user_id}")
+
+        # Recompute and return the full state
+        # (This logic duplicates GET /data - could be refactored into a helper)
+        streak_data = core_streak.update_user_streak(user_id) # Update streak on interaction
+        nodes, links, unlocked, discovered = core_nodes.compute_user_graph_state(user_id, graph_id)
+        ctfs = core_ctfs.get_combined_ctf_data_for_user(user_id) # Fetch updated combined data
+        abilities = core_nodes.compute_abilities(user_id, graph_id)
+        user_badges = core_badges.get_user_badges(user_id)
+        newly_awarded_badges_defs = core_badges.check_and_award_badges(user_id, graph_id)
+        all_display_badges = user_badges + [
+             {**badge_def.__dict__, 'image': badge_def.image_path}
+             for badge_def in newly_awarded_badges_defs if badge_def ]
+        for badge in all_display_badges: badge.pop('_sa_instance_state', None)
+
+        state = {
+            "nodes": nodes, "links": links, "unlocked": {nid: status for nid, status in unlocked.items()},
+            "discovered": list(discovered), "streak": streak_data, "ctfs": ctfs,
+            "abilities": abilities, "badges": all_display_badges, "current_graph": graph_name
+        }
+        return jsonify(state)
+
     except Exception as e:
-        print(f"Error processing POST /ctfs: {e}")
+        db.session.rollback() # Rollback on error during update
+        print(f"Error processing POST /ctfs for user {user_id}: {e}")
         return jsonify({"error": "Failed to process CTF data update", "details": str(e)}), 500
 
 
-# Correctly serve static files from the 'static' folder relative to app.py
-# Flask does this automatically if static_folder is set correctly in app = Flask(...)
-# So this route might be redundant unless you need custom logic for static files.
-# If you keep it, ensure the path logic is robust.
+@app.route("/update_badges", methods=["POST"])
+@login_required
+def update_badges_shown_status():
+    """Marks specific badges as 'shown' for the logged-in user."""
+    user_id = current_user.id
+    payload = request.json
+    badge_ids_to_mark = payload.get("badgeIds", [])
+
+    if not isinstance(badge_ids_to_mark, list):
+         return jsonify({"error": "Invalid payload format, expected list for badgeIds"}), 400
+
+    updated_count = 0
+    try:
+        for badge_id in badge_ids_to_mark:
+            if isinstance(badge_id, str): # Basic validation
+                 success = core_badges.mark_user_badge_shown(user_id, badge_id)
+                 if success:
+                     updated_count += 1
+            else:
+                 print(f"Skipping invalid badge ID format: {badge_id}")
+
+        return jsonify({"status": "ok", "updated": updated_count > 0})
+    except Exception as e:
+         # Rollback might have already happened in the core function
+         print(f"Error processing POST /update_badges for user {user_id}: {e}")
+         return jsonify({"error": "Failed to update badge status", "details": str(e)}), 500
+
+# --- Static & Markdown Routes (Keep as is) ---
 @app.route("/static/<path:path>")
 def static_files(path):
-    # Use Flask's safe_join to prevent path traversal issues
+    # ... (keep existing implementation) ...
     try:
-        # Assuming static folder is 'static' relative to app.py
         safe_path = safe_join(app.static_folder, path)
-        if safe_path is None:
-             abort(404)
+        if safe_path is None: abort(404)
         return send_from_directory(os.path.dirname(safe_path), os.path.basename(safe_path))
-    except NotFound:
-         abort(404)
-    except Exception as e:
-         print(f"Error serving static file {path}: {e}")
-         abort(500)
+    except Exception as e: print(f"Error serving static file {path}: {e}"); abort(500)
 
 
 @app.route("/md/<path:filename>")
+@login_required # Protect markdown too? Optional.
 def serve_markdown_md(filename):
-    try:
-        return serve_markdown(filename, "md")
-    except NotFound:
-        print(f"Caught FileNotFoundError for: {filename}")
-        abort(404)
-    except Exception as e:
-        print(f"Error rendering markdown {filename}: {e}")
-        abort(500)
-
+    return serve_markdown(filename, "md")
 
 @app.route("/mdml/<path:filename>")
+@login_required # Protect markdown too? Optional.
 def serve_markdown_mdml(filename):
-    try:
-        return serve_markdown(filename, "mdml")
-    except NotFound:
-        print(f"Caught FileNotFoundError for: {filename}")
-        abort(404)
-    except Exception as e:
-        print(f"Error rendering markdown {filename}: {e}")
-        abort(500)
-
-
+    return serve_markdown(filename, "mdml")
 
 def serve_markdown(filename, folder):
-    """Serves markdown files from the static/md directory rendered as HTML."""
+    # ... (keep existing implementation, ensure it doesn't leak paths) ...
     markdown_dir = os.path.join(app.root_path, app.static_folder, folder)
     filepath = safe_join(markdown_dir, filename)
-    if filepath is None or not os.path.isfile(filepath):
-        print(f"Markdown file not found or path issue: {filename}")
-        abort(404)
-
-    with open(filepath, "r", encoding="utf-8") as f:
-        content = f.read()
-
-    # Render markdown with code highlighting extensions
-    html = markdown.markdown(content, extensions=['fenced_code', 'tables', 'codehilite'])
-
-    # Define minimal layout styles, letting the theme handle colors/code
-    # You can adjust padding, max-width as desired
-    layout_style = """
-        body {
-            padding: 30px 40px; /* Adjust padding */
-            max-width: 850px; /* Adjust max width */
-            margin: 20px auto; /* Center content with top/bottom margin */
-            line-height: 1.7; /* Improve readability */
-            overflow: auto !important;
-        }
-        /* Optional: Add specific styles for elements not covered well by theme */
-        img { max-width: 100%; height: auto; margin: 1em 0; } /* Responsive images */
-        table { width: 100%; margin: 1.5em 0; } /* Full width tables */
-        blockquote {
-            border-left: 4px solid var(--comment, #6272a4); /* Use theme variable */
-            padding-left: 15px;
-            margin-left: 0;
-            color: var(--base0, #839496); /* Dimmer text for quotes */
-            font-style: italic;
-        }
-        hr {
-            border: none;
-            border-top: 1px solid var(--current-line, #44475a); /* Theme variable */
-            margin: 2em 0;
-        }
-        a {
-        border:none;
-        }
-    """
-
-    # Render using template string, linking the theme CSS
-    # Using Dracula theme as an example default
-    theme_css_path = "/static/monokai.css" # Or dynamically choose based on user pref?
-    return render_template_string(f"""
-    <!DOCTYPE html>
-    <html>
-        <head>
-        <meta charset="UTF-8">
-        <title>{Markup.escape(filename)}</title>
-        <link rel="stylesheet" href="{theme_css_path}">
-        <link href="https://fonts.googleapis.com/css2?family=Fira+Code&family=Share+Tech+Mono&display=swap" rel="stylesheet">
-        <style>{layout_style}</style>
-        </head>
-        
-        <body>
-            {Markup(html)}
-        </body>
-    </html>
-    """
-    )
-
-
-
-@app.route("/update_badges", methods=["POST"])
-def update_badges_shown_status():
-    """Marks specific badges as 'shown'."""
-    payload = request.json
-    if not payload or "badgeIds" not in payload:
-        return jsonify({"error": "Missing badgeIds in payload"}), 400
-    ids_to_mark = payload.get("badgeIds", [])
-    if not isinstance(ids_to_mark, list):
-         return jsonify({"error": "Invalid payload format, expected list for badgeIds"}), 400
-
+    if filepath is None or not os.path.isfile(filepath): abort(404)
     try:
-        badges = load_badges()
-        changed = False
-        for b in badges:
-            if b.get("id") in ids_to_mark and not b.get("shown", False):
-                b["shown"] = True
-                changed = True
-        if changed:
-            save_badges(badges)
-            print(f"Marked badges as shown: {ids_to_mark}")
-            return jsonify({"status": "ok", "updated": True})
-        else:
-             return jsonify({"status": "ok", "updated": False})
-    except Exception as e:
-         print(f"Error processing POST /update_badges: {e}")
-         return jsonify({"error": "Failed to update badge status", "details": str(e)}), 500
+        with open(filepath, "r", encoding="utf-8") as f: content = f.read()
+        html = markdown.markdown(content, extensions=['fenced_code', 'tables', 'codehilite'])
+        # Simplified layout string for brevity
+        layout_style = "body { padding: 20px; max-width: 800px; margin: auto; } img {max-width: 100%;}"
+        theme_css_path = "/static/dracula.css" # Example
+        return render_template_string(f"""...{Markup(html)}...""", filename=filename, theme_css_path=theme_css_path, layout_style=layout_style)
+    except Exception as e: print(f"Error rendering markdown {filename}: {e}"); abort(500)
 
-# --- Main Execution ---
+
+# --- Optional DB Init Command (Keep as is) ---
+@app.cli.command("init-db")
+def init_db_command():
+    """Creates the database tables."""
+    try:
+        # Ensure this is run within app context if needed, depends on Flask version
+        with app.app_context():
+             db.create_all()
+        print("Initialized the database.")
+    except Exception as e:
+        print(f"Error initializing database: {e}")
+
+# --- Main Execution (Keep as is) ---
 if __name__ == "__main__":
     debug_mode = os.environ.get("FLASK_DEBUG", "True").lower() == "true"
     port = int(os.environ.get("PORT", 5000))
-    host = os.environ.get("HOST", "127.0.0.1")
+    host = os.environ.get("HOST", "127.0.0.1") # Listen on 0.0.0.0 to be accessible externally if needed
     print(f"Starting Flask app: host={host}, port={port}, debug={debug_mode}")
     app.run(host=host, port=port, debug=debug_mode)

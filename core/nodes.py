@@ -1,197 +1,314 @@
+# cyberorbit/core/nodes.py
 import collections
-from core.utils import build_child_map
+from models import db, Node, NodeRelationship, UserNodeStatus, UserExerciseCompletion, Exercise, Ctf, UserCtfCompletion # Import necessary models
+from core import data as core_data # Use functions from refactored core/data.py
+from core import ctfs as core_ctfs # Use functions from refactored core/ctfs.py
+from core.utils import build_child_map # Keep utility if still needed
 
 UNLOCK_PERCENT = 50
 
-def compute_node_states(data):
+# --- User-Specific State Computation ---
+
+def compute_user_graph_state(user_id, graph_id):
     """
-    Computes node percentages and unlocked status.
-    - Sub-node percent = based on count of completed exercises / total exercises. (NEW)
-    - Main-node percent = average percent of all descendant sub-nodes *within its branch*
-                         (traversal stops at the next main node).
-    - Unlock logic:
-        - Main nodes unlock ONLY if all prerequisites are unlocked AND meet UNLOCK_PERCENT.
-        - Sub-nodes unlock if parent is unlocked AND all prerequisites are met (ignoring % for direct main parent prereq).
+    Computes the complete graph state for a specific user and graph,
+    including node percentages, unlocked status, and discovered status,
+    fetching data from the database.
     """
-    id_to_node = {d["id"]: dict(d, percent=0) for d in data if "id" in d}
-    id_to_node["Start"] = {
-        "id": "Start", "title": "Start", "type": "start", "percent": 100,
-        "popup": {"text": "Start.", "exercises": []},
-        "children": [], "prerequisites": []
-    }
+    try:
+        # 1. Fetch static graph structure and user progress
+        static_nodes_list, static_links_list = core_data.get_static_graph_data(graph_id)
+        user_node_status_map, user_completed_exercise_ids = core_data.get_user_progress(user_id, graph_id)
 
-    # --- Step 1: Calculate sub-node percentages (REVISED LOGIC) ---
-    for node_id, node in id_to_node.items():
-        if node["type"] == "sub":
-            exercises = node.get("popup", {}).get("exercises", [])
-            total_exercises = len(exercises)
+        if not static_nodes_list:
+            print(f"Warning: No static nodes found for graph_id {graph_id}")
+            return {}, [], {}, set() # Return empty state
 
-            if total_exercises == 0:
-                # If a sub-node has no exercises, its completion is 0%
-                # (or arguably 100%? Setting to 0 seems safer)
-                node["percent"] = 0
-                continue
+        # Build helper maps from static data
+        static_node_map = {node['id']: node for node in static_nodes_list}
+        # Build parent/prereq maps from relationships
+        child_map = collections.defaultdict(list)
+        prereq_map = collections.defaultdict(list)
+        node_parents = collections.defaultdict(list) # node_id -> list of parent_ids
+        for link in static_links_list:
+            if link['type'] == 'CHILD':
+                child_map[link['source']].append(link['target'])
+                node_parents[link['target']].append(link['source'])
+            elif link['type'] == 'PREREQUISITE':
+                # Store as target_node -> list of prerequisite_nodes
+                prereq_map[link['target']].append(link['source'])
 
-            # Count completed exercises regardless of points or optional status
-            completed_exercises = sum(1 for e in exercises if e.get("completed"))
-
-            # Calculate percentage based on count
-            node["percent"] = round((completed_exercises / total_exercises) * 100)
+        # Add Start node conceptually for calculations
+        static_node_map["Start"] = {"id": "Start", "type": "start", "title": "Start"}
+        user_node_status_map["Start"] = UserNodeStatus(unlocked=True, discovered=True, percent_complete=100) # Treat Start as always complete/unlocked/discovered
 
 
-    # Step 2: Build child map (same as before)
-    child_map = build_child_map(id_to_node.values())
+        # 2. Calculate user-specific percentages for each node
+        node_percentages = {} # node_id -> calculated percentage for this user
 
-    # Step 3: Calculate main node percentages (BFS stopping at main nodes - same as before)
-    for node_id, node in id_to_node.items():
-        if node["type"] == "main":
-            total_percent = 0
-            sub_node_count = 0
-            queue = collections.deque(child_map.get(node_id, []))
-            visited_in_calc = {node_id}
-            while queue:
-                descendant_id = queue.popleft()
-                if descendant_id in visited_in_calc: continue
-                visited_in_calc.add(descendant_id)
-                descendant_node = id_to_node.get(descendant_id)
-                if not descendant_node: continue
-                if descendant_node["type"] == "sub":
-                    # Use the percentage calculated in Step 1
-                    total_percent += descendant_node.get("percent", 0)
-                    sub_node_count += 1
-                    for child_id in child_map.get(descendant_id, []):
-                        if child_id not in visited_in_calc: queue.append(child_id)
-                elif descendant_node["type"] == "main":
-                    continue # Stop traversal at main nodes
-            # Average the percentages of the descendant sub-nodes found
-            node["percent"] = round(total_percent / sub_node_count) if sub_node_count else 0
-
-    # Step 4: Determine unlocked status (Using logic from previous working version - v6)
-    unlocked = {"Start": True}
-    changed_in_pass = True
-    max_passes = len(id_to_node) + 1
-    current_pass = 0
-
-    while changed_in_pass and current_pass < max_passes:
-        changed_in_pass = False
-        current_pass += 1
-
-        for node_id, node in id_to_node.items():
-            if node_id == "Start":
-                continue
-
-            current_status = unlocked.get(node_id, False)
-            new_status = False # Assume locked
-
-            prereq_ids = node.get("prerequisites", [])
-            parent_ids = [p_id for p_id, children in child_map.items() if node_id in children]
-
-            # --- Determine unlock based on Type ---
-            if node["type"] == "main":
-                # Main nodes depend *only* on prerequisites meeting the threshold.
-                prereqs_met = True
-                if not prereq_ids:
-                    prereqs_met = True # No prerequisites means OK (unlocked by Start)
+        # Calculate sub-node percentages first
+        for node_id, node_data in static_node_map.items():
+            if node_data['type'] == 'sub':
+                exercises = node_data.get('popup', {}).get('exercises', [])
+                total_exercises = len(exercises)
+                if total_exercises == 0:
+                    node_percentages[node_id] = 0
                 else:
-                    for prereq_id in prereq_ids:
-                        prereq_node = id_to_node.get(prereq_id)
-                        # Must exist, be unlocked, AND meet percentage
-                        if not prereq_node or not unlocked.get(prereq_id, False) or prereq_node.get("percent", 0) < UNLOCK_PERCENT:
-                            prereqs_met = False
-                            break
-                new_status = prereqs_met
+                    completed_count = sum(1 for ex in exercises if ex['id'] in user_completed_exercise_ids)
+                    node_percentages[node_id] = round((completed_count / total_exercises) * 100)
 
-            elif node["type"] == "sub":
-                # Sub-nodes need parent unlocked AND prerequisites met (with exception for main parent prereq)
-                parent_unlocked = any(unlocked.get(p_id, False) for p_id in parent_ids)
+        # Calculate main-node percentages (BFS based on *user-specific* sub-node percentages)
+        for node_id, node_data in static_node_map.items():
+             if node_data['type'] == 'main':
+                total_percent_sum = 0
+                sub_node_count = 0
+                queue = collections.deque(child_map.get(node_id, []))
+                visited_in_calc = {node_id} # Prevent cycles within percentage calc
 
-                prereqs_met = True # Assume OK unless a non-parent prereq fails
-                if not prereq_ids:
-                    prereqs_met = True # No specific prerequisites for the sub-node itself
-                else:
-                    for prereq_id in prereq_ids:
-                        prereq_node = id_to_node.get(prereq_id)
-                        # Basic check: Prerequisite must exist and be unlocked
-                        if not prereq_node or not unlocked.get(prereq_id, False):
-                            prereqs_met = False
-                            break
-                        # Percentage Check: Required ONLY if the prerequisite is NOT a direct main-node parent
-                        is_direct_parent = prereq_id in parent_ids
-                        prereq_is_main = prereq_node.get("type") == "main"
-                        # Check percentage ONLY if it's NOT (a direct parent AND that parent is main)
-                        if not (is_direct_parent and prereq_is_main):
-                            if prereq_node.get("percent", 0) < UNLOCK_PERCENT:
-                                prereqs_met = False
+                while queue:
+                    descendant_id = queue.popleft()
+                    if descendant_id in visited_in_calc: continue
+                    visited_in_calc.add(descendant_id)
+
+                    descendant_node_data = static_node_map.get(descendant_id)
+                    if not descendant_node_data: continue
+
+                    if descendant_node_data['type'] == 'sub':
+                        # Use the user-specific percentage calculated above
+                        total_percent_sum += node_percentages.get(descendant_id, 0)
+                        sub_node_count += 1
+                        # Continue traversal from sub-nodes
+                        for child_id in child_map.get(descendant_id, []):
+                            if child_id not in visited_in_calc: queue.append(child_id)
+                    elif descendant_node_data['type'] == 'main':
+                         # Stop traversal at the next main node for percentage calculation
+                        continue
+                    else: # Start or other types? Continue traversal if needed
+                         for child_id in child_map.get(descendant_id, []):
+                            if child_id not in visited_in_calc: queue.append(child_id)
+
+                # Average the percentages of the descendant sub-nodes found
+                node_percentages[node_id] = round(total_percent_sum / sub_node_count) if sub_node_count else 0
+
+        # 3. Determine user-specific unlocked status iteratively
+        unlocked_map = {"Start": True} # node_id -> bool
+        changed_in_pass = True
+        max_passes = len(static_node_map) + 1
+        current_pass = 0
+
+        while changed_in_pass and current_pass < max_passes:
+            changed_in_pass = False
+            current_pass += 1
+
+            for node_id, node_data in static_node_map.items():
+                if node_id == "Start": continue
+
+                current_status = unlocked_map.get(node_id, False)
+                # Default to locked unless proven otherwise
+                new_status = False
+
+                # --- Logic based on original description ---
+                if node_data['type'] == 'main':
+                    # Main nodes unlock ONLY if all prerequisites are unlocked AND meet percentage.
+                    prereqs_fully_met = True
+                    node_prereqs = prereq_map.get(node_id, [])
+                    if not node_prereqs: # If no prereqs (should link to Start)
+                        prereqs_fully_met = unlocked_map.get("Start", False) # Depends only on Start
+                    else:
+                        for prereq_id in node_prereqs:
+                            prereq_unlocked = unlocked_map.get(prereq_id, False)
+                            # Fetch percent calculated earlier for this user
+                            prereq_percent = node_percentages.get(prereq_id, 0)
+                            if not prereq_unlocked or prereq_percent < UNLOCK_PERCENT:
+                                prereqs_fully_met = False
                                 break
-                # Sub-node unlocks if parent is unlocked AND its own prerequisites are met
-                new_status = parent_unlocked and prereqs_met
+                    new_status = prereqs_fully_met
 
-            # Update status if changed
-            if new_status != current_status:
-                unlocked[node_id] = new_status
-                changed_in_pass = True
+                elif node_data['type'] == 'sub':
+                    # Sub-nodes unlock if parent is unlocked AND all prerequisites are met
+                    # (ignoring % for direct main parent prereq - simplified here: ALL prereqs must be met generally).
+                    # Let's first check if *any* parent is unlocked.
+                    parents_unlocked = False
+                    direct_parent_ids = node_parents.get(node_id, [])
+                    if not direct_parent_ids: # Should not happen for sub-nodes usually
+                        parents_unlocked = False
+                    else:
+                        parents_unlocked = any(unlocked_map.get(p_id, False) for p_id in direct_parent_ids)
 
-        # Safety break log
-        if current_pass == max_passes and changed_in_pass:
-            print("Warning: Unlock status did not stabilize within max passes.")
+                    # Then check if *all* prerequisites are met (basic unlocked check here, % check implicitly handled by prereqs needing unlock first)
+                    prereqs_ok_for_sub = True
+                    node_prereqs = prereq_map.get(node_id, [])
+                    if node_prereqs:
+                         for prereq_id in node_prereqs:
+                            if not unlocked_map.get(prereq_id, False):
+                                 prereqs_ok_for_sub = False
+                                 break
 
-    # Step 5: Generate Links (same as before)
-    links = []
-    unique_links_set = set()
-    for node_id, node_data in id_to_node.items():
-        for child_id in child_map.get(node_id, []):
-             if child_id in id_to_node:
-                 link_tuple = tuple(sorted((node_id, child_id)))
-                 if link_tuple not in unique_links_set:
-                     links.append({"source": node_id, "target": child_id})
-                     unique_links_set.add(link_tuple)
-        # Add links from Start only to main nodes that have NO prerequisites
-        if node_data["type"] == "main" and not node_data.get("prerequisites"):
-             if "Start" in id_to_node:
-                 link_tuple = tuple(sorted(("Start", node_id)))
-                 if link_tuple not in unique_links_set:
-                     links.append({"source": "Start", "target": node_id})
-                     unique_links_set.add(link_tuple)
+                    new_status = parents_unlocked and prereqs_ok_for_sub
+
+                # --- End Logic based on original description ---
+
+                # Update status if changed
+                if new_status != current_status:
+                    unlocked_map[node_id] = new_status
+                    changed_in_pass = True
+
+            if current_pass == max_passes and changed_in_pass:
+                print(f"Warning: User {user_id} unlock status did not stabilize.")
+
+        # 4. Determine user-specific discovered status
+        discovered_ids = compute_discovered_nodes(unlocked_map, static_links_list)
 
 
-    return list(id_to_node.values()), links, unlocked
+        # 5. Prepare data for DB update
+        node_status_updates = {}
+        for node_id in static_node_map:
+            if node_id == "Start": continue # Don't save Start node status
 
-# --- compute_abilities and compute_discovered_nodes remain the same ---
-# (Include the previous versions of these functions here)
-def compute_abilities(data, ctfs):
-    # ... (same as before) ...
-    from collections import defaultdict
-    abilities = defaultdict(int)
-    for node in data:
-        exercises = node.get("popup", {}).get("exercises", [])
-        for ex in exercises:
-            if ex.get("completed") and not ex.get("optional", False):
-                for cat in ex.get("categories", []):
-                    abilities[cat] += 1
-    abilities["CTFs"] = sum(c.get("completed", 0) for c in ctfs)
-    return dict(abilities)
+            current_db_status = user_node_status_map.get(node_id)
+            new_percent = node_percentages.get(node_id, 0)
+            new_unlocked = unlocked_map.get(node_id, False)
+            new_discovered = node_id in discovered_ids
 
-def compute_discovered_nodes(unlocked, links):
-    # ... (same as before) ...
-    discovered = set(node_id for node_id, is_unlocked in unlocked.items() if is_unlocked)
-    link_map = collections.defaultdict(list)
+            # Check if an update is needed
+            needs_update = False
+            if not current_db_status:
+                needs_update = True
+            elif (current_db_status.percent_complete != new_percent or
+                  current_db_status.unlocked != new_unlocked or
+                  current_db_status.discovered != new_discovered):
+                needs_update = True
+
+            if needs_update:
+                 node_status_updates[node_id] = {
+                    'percent_complete': new_percent,
+                    'unlocked': new_unlocked,
+                    'discovered': new_discovered
+                 }
+
+        # 6. Bulk update user node status in DB if changes occurred
+        if node_status_updates:
+             print(f"Updating node statuses for user {user_id}: {node_status_updates}")
+             core_data.update_user_node_status_bulk(user_id, node_status_updates)
+             # Refresh user_node_status_map after update
+             user_node_status_map, _ = core_data.get_user_progress(user_id, graph_id)
+
+
+        # 7. Format the final state for the frontend
+        final_nodes = []
+        final_links = [] # Links based only on CHILD relationships for graph drawing
+
+        for node_data in static_nodes_list: # Iterate original list to preserve order somewhat
+            node_id = node_data['id']
+            user_status = user_node_status_map.get(node_id)
+
+            final_node = {
+                'id': node_id,
+                'title': node_data['title'],
+                'type': node_data['type'],
+                'percent': user_status.percent_complete if user_status else 0,
+                'popup': {
+                    'text': node_data.get('popup',{}).get('text',''),
+                    'pdf_link': node_data.get('popup',{}).get('pdf_link',''),
+                    'userNotes': user_status.user_notes if user_status else '', # Include notes
+                    'exercises': [ # Add completion status from user data
+                        {**ex, 'completed': ex['id'] in user_completed_exercise_ids}
+                        for ex in node_data.get('popup', {}).get('exercises', [])
+                    ]
+                }
+                # Add children/prerequisites if needed by frontend, derived from static_links_list
+            }
+            final_nodes.append(final_node)
+
+        # Format links for d3 (source/target)
+        for link in static_links_list:
+            if link['type'] == 'CHILD':
+                final_links.append({'source': link['source'], 'target': link['target']})
+            # Add prerequisite links if desired by frontend visualization
+            # elif link['type'] == 'PREREQUISITE':
+            #     final_links.append({'source': link['source'], 'target': link['target'], 'type': 'prereq'}) # Example
+
+
+        # Add Start node to final output
+        final_nodes.append({
+             'id': 'Start', 'title': 'Start', 'type': 'start', 'percent': 100,
+             'popup': {'text': 'Start.', 'exercises': []}
+        })
+        # Add links from Start to root nodes (nodes with no CHILD parents and no PREREQUISITEs)
+        root_nodes = {n['id'] for n in static_nodes_list if not node_parents.get(n['id']) and not prereq_map.get(n['id'])}
+        for root_id in root_nodes:
+            final_links.append({'source': 'Start', 'target': root_id})
+
+
+        return final_nodes, final_links, unlocked_map, discovered_ids
+
+    except Exception as e:
+        # Log the error appropriately
+        print(f"Error computing user graph state for user {user_id}, graph {graph_id}: {e}")
+        db.session.rollback() # Rollback any partial changes if an error occurred mid-process
+        # Return an empty or default state
+        return [], [], {"Start": True}, {"Start"}
+
+
+def compute_abilities(user_id, graph_id):
+    """Computes ability scores based on user's completed exercises and CTFs."""
+    try:
+        # Fetch user's completed exercise IDs
+        _, completed_exercise_ids = core_data.get_user_progress(user_id, graph_id) # Only need IDs
+
+        # Fetch exercises with categories for the given graph
+        exercises_with_cats = db.session.query(Exercise).options(
+             db.joinedload(Exercise.categories),
+             db.joinedload(Exercise.node).load_only(Node.graph_id) # Load only graph_id
+        ).filter(Node.graph_id == graph_id).all()
+
+        abilities = collections.defaultdict(int)
+        for ex in exercises_with_cats:
+            # Only count non-optional completed exercises
+            if ex.id in completed_exercise_ids and not ex.optional:
+                for cat in ex.categories:
+                    abilities[cat.name] += 1 # Add 1 point per category per completed exercise
+
+        # Fetch user's CTF completions
+        user_ctf_completions = core_ctfs.get_user_ctf_completions(user_id)
+        abilities["CTFs"] = sum(user_ctf_completions.values()) # Sum of completed counts
+
+        return dict(abilities)
+    except Exception as e:
+        print(f"Error computing abilities for user {user_id}: {e}")
+        return {"CTFs": 0} # Return default
+
+def compute_discovered_nodes(unlocked_map, links):
+    """
+    Determines all nodes reachable from the initially unlocked set.
+    :param unlocked_map: Dict {node_id: bool} indicating initially unlocked nodes.
+    :param links: List of {'source': id, 'target': id} dictionaries representing connections.
+    :return: Set of discovered node IDs.
+    """
+    discovered = set(node_id for node_id, is_unlocked in unlocked_map.items() if is_unlocked)
+    nodes_to_process = collections.deque(discovered)
+    processed = set() # Keep track of nodes whose neighbors we've already added
+
+    # Build adjacency list for efficient lookup
+    adj = collections.defaultdict(list)
     for link in links:
-        link_map[link['source']].append(link['target'])
-        link_map[link['target']].append(link['source'])
+        # Ensure both directions are added if links are undirected for discovery
+        adj[link['source']].append(link['target'])
+        adj[link['target']].append(link['source'])
 
-    nodes_to_check = collections.deque(discovered)
-    fully_discovered = set(discovered)
-    processed_discovery = set()
-
-    while nodes_to_check:
-        node_id = nodes_to_check.popleft()
-        if node_id in processed_discovery :
+    while nodes_to_process:
+        current_node = nodes_to_process.popleft()
+        if current_node in processed:
             continue
-        processed_discovery.add(node_id)
+        processed.add(current_node)
 
-        for neighbor_id in link_map.get(node_id, []):
-            if neighbor_id not in fully_discovered:
-                fully_discovered.add(neighbor_id)
-                if unlocked.get(node_id, False):
-                     nodes_to_check.append(neighbor_id)
-    return fully_discovered
+        for neighbor in adj.get(current_node, []):
+            if neighbor not in discovered:
+                discovered.add(neighbor)
+                # If a node allows discovery of neighbors even if locked, add all neighbors
+                # If discovery stops at locked nodes, only add if unlocked_map.get(neighbor, False):
+                nodes_to_process.append(neighbor) # Add neighbor to check its neighbors later
+
+    return discovered
+
+# Remove old compute_node_states function if it still exists

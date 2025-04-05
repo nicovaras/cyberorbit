@@ -86,12 +86,22 @@ function updateUI(newState, discoveredNodes) {
 // --- Fetch Initial Data and Initialize ---
 fetch(`/data?graph=${selectedGraph}`)
   .then(res => {
+    if (res.redirected && res.url.includes('/login')) {
+        // If fetch was redirected to the login page, redirect the whole window
+        console.log("User not authenticated, redirecting to login.");
+        window.location.href = '/login';
+        return null; // Stop processing this response chain
+      }
+
     if (!res.ok) {
       throw new Error(`HTTP error! status: ${res.status}`);
     }
     return res.json();
   })
   .then((initialData) => {
+    if (initialData === null) {
+        return; // Exit if we were redirected
+    }
     // Store initial state
      currentAppState = {
         ...initialData,
@@ -144,9 +154,14 @@ fetch(`/data?graph=${selectedGraph}`)
 
   })
   .catch(error => {
-      console.error("Failed to fetch or initialize data:", error);
-      document.body.innerHTML = `<div style="color: red; padding: 20px; font-family: monospace;">Error loading roadmap data. Please check the console or try again later.</div>`;
-  });
+    console.error("Failed to fetch or initialize data:", error);
+    // Display a more user-friendly error, maybe keep login link
+    document.body.innerHTML = `<div style="color: red; padding: 20px; font-family: monospace;">
+        Error loading roadmap data. Please ensure you are logged in or try again later.
+        <br><a href="/login">Login</a>
+        <br>Details: ${error.message}
+        </div>`;
+});
 
 
 // --- Event Listener for Stats Modal ---

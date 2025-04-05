@@ -1,37 +1,65 @@
+# cyberorbit/core/streak.py
 import os
 import json
 from datetime import datetime, timedelta
-from core.s3sync import sync_down, sync_up
+from models import db, UserStreak, User # Import db and models
+# Remove s3sync imports
 
-STREAK_PATH = "json/streak.json"
+# Remove old STREAK_PATH and JSON functions (load_streak, update_streak)
 
-def load_streak():
+def get_user_streak(user_id):
+    """Fetches the streak data for a specific user."""
     try:
-        sync_down(STREAK_PATH)
-    except Exception as e:
-        print(e)
-    if not os.path.exists(STREAK_PATH):
-        return {"streak": 0, "last_used": ""}
-    with open(STREAK_PATH, "r") as f:
-        return json.load(f)
-
-def update_streak():
-    today = datetime.utcnow().date()
-    streak_data = load_streak()
-    last = streak_data.get("last_used", "")
-    if last:
-        last_date = datetime.strptime(last, "%Y-%m-%d").date()
-        if today == last_date:
-            pass
-        elif today == last_date + timedelta(days=1):
-            streak_data["streak"] += 1
+        streak_record = UserStreak.query.filter_by(user_id=user_id).first()
+        if streak_record:
+            return {
+                "streak": streak_record.current_streak,
+                "last_used": streak_record.last_used_date.isoformat() if streak_record.last_used_date else ""
+            }
         else:
-            streak_data["streak"] = 1
-    else:
-        streak_data["streak"] = 1
-    streak_data["last_used"] = today.isoformat()
-    with open(STREAK_PATH, "w") as f:
-        json.dump(streak_data, f, indent=2)
-    sync_up(STREAK_PATH)
+            # Return default if no record exists for the user yet
+            return {"streak": 0, "last_used": ""}
+    except Exception as e:
+        print(f"Error fetching streak for user {user_id}: {e}")
+        return {"streak": 0, "last_used": ""} # Return default on error
 
-    return streak_data
+def update_user_streak(user_id):
+    """
+    Updates the streak for a specific user based on the current date.
+    Returns the updated streak data dictionary.
+    """
+    today = datetime.utcnow().date()
+    updated_streak_data = {"streak": 0, "last_used": ""} # Default return
+
+    try:
+        streak_record = UserStreak.query.filter_by(user_id=user_id).first()
+
+        if not streak_record:
+            # First time user interaction, create record
+            streak_record = UserStreak(user_id=user_id, current_streak=1, last_used_date=today)
+            db.session.add(streak_record)
+            updated_streak_data = {"streak": 1, "last_used": today.isoformat()}
+        else:
+            last_date = streak_record.last_used_date
+            if last_date == today:
+                # Already updated today, no change in streak
+                updated_streak_data = {"streak": streak_record.current_streak, "last_used": today.isoformat()}
+            elif last_date == today - timedelta(days=1):
+                # Consecutive day, increment streak
+                streak_record.current_streak += 1
+                streak_record.last_used_date = today
+                updated_streak_data = {"streak": streak_record.current_streak, "last_used": today.isoformat()}
+            else:
+                # Gap detected, reset streak
+                streak_record.current_streak = 1
+                streak_record.last_used_date = today
+                updated_streak_data = {"streak": 1, "last_used": today.isoformat()}
+
+        db.session.commit()
+        return updated_streak_data
+
+    except Exception as e:
+        db.session.rollback()
+        print(f"Error updating streak for user {user_id}: {e}")
+        # Return the default or last known state before error
+        return get_user_streak(user_id) # Fetch again to be safe, or return the default

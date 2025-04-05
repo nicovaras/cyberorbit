@@ -127,7 +127,14 @@
       <button id="increaseCtf">➕</button>
     </div>
   </template>
-
+  <div style="position: fixed; top: 10px; left: 100px; z-index: 1001; color: var(--foreground); font-size: 14px;">
+    {% if current_user.is_authenticated %}
+      Welcome, {{ current_user.username }}! | <a href="{{ url_for('logout') }}" style="border: none; padding: 0; text-decoration: underline;">Logout</a>
+    {% else %}
+       <a href="{{ url_for('login') }}" style="border: none; padding: 0; text-decoration: underline;">Login</a> |
+       <a href="{{ url_for('register') }}" style="border: none; padding: 0; text-decoration: underline;">Register</a>
+    {% endif %}
+  </div>
   <script src="https://d3js.org/d3.v6.min.js"></script>
   <script type="module" src="/static/main.js"></script>
 </body>

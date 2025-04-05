@@ -126,22 +126,19 @@ export function initModal(nodes, unlocked) {
                       fetch(`/data?graph=${selectedGraph}`)
                           .then(res => { if (!res.ok) throw new Error(`HTTP error! Status: ${res.status}`); return res.json(); })
                           .then(currentState => {
-                              const nodeToUpdate = currentState.nodes.find(n => n.id === currentNodeId);
-                              if (nodeToUpdate) {
-                                  // Ensure popup object exists
-                                  if (!nodeToUpdate.popup) nodeToUpdate.popup = {};
-                                  // Update userNotes field
-                                  nodeToUpdate.popup.userNotes = currentNotes;
-
-                                  // Send the ENTIRE updated nodes list back
-                                  return fetch(`/data?graph=${selectedGraph}`, {
-                                      method: 'POST',
-                                      headers: { 'Content-Type': 'application/json' },
-                                      body: JSON.stringify(currentState.nodes)
-                                  });
-                              } else {
-                                  throw new Error(`Node with ID ${currentNodeId} not found in current state.`);
-                              }
+                            const notesPayload = {
+                                notes_update: { // Add wrapper key
+                                    node_id: currentNodeId,
+                                    notes: currentNotes
+                                }
+                            };
+                            // Send the ENTIRE updated nodes list back
+                            return fetch(`/data?graph=${selectedGraph}`, { // Keep graph param
+                                method: 'POST',
+                                headers: { 'Content-Type': 'application/json' },
+                                // *** CHANGED: Use the new payload structure ***
+                                body: JSON.stringify(notesPayload)
+                            });
                           })
                           .then(res => { if (!res.ok) throw new Error(`POST error! Status: ${res.status}`); return res.json(); })
                           .then(newState => {
@@ -177,17 +174,24 @@ function handleCheckboxChange(event) {
   const nodeId = checkbox.dataset.nodeId;
   const exerciseIndex = parseInt(checkbox.dataset.exIndex, 10);
   const isCompleted = checkbox.checked;
+  const exerciseId = checkbox.dataset.exId; 
 
   console.log(`Checkbox change: Node ${nodeId}, Index ${exerciseIndex}, Completed: ${isCompleted}`);
 
   fetch(`/data?graph=${selectedGraph}`)
     .then(res => { if (!res.ok) throw new Error(`HTTP error! Status: ${res.status}`); return res.json(); })
     .then(currentState => {
-      const nodeToUpdate = currentState.nodes.find(n => n.id === nodeId);
-      if (nodeToUpdate?.popup?.exercises?.[exerciseIndex]) {
-        nodeToUpdate.popup.exercises[exerciseIndex].completed = isCompleted;
-        return fetch(`/data?graph=${selectedGraph}`, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(currentState.nodes) });
-      } else { throw new Error(`Node or exercise not found for update: Node ${nodeId}, Index ${exerciseIndex}`); }
+      const updatePayload = {
+        exercise_update: { // Add wrapper key
+            exercise_id: exerciseId,
+            completed: isCompleted
+        }
+    };
+    return fetch(`/data?graph=${selectedGraph}`, { // Keep graph param
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(updatePayload)
+    });
     })
     .then(res => { if (!res.ok) throw new Error(`POST error! Status: ${res.status}`); return res.json(); })
     .then(newState => {
