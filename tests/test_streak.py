@@ -1,87 +1,129 @@
-# tests/test_streak.py
-import json
+# test_streak.py (REVISED TO FIX UNIQUE CONSTRAINT ERRORS)
 import pytest
-from datetime import datetime, timedelta
-from core.streak import load_streak, update_streak
+from datetime import datetime, date, timedelta
 
-# Mock s3 interactions
-@pytest.fixture(autouse=True)
-def mock_s3(mocker):
-    mocker.patch('core.streak.sync_down', return_value=None)
-    mocker.patch('core.streak.sync_up', return_value=None)
+# Assuming test fixtures (test_app, db_session) are defined in conftest.py
+# or accessible otherwise.
 
-def test_load_streak(manage_test_json_files):
-    """Test loading streak data."""
-    streak_data = load_streak()
-    assert isinstance(streak_data, dict)
-    assert "streak" in streak_data
-    assert "last_used" in streak_data
-    assert streak_data["streak"] == 5
-    assert streak_data["last_used"] == "2023-10-26"
+# --- Imports for the module being tested ---
+from core.streak import get_user_streak, update_user_streak
+from models import User, UserStreak, db as original_db # Import necessary models and db
 
-def test_update_streak_today(manage_test_json_files, mocker):
-    """Test update_streak when last used was today (no change)."""
-    today_str = datetime.utcnow().date().isoformat()
-    # Mock load_streak to return 'today's date
-    mocker.patch('core.streak.load_streak', return_value={"streak": 10, "last_used": today_str})
+# --- Test Data ---
+USER_ID_1 = 1
+USER_ID_2 = 2
+USER_ID_NEW = 99
 
-    updated_data = update_streak()
+TODAY = date.today()
+YESTERDAY = TODAY - timedelta(days=1)
+TWO_DAYS_AGO = TODAY - timedelta(days=2)
 
-    assert updated_data["streak"] == 10 # Streak should not change
-    assert updated_data["last_used"] == today_str
+# --- MODIFIED Helper function to set up streaks ---
+def setup_streak_entry(db_session, user_id, streak_count, last_date):
+    """
+    Helper to add User and UserStreak records to the session WITHOUT committing.
+    Relies on the db_session fixture to handle rollback/commit boundaries.
+    """
+    # Ensure user exists in the session or add them
+    user = db_session.get(User, user_id)
+    if not user:
+        user = User(id=user_id, username=f'user{user_id}', email=f'user{user_id}@test.com')
+        user.set_password('password')
+        db_session.add(user)
+        # Flush to ensure user is queryable within the same transaction if needed,
+        # but DON'T commit.
+        db_session.flush()
 
-def test_update_streak_yesterday(manage_test_json_files, mocker):
-    """Test update_streak when last used was yesterday (increment)."""
-    yesterday = datetime.utcnow().date() - timedelta(days=1)
-    yesterday_str = yesterday.isoformat()
-    mocker.patch('core.streak.load_streak', return_value={"streak": 10, "last_used": yesterday_str})
+    # Create streak and add to session, DON'T commit.
+    streak = UserStreak(user_id=user_id, current_streak=streak_count, last_used_date=last_date)
+    db_session.add(streak)
+    # Flush again if streak object needs to be read back immediately before test logic
+    db_session.flush()
+    return streak
 
-    updated_data = update_streak()
 
-    assert updated_data["streak"] == 11 # Streak should increment
-    assert updated_data["last_used"] == datetime.utcnow().date().isoformat()
+# --- Tests for get_user_streak ---
 
-def test_update_streak_long_ago(manage_test_json_files, mocker):
-    """Test update_streak when last used was long ago (reset)."""
-    long_ago = datetime.utcnow().date() - timedelta(days=5)
-    long_ago_str = long_ago.isoformat()
-    mocker.patch('core.streak.load_streak', return_value={"streak": 10, "last_used": long_ago_str})
+def test_get_streak_no_record(db_session):
+    """Test getting streak for a user with no streak record."""
+    result = get_user_streak(USER_ID_NEW)
+    assert result == {"streak": 0, "last_used": ""}
 
-    updated_data = update_streak()
+def test_get_streak_existing_record(db_session):
+    """Test getting streak for a user with an existing record."""
+    # Setup adds to session, but doesn't commit. get_user_streak queries session.
+    setup_streak_entry(db_session, USER_ID_1, 5, YESTERDAY)
+    result = get_user_streak(USER_ID_1)
+    assert result == {"streak": 5, "last_used": YESTERDAY.isoformat()}
 
-    assert updated_data["streak"] == 1 # Streak should reset to 1
-    assert updated_data["last_used"] == datetime.utcnow().date().isoformat()
+def test_get_streak_existing_record_no_date(db_session):
+    """Test getting streak for a user with record but null date (edge case)."""
+    # Setup adds to session.
+    setup_streak_entry(db_session, USER_ID_1, 3, None)
+    result = get_user_streak(USER_ID_1)
+    assert result == {"streak": 3, "last_used": ""} # Correctly handles None date
 
-def test_update_streak_first_time(manage_test_json_files, mocker):
-    """Test update_streak when there's no prior data (start at 1)."""
-    mocker.patch('core.streak.load_streak', return_value={"streak": 0, "last_used": ""}) # Simulate empty/new file
 
-    updated_data = update_streak()
+# --- Tests for update_user_streak ---
+# These tests now rely on setup_streak_entry adding data to the session,
+# and update_user_streak potentially modifying it within that same session.
+# The db_session fixture rollback will clear everything afterwards.
 
-    assert updated_data["streak"] == 1 # Streak starts at 1
-    assert updated_data["last_used"] == datetime.utcnow().date().isoformat()
+def test_update_streak_new_user(db_session):
+    """Test updating streak for a user with no prior record."""
+    result = update_user_streak(USER_ID_NEW)
+    assert result == {"streak": 1, "last_used": TODAY.isoformat()}
+    # Verify DB state (within the uncommitted session)
+    # Use db_session.get() or query directly
+    streak_record = db_session.query(UserStreak).filter_by(user_id=USER_ID_NEW).first()
+    assert streak_record is not None
+    assert streak_record.current_streak == 1
+    assert streak_record.last_used_date == TODAY
 
-def test_update_streak_saves_correctly(manage_test_json_files):
-    """Verify the file is updated after streak calculation."""
-    file_path = manage_test_json_files["streak.json"]
-    # Ensure it resets or increments based on the fixture's date vs today
-    update_streak()
+def test_update_streak_same_day(db_session):
+    """Test updating streak when last used was today."""
+    setup_streak_entry(db_session, USER_ID_1, 5, TODAY)
+    result = update_user_streak(USER_ID_1)
+    assert result == {"streak": 5, "last_used": TODAY.isoformat()}
+    # Verify DB state (within the uncommitted session)
+    streak_record = db_session.query(UserStreak).filter_by(user_id=USER_ID_1).first()
+    assert streak_record.current_streak == 5
+    assert streak_record.last_used_date == TODAY
 
-    with open(file_path, 'r') as f:
-        saved_data = json.load(f)
+def test_update_streak_consecutive_day(db_session):
+    """Test updating streak when last used was yesterday."""
+    setup_streak_entry(db_session, USER_ID_1, 5, YESTERDAY)
+    result = update_user_streak(USER_ID_1)
+    assert result == {"streak": 6, "last_used": TODAY.isoformat()}
+    # Verify DB state (within the uncommitted session)
+    streak_record = db_session.query(UserStreak).filter_by(user_id=USER_ID_1).first()
+    assert streak_record.current_streak == 6
+    assert streak_record.last_used_date == TODAY
 
-    assert saved_data["last_used"] == datetime.utcnow().date().isoformat()
-    # Streak value depends on when the test is run relative to 2023-10-26
-    assert saved_data["streak"] >= 1
+def test_update_streak_gap_day(db_session):
+    """Test updating streak when last used was >= 2 days ago (streak resets)."""
+    setup_streak_entry(db_session, USER_ID_1, 5, TWO_DAYS_AGO)
+    result = update_user_streak(USER_ID_1)
+    assert result == {"streak": 1, "last_used": TODAY.isoformat()}
+    # Verify DB state (within the uncommitted session)
+    streak_record = db_session.query(UserStreak).filter_by(user_id=USER_ID_1).first()
+    assert streak_record.current_streak == 1
+    assert streak_record.last_used_date == TODAY
 
-def test_load_streak_file_not_found(mocker, tmp_path):
-    """Test load_streak behavior when the file doesn't exist."""
-    mocker.patch('core.streak.sync_down', side_effect=FileNotFoundError)
-    non_existent_path = tmp_path / "non_existent_streak.json"
-    mocker.patch('core.streak.STREAK_PATH', str(non_existent_path))
+def test_update_streak_multiple_updates_same_day(db_session):
+    """Test calling update multiple times on the same day."""
+    # First call (new user)
+    result1 = update_user_streak(USER_ID_NEW)
+    assert result1 == {"streak": 1, "last_used": TODAY.isoformat()}
 
-    # Should return default values if os.path.exists is false after sync_down mock
-    mocker.patch('os.path.exists', return_value=False)
-    streak_data = load_streak()
+    # Second call (same day) - should read the state from the session
+    result2 = update_user_streak(USER_ID_NEW)
+    assert result2 == {"streak": 1, "last_used": TODAY.isoformat()}
 
-    assert streak_data == {"streak": 0, "last_used": ""}
+    # Third call (same day)
+    result3 = update_user_streak(USER_ID_NEW)
+    assert result3 == {"streak": 1, "last_used": TODAY.isoformat()}
+
+    # Final check on session state before rollback
+    streak_record = db_session.query(UserStreak).filter_by(user_id=USER_ID_NEW).first()
+    assert streak_record.current_streak == 1 # Streak should not have incremented

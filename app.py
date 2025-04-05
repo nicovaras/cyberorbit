@@ -103,8 +103,159 @@ def _get_cached_static_definitions():
 # --- End Caching Setup ---
 
 
-REGISTER_HTML = """...""" # Keep HTML templates as they were
-LOGIN_HTML = """...""" # Keep HTML templates as they were
+REGISTER_HTML = """
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Register - CyberOrbit</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='solarized.css') }}">
+    <style>
+        body { padding: 20px; max-width: 500px; margin: 40px auto; font-family: sans-serif; }
+        .form-container { padding: 30px; border: 1px solid var(--base01); border-radius: 8px; background-color: var(--base03); }
+        h1 { text-align: center; color: var(--base1); margin-bottom: 25px; }
+        .form-group { margin-bottom: 15px; }
+        label { display: block; margin-bottom: 5px; font-weight: bold; color: var(--base0); }
+        input[type="text"], input[type="email"], input[type="password"] {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid var(--base01);
+            border-radius: 4px;
+            box-sizing: border-box;
+            background-color: var(--base02);
+            color: var(--base1);
+        }
+        button {
+            width: 100%;
+            padding: 12px;
+            background-color: var(--blue);
+            color: var(--base3);
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 16px;
+            margin-top: 10px;
+        }
+        button:hover { background-color: var(--cyan); }
+        .alert { padding: 10px; margin-bottom: 15px; border-radius: 4px; }
+        .alert-danger { background-color: var(--red); color: var(--base3); }
+        .alert-success { background-color: var(--green); color: var(--base3); }
+        .alert-info { background-color: var(--blue); color: var(--base3); }
+        .login-link { text-align: center; margin-top: 20px; }
+        .login-link a { color: var(--violet); text-decoration: none; }
+        .login-link a:hover { text-decoration: underline; }
+    </style>
+</head>
+<body>
+    <div class="form-container">
+        <h1>Register New Account</h1>
+
+        {% with messages = get_flashed_messages(with_categories=true) %}
+            {% if messages %}
+                {% for category, message in messages %}
+                    <div class="alert alert-{{ category }}">{{ message }}</div>
+                {% endfor %}
+            {% endif %}
+        {% endwith %}
+
+        <form method="POST" action="{{ url_for('register') }}">
+            <div class="form-group">
+                <label for="username">Username</label>
+                <input type="text" id="username" name="username" required>
+            </div>
+            <div class="form-group">
+                <label for="email">Email</label>
+                <input type="email" id="email" name="email" required>
+            </div>
+            <div class="form-group">
+                <label for="password">Password</label>
+                <input type="password" id="password" name="password" required>
+            </div>
+            <button type="submit">Register</button>
+        </form>
+        <div class="login-link">
+            <p>Already have an account? <a href="{{ url_for('login') }}">Login here</a></p>
+        </div>
+    </div>
+</body>
+</html>
+""" 
+LOGIN_HTML = """
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login - CyberOrbit</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='solarized.css') }}">
+     <style>
+        /* Using the same styles as REGISTER_HTML for consistency */
+        body { padding: 20px; max-width: 500px; margin: 40px auto; font-family: sans-serif; }
+        .form-container { padding: 30px; border: 1px solid var(--base01); border-radius: 8px; background-color: var(--base03); }
+        h1 { text-align: center; color: var(--base1); margin-bottom: 25px; }
+        .form-group { margin-bottom: 15px; }
+        label { display: block; margin-bottom: 5px; font-weight: bold; color: var(--base0); }
+        input[type="text"], input[type="password"] {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid var(--base01);
+            border-radius: 4px;
+            box-sizing: border-box;
+            background-color: var(--base02);
+            color: var(--base1);
+        }
+        button {
+            width: 100%;
+            padding: 12px;
+            background-color: var(--blue);
+            color: var(--base3);
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 16px;
+            margin-top: 10px;
+        }
+        button:hover { background-color: var(--cyan); }
+        .alert { padding: 10px; margin-bottom: 15px; border-radius: 4px; }
+        .alert-danger { background-color: var(--red); color: var(--base3); }
+        .alert-success { background-color: var(--green); color: var(--base3); }
+        .alert-info { background-color: var(--blue); color: var(--base3); }
+        .register-link { text-align: center; margin-top: 20px; }
+        .register-link a { color: var(--violet); text-decoration: none; }
+        .register-link a:hover { text-decoration: underline; }
+    </style>
+</head>
+<body>
+    <div class="form-container">
+        <h1>Login</h1>
+
+        {% with messages = get_flashed_messages(with_categories=true) %}
+            {% if messages %}
+                {% for category, message in messages %}
+                    <div class="alert alert-{{ category }}">{{ message }}</div>
+                {% endfor %}
+            {% endif %}
+        {% endwith %}
+
+        <form method="POST" action="{{ url_for('login') }}{% if request.args.get('next') %}?next={{ request.args.get('next') }}{% endif %}">
+             <div class="form-group">
+                <label for="username">Username</label>
+                <input type="text" id="username" name="username" required>
+            </div>
+            <div class="form-group">
+                <label for="password">Password</label>
+                <input type="password" id="password" name="password" required>
+            </div>
+            <button type="submit">Login</button>
+        </form>
+         <div class="register-link">
+            <p>Don't have an account? <a href="{{ url_for('register') }}">Register here</a></p>
+        </div>
+    </div>
+</body>
+</html>
+""" 
 
 @app.route('/register', methods=['GET', 'POST'])
 def register():
