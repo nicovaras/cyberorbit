@@ -8,7 +8,14 @@ from markupsafe import Markup
 from flask_sqlalchemy import SQLAlchemy
 from flask_login import LoginManager, UserMixin, login_user, logout_user, login_required, current_user # Added login functions
 from dotenv import load_dotenv
-
+import time
+import logging # Import the logging module
+from flask import g # Import Flask's application context global
+from sqlalchemy import event
+from sqlalchemy.engine import Engine
+from sqlalchemy.orm import joinedload, selectinload # Import selectinload
+import datetime
+from models import UserBadge
 # --- Load Environment Variables ---
 load_dotenv()
 
@@ -170,67 +177,77 @@ def index():
     except FileNotFoundError:
          abort(404) # Or render an error template
 
+# cyberorbit/app.py
+# ... imports ...
+
+# cyberorbit/app.py
+# ... imports ...
+
+def _get_full_user_state(user_id, graph_id):
+    """Fetches all data and computes the full user state for the API."""
+    try:
+        # === Stage 1: Consolidated Data Fetching ===
+        streak_data = core_streak.update_user_streak(user_id)
+        user_node_status_map, completed_exercise_ids = core_data.get_user_progress(user_id, graph_id)
+        user_ctf_completions = core_ctfs.get_user_ctf_completions(user_id)
+        user_badge_ids = {ub.badge_id for ub in UserBadge.query.filter_by(user_id=user_id).with_entities(UserBadge.badge_id).all()}
+        static_nodes_list, static_links_list = core_data.get_cached_static_graph_data(graph_id) # Uses cache
+        all_ctfs_list = core_ctfs.get_all_ctfs()
+        all_badge_defs_map = {b.id: b for b in Badge.query.all()}
+        exercises_with_cats = db.session.query(Exercise).options(selectinload(Exercise.categories)).join(Node).filter(Node.graph_id == graph_id).all()
+        required_exercises = [ex for ex in exercises_with_cats if not ex.optional]
+
+        # === Stage 2: Compute State & Stage DB Changes ===
+        nodes, links, unlocked, discovered = core_nodes.compute_user_graph_state(
+            user_id, graph_id, static_nodes_list, static_links_list,
+            user_node_status_map, completed_exercise_ids
+        )
+        abilities = core_nodes.compute_abilities(user_id, completed_exercise_ids, user_ctf_completions, exercises_with_cats)
+        newly_awarded_badge_defs = core_badges.check_and_award_badges(
+            user_id, graph_id, streak_data, user_ctf_completions, user_node_status_map,
+            completed_exercise_ids, required_exercises, user_badge_ids, all_badge_defs_map
+        )
+
+        # === Stage 3: Commit staged changes ===
+        db.session.commit() # Commit updates from graph state and badge awards
+
+        # === Stage 4: Assemble Final State ===
+        final_user_badges_list = core_badges.get_user_badges(user_id) # Fetch list AFTER commit
+        combined_ctfs = [{**ctf_def, 'completed': user_ctf_completions.get(ctf_def['id'], 0)} for ctf_def in all_ctfs_list]
+        graph = db.session.get(Graph, graph_id); graph_name = graph.name if graph else 'x'
+
+        state = { # Assemble final state dict ...
+            "nodes": nodes, "links": links, "unlocked": {nid: status for nid, status in unlocked.items()},
+            "discovered": list(discovered), "streak": streak_data, "ctfs": combined_ctfs,
+            "abilities": abilities, "badges": final_user_badges_list, "current_graph": graph_name
+        }
+        return state
+
+    except Exception as e:
+        print(f"Error in _get_full_user_state for user {user_id}, graph {graph_id}: {e}")
+        db.session.rollback()
+        return {"error": "Failed to compute state"}
+
+    except Exception as e:
+        print(f"Error in _get_full_user_state for user {user_id}, graph {graph_id}: {e}")
+        db.session.rollback()
+        return {"error": "Failed to compute state"}
+
+# --- Ensure all routes call the updated helper ---
+# ... (GET /data, POST /data, POST /ctfs) ...
+
+# --- Update Routes to use the helper ---
+
 @app.route("/data", methods=["GET"])
 @login_required
 def get_data():
-    """Gets the full graph state for the logged-in user."""
-    try:
-        user_id = current_user.id
-        selected_graph_name = request.args.get('graph', 'x') # Default to 'x'
-        graph = Graph.query.filter_by(name=selected_graph_name).first()
-
-        if not graph:
-             print(f"Graph '{selected_graph_name}' not found in database.")
-             # Maybe load default graph 'x' if graph 1 exists?
-             graph = db.session.get(Graph, 1) # Assuming graph 'x' has id=1
-             if not graph:
-                 return jsonify({"error": f"Default graph not found"}), 404
-
-        print(f"Computing state for user {user_id}, graph {graph.id} ({graph.name})")
-        # Update streak *before* calculating state potentially involving badges
-        streak_data = core_streak.update_user_streak(user_id)
-
-        # Compute the state (this now also updates DB node status)
-        nodes, links, unlocked, discovered = core_nodes.compute_user_graph_state(user_id, graph.id)
-
-        # Fetch other user-specific data
-        ctfs = core_ctfs.get_combined_ctf_data_for_user(user_id)
-        abilities = core_nodes.compute_abilities(user_id, graph.id)
-        user_badges = core_badges.get_user_badges(user_id) # Fetches already earned badges
-
-        # Check for and award *new* badges after state computation
-        newly_awarded_badges_defs = core_badges.check_and_award_badges(user_id, graph.id)
-
-        # Combine existing and newly awarded for frontend display
-        all_display_badges = user_badges + [
-             {**badge_def.__dict__, 'image': badge_def.image_path} # Convert newly awarded model to dict
-             for badge_def in newly_awarded_badges_defs
-             if badge_def # Filter out None if badge def wasn't found
-        ]
-        # Remove potential internal SQLAlchemy state from dicts
-        for badge in all_display_badges:
-            badge.pop('_sa_instance_state', None)
-
-
-        state = {
-            "nodes": nodes,
-            "links": links,
-            "unlocked": {nid: status for nid, status in unlocked.items()}, # Convert set/map if needed by JS
-            "discovered": list(discovered), # Convert set to list for JSON
-            "streak": streak_data,
-            "ctfs": ctfs,
-            "abilities": abilities,
-            "badges": all_display_badges, # Combined list
-            "current_graph": graph.name # Send back the name of the graph used
-        }
-        return jsonify(state)
-
-    except Exception as e:
-        # Log the error
-        print(f"Error in GET /data for user {current_user.id}: {e}")
-        # Potentially rollback session if db operations were started
-        # db.session.rollback()
-        return jsonify({"error": "Failed to retrieve graph data", "details": str(e)}), 500
+    graph_name = request.args.get('graph', 'x')
+    graph = Graph.query.filter_by(name=graph_name).first()
+    graph_id = graph.id if graph else 1
+    state = _get_full_user_state(current_user.id, graph_id)
+    if "error" in state:
+        return jsonify(state), 500
+    return jsonify(state)
 
 
 @app.route("/data", methods=["POST"])
@@ -239,123 +256,90 @@ def post_data():
     """Handles updates for exercises or node notes."""
     user_id = current_user.id
     payload = request.json
-    graph_name = request.args.get('graph', 'x') # Need graph context for recomputing state
+    graph_name = request.args.get('graph', 'x')
     graph = Graph.query.filter_by(name=graph_name).first()
-    graph_id = graph.id if graph else 1 # Default to graph 1 if not found
+    graph_id = graph.id if graph else 1
 
     update_successful = True
-    update_type = payload.get('update_type') # Hypothetical field to differentiate updates
-
     try:
+        # --- Perform Update ---
         if 'exercise_update' in payload:
+            # ... (logic to call update_user_exercise_completion) ...
             ex_data = payload['exercise_update']
             exercise_id = ex_data.get('exercise_id')
             is_completed = ex_data.get('completed')
             if exercise_id is not None and is_completed is not None:
-                print(f"Updating exercise {exercise_id} for user {user_id} to {is_completed}")
-                update_successful &= core_data.update_user_exercise_completion(user_id, exercise_id, is_completed)
+                 update_successful &= core_data.update_user_exercise_completion(user_id, exercise_id, is_completed)
             else: update_successful = False; print(f"Invalid exercise update payload")
 
-        elif 'notes_update' in payload: # Use elif if updates are mutually exclusive per request
-            notes_data = payload['notes_update']
-            node_id = notes_data.get('node_id')
-            notes = notes_data.get('notes')
-            if node_id is not None and notes is not None:
-                print(f"Updating notes for node {node_id} for user {user_id}")
-                update_successful &= core_data.update_user_node_notes(user_id, node_id, notes)
-            else: update_successful = False; print(f"Invalid notes update payload")
+        elif 'notes_update' in payload:
+             # ... (logic to call update_user_node_notes) ...
+             notes_data = payload['notes_update']
+             node_id = notes_data.get('node_id')
+             notes = notes_data.get('notes')
+             if node_id is not None and notes is not None:
+                  update_successful &= core_data.update_user_node_notes(user_id, node_id, notes)
+             else: update_successful = False; print(f"Invalid notes update payload")
         else:
-            # Handle unknown update type or disallow requests with no known update type
-            return jsonify({"error": "Unknown or missing update type in payload"}), 400
+             return jsonify({"error": "Unknown or missing update type in payload"}), 400
 
         if not update_successful:
-            return jsonify({"error": "Failed to apply update"}), 400 # Or more specific error
+             # Rollback might have happened in core functions, or do it here
+             db.session.rollback()
+             return jsonify({"error": "Failed to apply update"}), 400
 
-        # Recompute and return the full state after successful update
-        # (This logic duplicates GET /data - could be refactored into a helper)
-        streak_data = core_streak.update_user_streak(user_id) # Update streak on interaction
-        nodes, links, unlocked, discovered = core_nodes.compute_user_graph_state(user_id, graph_id)
-        ctfs = core_ctfs.get_combined_ctf_data_for_user(user_id)
-        abilities = core_nodes.compute_abilities(user_id, graph_id)
-        user_badges = core_badges.get_user_badges(user_id)
-        newly_awarded_badges_defs = core_badges.check_and_award_badges(user_id, graph_id)
-        all_display_badges = user_badges + [
-             {**badge_def.__dict__, 'image': badge_def.image_path}
-             for badge_def in newly_awarded_badges_defs if badge_def ]
-        for badge in all_display_badges: badge.pop('_sa_instance_state', None)
-
-        state = {
-            "nodes": nodes, "links": links, "unlocked": {nid: status for nid, status in unlocked.items()},
-            "discovered": list(discovered), "streak": streak_data, "ctfs": ctfs,
-            "abilities": abilities, "badges": all_display_badges, "current_graph": graph_name
-        }
+        state = _get_full_user_state(user_id, graph_id)
+        if "error" in state:
+            return jsonify(state), 500
         return jsonify(state)
 
     except Exception as e:
-        db.session.rollback() # Rollback on error during update
+        db.session.rollback()
         print(f"Error processing POST /data for user {user_id}: {e}")
         return jsonify({"error": "Failed to process data update", "details": str(e)}), 500
-
 
 @app.route("/ctfs", methods=["POST"])
 @login_required
 def post_ctfs():
     """Handles updates to user's CTF completion counts."""
     user_id = current_user.id
-    # Assuming payload is the *full list* of CTFs from the frontend,
-    # where each item now includes 'id' and the new 'completed' count.
     ctf_updates = request.json
-    graph_name = request.args.get('graph', 'x') # Need graph context for recomputing state
+    graph_name = request.args.get('graph', 'x')
     graph = Graph.query.filter_by(name=graph_name).first()
-    graph_id = graph.id if graph else 1 # Default to graph 1
+    graph_id = graph.id if graph else 1
 
     if not isinstance(ctf_updates, list):
         return jsonify({"error": "Invalid payload format, expected a list of CTFs"}), 400
 
     try:
-        # Fetch current completions to calculate delta
+        # --- Perform Update ---
         current_completions = core_ctfs.get_user_ctf_completions(user_id)
-
+        update_failed = False
         for ctf_data in ctf_updates:
             ctf_id = ctf_data.get('id')
             new_count = ctf_data.get('completed')
-            if ctf_id is None or new_count is None:
-                print(f"Skipping invalid CTF update item for user {user_id}: {ctf_data}")
-                continue
-
+            # ... (validation) ...
             current_count = current_completions.get(ctf_id, 0)
             delta = new_count - current_count
             if delta != 0:
-                print(f"Updating CTF {ctf_id} for user {user_id} by delta {delta}")
                 success = core_ctfs.update_user_ctf_completion(user_id, ctf_id, delta)
-                if not success:
-                    # Handle potential individual update failure if needed
-                    print(f"Warning: Failed to update completion for CTF {ctf_id}, user {user_id}")
+                if not success: update_failed = True # Track if any update failed
 
-        # Recompute and return the full state
-        # (This logic duplicates GET /data - could be refactored into a helper)
-        streak_data = core_streak.update_user_streak(user_id) # Update streak on interaction
-        nodes, links, unlocked, discovered = core_nodes.compute_user_graph_state(user_id, graph_id)
-        ctfs = core_ctfs.get_combined_ctf_data_for_user(user_id) # Fetch updated combined data
-        abilities = core_nodes.compute_abilities(user_id, graph_id)
-        user_badges = core_badges.get_user_badges(user_id)
-        newly_awarded_badges_defs = core_badges.check_and_award_badges(user_id, graph_id)
-        all_display_badges = user_badges + [
-             {**badge_def.__dict__, 'image': badge_def.image_path}
-             for badge_def in newly_awarded_badges_defs if badge_def ]
-        for badge in all_display_badges: badge.pop('_sa_instance_state', None)
+        if update_failed:
+             # Decide if partial success is acceptable or rollback / return error
+             print(f"Warning: One or more CTF updates failed for user {user_id}")
+             # Potentially return an error if strict consistency is needed
 
-        state = {
-            "nodes": nodes, "links": links, "unlocked": {nid: status for nid, status in unlocked.items()},
-            "discovered": list(discovered), "streak": streak_data, "ctfs": ctfs,
-            "abilities": abilities, "badges": all_display_badges, "current_graph": graph_name
-        }
+        state = _get_full_user_state(user_id, graph_id)
+        if "error" in state:
+            return jsonify(state), 500
         return jsonify(state)
 
     except Exception as e:
-        db.session.rollback() # Rollback on error during update
+        db.session.rollback()
         print(f"Error processing POST /ctfs for user {user_id}: {e}")
         return jsonify({"error": "Failed to process CTF data update", "details": str(e)}), 500
+
 
 
 @app.route("/update_badges", methods=["POST"])

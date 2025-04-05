@@ -55,7 +55,7 @@ def update_user_streak(user_id):
                 streak_record.last_used_date = today
                 updated_streak_data = {"streak": 1, "last_used": today.isoformat()}
 
-        db.session.commit()
+        # db.session.commit()
         return updated_streak_data
 
     except Exception as e:

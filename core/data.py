@@ -183,10 +183,8 @@ def update_user_node_status_bulk(user_id, node_status_updates):
                 status.percent_complete = updates['percent_complete']
             # Notes are handled separately by update_user_node_notes
 
-        db.session.commit()
         return True
     except Exception as e:
-        db.session.rollback()
         print(f"Error bulk updating node status for user {user_id}: {e}")
         return False
 
