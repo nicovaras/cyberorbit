@@ -6,9 +6,9 @@ import { setupCtfHandlers } from './ctf.js';
 import { updateSidebar, renderOrUpdateHexChart } from './sidebar.js';
 
 // --- Global state (within module scope) ---
-let currentAppState = {
+window.currentAppState = { 
     nodes: [], links: [], unlocked: {}, discovered: new Set(),
-    streak: {}, ctfs: [], badges: [], current_graph: 'x.json' // <<< Default graph
+    streak: {}, ctfs: [], badges: [], current_graph: 'x.json'
 };
 
 const urlParams = new URLSearchParams(window.location.search);
@@ -40,44 +40,58 @@ function calculateAbilities(nodes, ctfs) {
 }
 
 // --- Function to Update All UI Components ---
-function updateUI(newState, discoveredNodes) {
-    console.log("Updating UI with new state...", newState); // Log for debugging
+function updateUI(newState) {
+    console.log("Updating UI with new state...", newState);
 
-    // Validate newState structure if needed
-    if (!newState || !Array.isArray(newState.nodes) || !newState.unlocked || !newState.discovered) {
+    // Validate newState structure
+    if (!newState || !Array.isArray(newState.nodes) || !newState.unlocked || !Array.isArray(newState.discovered)) {
         console.error("Received invalid state for UI update:", newState);
         return;
     }
 
-    // Update the global state
-    currentAppState = {
-        ...newState,
-        discovered: new Set(newState.discovered || []) // Ensure discovered is a Set
-    };
+    // Ensure discovered is a Set for internal logic that might expect it
+    const discoveredSet = new Set(newState.discovered || []);
 
-    // Update the graph visuals
+    // Update the graph visuals using data directly from newState
+    // Ensure updateGraph receives nodes, links, unlocked status, and the discovered Set
     updateGraph(
-        currentAppState.nodes,
-        currentAppState.links, // Pass links if they might change
-        currentAppState.unlocked,
-        currentAppState.discovered
+        newState.nodes,
+        newState.links,         // Assuming links are part of the state now
+        newState.unlocked,      // Pass the unlocked map {node_id: boolean}
+        discoveredSet           // Pass the discovered Set
     );
 
-    // Update the sidebar content
+    // Update the sidebar content using data from newState
     updateSidebar(
-        currentAppState.nodes,
-        currentAppState.streak,
-        currentAppState.ctfs,
-        discoveredNodes
+        newState.nodes,
+        newState.streak,
+        newState.ctfs,
+        discoveredSet           // Pass the discovered Set
     );
 
-    // Update badges (assuming these functions handle updates)
-    handleBadges(currentAppState.badges);
-    renderBadgeGallery(currentAppState.badges);
+    // Update badges (check if they need the full state or just the badges list)
+    // These functions likely only need the badges array from the state
+    handleBadges(newState.badges);
+    renderBadgeGallery(newState.badges);
 
-    // Re-initialize modal listeners for potentially new/updated nodes if necessary
-    // (Current initModal adds listeners once, might need adjustments if nodes are added/removed dynamically)
-    // initModal(currentAppState.nodes, currentAppState.unlocked); // Be cautious re-adding listeners
+    // Update the hexagon chart in the sidebar/stats modal
+    // Ensure calculateAbilities is called if needed, or use abilities from state
+    // Assuming newState contains an 'abilities' object calculated by the backend:
+    if (newState.abilities) {
+        renderOrUpdateHexChart(newState.abilities);
+    } else {
+        // Fallback or recalculate if needed, though backend should provide it
+        console.warn("Abilities data missing from new state for chart update.");
+        const currentAbilities = calculateAbilities(newState.nodes, newState.ctfs); // Recalculate as fallback
+        renderOrUpdateHexChart(currentAbilities);
+    }
+
+
+    // Re-initialize modal listeners IF nodes might be dynamically added/removed.
+    // If the node structure is static per graph, calling initModal once initially might be sufficient.
+    // If you call it here, ensure it doesn't create duplicate listeners.
+    // initModal(); // Call without args if relying on global state
+
 
     console.log("UI Update complete.");
 }
@@ -103,7 +117,7 @@ fetch(`/data?graph=${selectedGraph}`)
         return; // Exit if we were redirected
     }
     // Store initial state
-     currentAppState = {
+    window.currentAppState = {
         ...initialData,
         discovered: new Set(initialData.discovered || []),
         unlocked: initialData.unlocked || {}
@@ -111,24 +125,24 @@ fetch(`/data?graph=${selectedGraph}`)
 
     // Initial rendering
     const discoveredNodes = initGraph(
-        currentAppState.nodes,
-        currentAppState.links,
-        currentAppState.unlocked,
-        currentAppState.discovered
+        window.currentAppState.nodes,
+        window.currentAppState.links,
+        window.currentAppState.unlocked,
+        window.currentAppState.discovered
     );
     initModal( // Attaches click listeners to graph nodes
-        currentAppState.nodes,
-        currentAppState.unlocked
+        window.currentAppState.nodes,
+        window.currentAppState.unlocked
     );
     updateSidebar( // Renders sidebar content
-        currentAppState.nodes,
-        currentAppState.streak,
-        currentAppState.ctfs,
+        window.currentAppState.nodes,
+        window.currentAppState.streak,
+        window.currentAppState.ctfs,
         discoveredNodes
     );
-    handleBadges(currentAppState.badges);
-    renderBadgeGallery(currentAppState.badges);
-    setupCtfHandlers(currentAppState.ctfs); // Sets up window.updateCtf
+    handleBadges(window.currentAppState.badges);
+    renderBadgeGallery(window.currentAppState.badges);
+    setupCtfHandlers(window.currentAppState.ctfs); // Sets up window.updateCtf
     
     const graphSelector = document.getElementById('graphSelector');
     if (graphSelector) {
@@ -139,16 +153,26 @@ fetch(`/data?graph=${selectedGraph}`)
     document.addEventListener('appDataUpdated', (event) => {
         console.log("Event 'appDataUpdated' received.");
         if (event.detail) {
-            updateUI(event.detail, discoveredNodes); // Call the central update function
+            // Update the global state first
+            window.currentAppState = {
+               ...event.detail,
+               // Ensure unlocked is an object and discovered is a Set if needed globally
+               unlocked: event.detail.unlocked || {},
+               discovered: new Set(event.detail.discovered || [])
+            };
+            // Pass the detail directly to updateUI
+            updateUI(event.detail);
         } else {
              console.warn("'appDataUpdated' event received without detail (newState).");
-             // Optionally re-fetch data as a fallback
-             // fetch('/data')
-             // .then(res => res.json()).then(updateUI);
+             // Optionally re-fetch data as a fallback?
         }
+        // Update graph selector dropdown if graph changed
+        const graphSelector = document.getElementById('graphSelector');
         if (graphSelector && event.detail?.current_graph) {
             const graphName = event.detail.current_graph.replace('.json', '');
-            graphSelector.value = graphName;
+            if (graphSelector.value !== graphName) {
+                graphSelector.value = graphName;
+            }
         }
     });
 

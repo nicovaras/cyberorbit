@@ -6,164 +6,130 @@ if (!['x', 'y'].includes(selectedGraph)) { // Add other valid graph codes here (
 }
 console.log(`Loading graph: ${selectedGraph}.json`);
 
-export function initModal(nodes, unlocked) {
-  // Use D3 to handle node clicks consistently
+export function initModal(/* Remove nodes, unlocked params if relying on global */) {
   d3.selectAll("g.node")
     .on("click", function(event, d) {
-      // Fetch fresh data to check lock status
-      fetch(`/data?graph=${selectedGraph}`).then(res => {
-           if (!res.ok) throw new Error(`HTTP error checking lock status! Status: ${res.status}`);
-           return res.json();
-          })
-          .then(currentState => {
-              const currentUnlocked = currentState.unlocked || {};
-              if (!currentUnlocked[d.id]) {
-                  console.log(`Node ${d.id} is locked.`);
-                  return; // Exit if node is locked
-              }
 
-              // --- Open Exercise Modal ---
-              console.log(`Opening exercise modal for unlocked node: ${d.id}`);
-              const modal = document.getElementById("modal");
-              const modalTitle = document.getElementById("modalTitle");
-              const modalDynamicBody = document.getElementById("modalDynamicBody");
-              const closeModalBtn = document.getElementById("closeModalBtn");
+      // --- START MODIFIED LOGIC ---
+      // Check lock status using the GLOBAL state fetched initially/updated via events
+      // Check if window.currentAppState and its properties exist
+      if (!window.currentAppState || !window.currentAppState.unlocked) {
+          console.error("Error: currentAppState or unlocked status not available.");
+          // Optionally show a message to the user
+          return;
+      }
 
-              if (!modal || !modalTitle || !modalDynamicBody || !closeModalBtn) {
-                   console.error("Core modal elements not found!"); return;
-              }
+      const isNodeUnlocked = window.currentAppState.unlocked[d.id];
 
-              const popup = d.popup;
-              const currentNodeId = d.id; // Store node ID for saving notes
+      if (!isNodeUnlocked && d.id !== 'Start') { // Allow clicking Start node
+          console.log(`Node ${d.id} is locked.`);
+          // Optionally provide visual feedback that node is locked
+          return; // Exit if node is locked
+      }
 
-              // Set the main modal title
-              modalTitle.textContent = d.title || "Node Details";
+      // Node is unlocked, proceed to build and show modal using existing data
+      console.log(`Opening exercise modal for unlocked node: ${d.id}`);
 
-              // Build HTML for the dynamic body area
-              let dynamicHtml = '';
+      // Find the full node data (including exercises) from the current state
+      const nodeDataFromState = window.currentAppState.nodes.find(n => n.id === d.id);
+      if (!nodeDataFromState) {
+          console.error(`Node data for ${d.id} not found in currentAppState.`);
+          return;
+      }
 
-              // Description (optional)
-              if (popup?.text && popup.text.trim() !== '') {
-                  dynamicHtml += `<p>${popup.text}</p>`;
-              }
+      const modal = document.getElementById("modal");
+      const modalTitle = document.getElementById("modalTitle");
+      const modalDynamicBody = document.getElementById("modalDynamicBody");
+      const closeModalBtn = document.getElementById("closeModalBtn");
 
-               // PDF Link (optional)
-               if (popup?.pdf_link) {
-                 if (dynamicHtml !== '') dynamicHtml += `<hr class="modal-separator">`;
-                 dynamicHtml += `<p><a href="${popup.pdf_link}" target="_blank" rel="noopener noreferrer">📄 Open Exercise Details</a></p>`;
-               }
+      if (!modal || !modalTitle || !modalDynamicBody || !closeModalBtn) {
+           console.error("Core modal elements not found!"); return;
+      }
 
-              // Exercises (optional)
-              if (popup?.exercises && popup.exercises.length > 0) {
-                if (dynamicHtml !== '') dynamicHtml += `<hr class="modal-separator">`;
-                dynamicHtml += "<h4>Exercises:</h4>";
-                popup.exercises.forEach((ex, i) => {
-                  // ... (exercise HTML generation - unchanged) ...
-                  const exerciseId = ex.id || `ex-${i}`;
-                  const optional = ex.optional ? " (optional)" : "";
-                  const points = ex.points ?? 10;
-                  const checked = ex.completed ? "checked" : "";
-                  dynamicHtml += `
-                    <div style="margin-bottom: 8px;">
-                        <label style="opacity: ${ex.optional ? 0.7 : 1}; font-style: ${ex.optional ? 'italic' : 'normal'}; display: flex; align-items: center;">
-                          <input type="checkbox" data-node-id="${currentNodeId}" data-ex-id="${exerciseId}" data-ex-index="${i}" ${checked} style="margin-right: 8px;"/>
-                          <span>${ex.label} (${points} points)${optional}</span>
-                        </label>
-                    </div>
-                  `;
-                });
-              }
+      // Use nodeDataFromState instead of 'd' if 'd' only has partial data from d3
+      const popup = nodeDataFromState.popup; // Use data from the state
+      const currentNodeId = nodeDataFromState.id;
 
-              // *** ADDED: User Notes Section ***
-              if (dynamicHtml !== '') dynamicHtml += `<hr class="modal-separator">`; // Separator before notes
-              dynamicHtml += `
-                  <div id="userNotesSection" style="margin-top: 15px;">
-                      <h4>My Notes:</h4>
-                      <textarea id="userNotesArea" rows="5" style="width: 98%; background-color: var(--base03, #1e1f1c); color: var(--base1, #f8f8f2); border: 1px solid var(--base01, #586e75); border-radius: 3px; padding: 8px; font-family: monospace;" placeholder="Add your private notes, commands, reminders here..."></textarea>
-                      <div style="text-align: right; margin-top: 8px;">
-                          <button id="saveNotesBtn" class="modal-save-button">Save Notes</button>
-                          <span id="notesSaveStatus" style="margin-left: 10px; font-size: 0.8em; font-style: italic;"></span>
-                       </div>
-                  </div>
-              `;
-              // *** END: User Notes Section ***
+      modalTitle.textContent = nodeDataFromState.title || "Node Details";
 
-
-              // Inject the built HTML into the dynamic body
-              modalDynamicBody.innerHTML = dynamicHtml;
-
-              // Populate the notes textarea AFTER it's added to the DOM
-              const notesTextArea = modalDynamicBody.querySelector('#userNotesArea');
-              if (notesTextArea) {
-                  notesTextArea.value = popup?.userNotes || ''; // Populate with existing notes or empty string
-              }
-
-              // Attach listener to the main close button
-              closeModalBtn.onclick = () => { modal.style.display = "none"; };
-
-              // Show the modal
-              modal.style.display = "block";
-
-              // Add checkbox listeners
-              modalDynamicBody.querySelectorAll('input[type=checkbox]').forEach(input => {
-                // input.replaceWith(input.cloneNode(true));
-                input.addEventListener('change', handleCheckboxChange);
-              });
-
-              // *** ADDED: Add Save Notes button listener ***
-              const saveNotesButton = modalDynamicBody.querySelector('#saveNotesBtn');
-              const notesSaveStatus = modalDynamicBody.querySelector('#notesSaveStatus');
-              if (saveNotesButton && notesTextArea) {
-                  saveNotesButton.onclick = () => {
-                      const currentNotes = notesTextArea.value;
-                      console.log(`Saving notes for node ${currentNodeId}`);
-                      saveNotesButton.disabled = true; // Disable button during save
-                      notesSaveStatus.textContent = "Saving...";
-                      notesSaveStatus.style.color = "var(--yellow, #b58900)";
+      // Build HTML using nodeDataFromState.popup
+      let dynamicHtml = '';
+      // ... (rest of HTML building logic using 'popup' variable) ...
+       // Description (optional)
+       if (popup?.text && popup.text.trim() !== '') { dynamicHtml += `<p>${popup.text}</p>`; }
+       // PDF Link (optional)
+       if (popup?.pdf_link) { if (dynamicHtml !== '') dynamicHtml += `<hr class="modal-separator">`; dynamicHtml += `<p><a href="${popup.pdf_link}" target="_blank" rel="noopener noreferrer">📄 Open Exercise Details</a></p>`; }
+      // Exercises (optional)
+      if (popup?.exercises && popup.exercises.length > 0) {
+           if (dynamicHtml !== '') dynamicHtml += `<hr class="modal-separator">`;
+           dynamicHtml += "<h4>Exercises:</h4>";
+           popup.exercises.forEach((ex, i) => {
+                const exerciseId = ex.id || `ex-${i}`;
+                const optional = ex.optional ? " (optional)" : "";
+                const points = ex.points ?? 10;
+                // Use ex.completed directly from the state
+                const checked = ex.completed ? "checked" : "";
+                dynamicHtml += `
+                 <div style="margin-bottom: 8px;">
+                     <label style="opacity: ${ex.optional ? 0.7 : 1}; font-style: ${ex.optional ? 'italic' : 'normal'}; display: flex; align-items: center;">
+                       <input type="checkbox" data-node-id="${currentNodeId}" data-ex-id="${exerciseId}" data-ex-index="${i}" ${checked} style="margin-right: 8px;"/>
+                       <span>${ex.label} (${points} points)${optional}</span>
+                     </label>
+                 </div>
+               `;
+           });
+       }
+      // User Notes Section
+      if (dynamicHtml !== '') dynamicHtml += `<hr class="modal-separator">`;
+      dynamicHtml += `
+          <div id="userNotesSection" style="margin-top: 15px;">
+              <h4>My Notes:</h4>
+              <textarea id="userNotesArea" rows="5" style="width: 98%; ...">${popup?.userNotes || ''}</textarea>
+              <div style="text-align: right; margin-top: 8px;">
+                  <button id="saveNotesBtn" class="modal-save-button">Save Notes</button>
+                  <span id="notesSaveStatus" style="margin-left: 10px; ..."></span>
+               </div>
+          </div>
+      `;
+      // --- END MODIFIED LOGIC ---
 
 
-                      // Fetch current state, update notes, POST back
-                      fetch(`/data?graph=${selectedGraph}`)
-                          .then(res => { if (!res.ok) throw new Error(`HTTP error! Status: ${res.status}`); return res.json(); })
-                          .then(currentState => {
-                            const notesPayload = {
-                                notes_update: { // Add wrapper key
-                                    node_id: currentNodeId,
-                                    notes: currentNotes
-                                }
-                            };
-                            // Send the ENTIRE updated nodes list back
-                            return fetch(`/data?graph=${selectedGraph}`, { // Keep graph param
-                                method: 'POST',
-                                headers: { 'Content-Type': 'application/json' },
-                                // *** CHANGED: Use the new payload structure ***
-                                body: JSON.stringify(notesPayload)
-                            });
-                          })
-                          .then(res => { if (!res.ok) throw new Error(`POST error! Status: ${res.status}`); return res.json(); })
-                          .then(newState => {
-                              console.log("Notes saved successfully. Dispatching update.");
-                              notesSaveStatus.textContent = "Saved!";
-                              notesSaveStatus.style.color = "var(--green, #859900)";
-                              saveNotesButton.disabled = false;
-                              // Dispatch event to potentially update UI if notes were displayed elsewhere (optional)
-                              document.dispatchEvent(new CustomEvent('appDataUpdated', { detail: newState }));
-                              // Clear status message after a delay
-                              setTimeout(() => { notesSaveStatus.textContent = ""; }, 2000);
-                          })
-                          .catch(error => {
-                              console.error('Error saving notes:', error);
-                              notesSaveStatus.textContent = "Error saving!";
-                              notesSaveStatus.style.color = "var(--red, #dc322f)";
-                              saveNotesButton.disabled = false;
-                              alert(`Error saving notes: ${error.message}`);
-                          });
-                  };
-              } else {
-                   console.warn("Save Notes button or textarea not found.");
-              }
+      modalDynamicBody.innerHTML = dynamicHtml;
 
-      }).catch(err => console.error("Error checking node lock status or building modal:", err));
+      // Populate notes and add listeners (keep this part)
+      const notesTextArea = modalDynamicBody.querySelector('#userNotesArea');
+      // notesTextArea.value = popup?.userNotes || ''; // Already set in template string above
+
+      closeModalBtn.onclick = () => { modal.style.display = "none"; };
+      modal.style.display = "block";
+      modalDynamicBody.querySelectorAll('input[type=checkbox]').forEach(input => {
+        input.addEventListener('change', handleCheckboxChange);
+      });
+      const saveNotesButton = modalDynamicBody.querySelector('#saveNotesBtn');
+      const notesSaveStatus = modalDynamicBody.querySelector('#notesSaveStatus');
+      if (saveNotesButton && notesTextArea) {
+           saveNotesButton.onclick = () => { // Keep notes saving logic
+                // ... (logic to construct notesPayload and fetch POST /data) ...
+                const currentNotes = notesTextArea.value;
+                const notesPayload = { notes_update: { node_id: currentNodeId, notes: currentNotes } };
+                const urlParams = new URLSearchParams(window.location.search);
+                let selectedGraph = urlParams.get('graph') || 'x';
+                if (!['x', 'y'].includes(selectedGraph)) { selectedGraph = 'x'; }
+
+                notesSaveStatus.textContent = "Saving...";
+                fetch(`/data?graph=${selectedGraph}`, {
+                    method: 'POST', headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(notesPayload) })
+                .then(res => { if (!res.ok) throw new Error(`Save error: ${res.statusText}`); return res.json();})
+                .then(newState => {
+                     console.log("Notes saved. Dispatching update.");
+                     notesSaveStatus.textContent = "Saved!";
+                     document.dispatchEvent(new CustomEvent('appDataUpdated', { detail: newState }));
+                     setTimeout(() => { notesSaveStatus.textContent = ""; }, 2000);
+                 })
+                 .catch(error => { console.error('Error saving notes:', error); notesSaveStatus.textContent = "Error!";});
+           };
+      }
 
     }); // End D3 click listener
 }
@@ -174,34 +140,59 @@ function handleCheckboxChange(event) {
   const nodeId = checkbox.dataset.nodeId;
   const exerciseIndex = parseInt(checkbox.dataset.exIndex, 10);
   const isCompleted = checkbox.checked;
-  const exerciseId = checkbox.dataset.exId; 
+  const exerciseId = checkbox.dataset.exId; // Get exerciseId
 
-  console.log(`Checkbox change: Node ${nodeId}, Index ${exerciseIndex}, Completed: ${isCompleted}`);
+  // Check if exerciseId was retrieved
+  if (!exerciseId) {
+      console.error("Error: Could not retrieve exerciseId from checkbox dataset.", checkbox);
+      alert("Error: Could not identify the exercise. Cannot save status.");
+      checkbox.checked = !isCompleted; // Revert UI change
+      return; // Stop execution
+  }
 
-  fetch(`/data?graph=${selectedGraph}`)
-    .then(res => { if (!res.ok) throw new Error(`HTTP error! Status: ${res.status}`); return res.json(); })
-    .then(currentState => {
-      const updatePayload = {
-        exercise_update: { // Add wrapper key
-            exercise_id: exerciseId,
-            completed: isCompleted
-        }
-    };
-    return fetch(`/data?graph=${selectedGraph}`, { // Keep graph param
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(updatePayload)
-    });
-    })
-    .then(res => { if (!res.ok) throw new Error(`POST error! Status: ${res.status}`); return res.json(); })
-    .then(newState => {
-        console.log("Dispatching appDataUpdated event after exercise update.");
-        document.dispatchEvent(new CustomEvent('appDataUpdated', { detail: newState }));
-        document.getElementById("modal").style.display = "none"; // Close modal on success
-    })
-    .catch(error => {
+  console.log(`Checkbox change: Node ${nodeId}, Exercise ${exerciseId}, Index ${exerciseIndex}, Completed: ${isCompleted}`);
+
+  // Get current graph selection
+  const urlParams = new URLSearchParams(window.location.search);
+  let selectedGraph = urlParams.get('graph') || 'x';
+  if (!['x', 'y'].includes(selectedGraph)) { selectedGraph = 'x'; }
+
+  // Construct the specific update payload
+  const updatePayload = {
+      exercise_update: {
+          exercise_id: exerciseId, // Use the retrieved exerciseId
+          completed: isCompleted
+      }
+  };
+
+  // Directly POST the update payload
+  fetch(`/data?graph=${selectedGraph}`, { // ONLY a POST request happens here
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(updatePayload)
+  })
+  .then(res => {
+      if (!res.ok) {
+          // Try to get error message from backend if possible
+          return res.json().then(errData => {
+              throw new Error(`POST error! Status: ${res.status}. ${errData.error || res.statusText}`);
+          }).catch(() => {
+              // Fallback if response wasn't JSON
+              throw new Error(`POST error! Status: ${res.status} ${res.statusText}`);
+          });
+      }
+      return res.json(); // Parse the JSON response containing the new state
+  })
+  .then(newState => {
+      // Backend successfully processed POST and returned the updated state
+      console.log("Dispatching appDataUpdated event after exercise update.");
+      document.dispatchEvent(new CustomEvent('appDataUpdated', { detail: newState }));
+      document.getElementById("modal").style.display = "none"; // Close modal on success
+  })
+  .catch(error => {
+      // Handle network errors or errors thrown from the .then block
       console.error('Error updating exercise:', error);
       alert(`Error saving exercise status: ${error.message}`);
-      // checkbox.checked = !isCompleted; // Optional: revert UI on error
-    });
-}
+      checkbox.checked = !isCompleted; // Revert UI on error
+  });
+} // End of handleCheckboxChange
