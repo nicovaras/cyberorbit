@@ -11,7 +11,7 @@ import markdown
 import os
 from markupsafe import Markup
 from core.s3sync import sync_down
-from werkzeug.exceptions import HTTPException
+from werkzeug.exceptions import HTTPException, NotFound
 
 # --- Initial Setup ---
 for f in ["json/ctfs.json", "json/x.json", "json/streak.json", "json/badges.json"]:
@@ -141,7 +141,7 @@ def static_files(path):
         if safe_path is None:
              abort(404)
         return send_from_directory(os.path.dirname(safe_path), os.path.basename(safe_path))
-    except FileNotFoundError:
+    except NotFound:
          abort(404)
     except Exception as e:
          print(f"Error serving static file {path}: {e}")
@@ -150,72 +150,94 @@ def static_files(path):
 
 @app.route("/md/<path:filename>")
 def serve_markdown_md(filename):
-    return serve_markdown(filename, "md")
+    try:
+        return serve_markdown(filename, "md")
+    except NotFound:
+        print(f"Caught FileNotFoundError for: {filename}")
+        abort(404)
+    except Exception as e:
+        print(f"Error rendering markdown {filename}: {e}")
+        abort(500)
+
 
 @app.route("/mdml/<path:filename>")
 def serve_markdown_mdml(filename):
-    return serve_markdown(filename, "mdml")
+    try:
+        return serve_markdown(filename, "mdml")
+    except NotFound:
+        print(f"Caught FileNotFoundError for: {filename}")
+        abort(404)
+    except Exception as e:
+        print(f"Error rendering markdown {filename}: {e}")
+        abort(500)
+
 
 
 def serve_markdown(filename, folder):
     """Serves markdown files from the static/md directory rendered as HTML."""
-    # Define the directory where markdown files are stored, relative to app's root path
     markdown_dir = os.path.join(app.root_path, app.static_folder, folder)
-    try:
-        # Securely join the directory and filename
-        filepath = safe_join(markdown_dir, filename)
-        if filepath is None:
-             print(f"Error: safe_join returned None for {filename}")
-             abort(404)
-
-        # Check if the file exists
-        if not os.path.isfile(filepath):
-            print(f"Markdown file not found at: {filepath}")
-            abort(404) # Use Flask's abort
-
-        # Read and render markdown
-        with open(filepath, "r", encoding="utf-8") as f:
-            content = f.read()
-        # Ensure Pygments is installed for codehilite: pip install Pygments
-        html = markdown.markdown(content, extensions=['fenced_code', 'tables', 'codehilite'])
-        style = """
-          body { background: #0b1120; color: #cceeff; font-family: monospace; padding: 40px; max-width: 800px; margin: auto; }
-          h1,h2,h3 { color: #00ffff; }
-          pre { background: #1e1f1c; padding: 15px; border-radius: 8px; overflow-x: auto; border: 1px solid #444; }
-          code { color: #f8f8f2; font-family: 'Fira Code', monospace; }
-          table { border-collapse: collapse; margin: 1em 0; }
-          th, td { border: 1px solid #00ffcc; padding: 8px; }
-          th { background-color: #1e1f1c; color: #00ffcc; }
-          /* Basic Code Highlighting Styles (requires Pygments) */
-          .codehilite .k { color: #f92672; } .codehilite .s1, .codehilite .s2 { color: #e6db74; }
-          .codehilite .c1 { color: #75715e; } .codehilite .kn { color: #66d9ef; }
-          .codehilite .fm { color: #a6e22e; } /* Add more styles */
-        """
-        # Render using a simple template string
-        return render_template_string(f"""
-        <!DOCTYPE html>
-        <html>
-          <head>
-            <meta charset="UTF-8">
-            <title>{Markup.escape(filename)}</title> 
-            <link href="https://fonts.googleapis.com/css2?family=Fira+Code&display=swap" rel="stylesheet">
-            <style>{style}</style>
-          </head>
-          <body>{Markup(html)}</body> 
-        </html>
-        """)
-    # --- MODIFIED EXCEPTION HANDLING ---
-    except FileNotFoundError: # Keep specific FileNotFoundError handling if needed elsewhere
-        print(f"Caught FileNotFoundError for: {filename}")
+    filepath = safe_join(markdown_dir, filename)
+    if filepath is None or not os.path.isfile(filepath):
+        print(f"Markdown file not found or path issue: {filename}")
         abort(404)
-    except HTTPException as e:
-        # If abort() was called, re-raise the HTTP exception it generated
-        raise e
-    except Exception as e:
-        # Catch other unexpected errors (e.g., markdown processing, file reading issues)
-        print(f"Error rendering markdown {filename}: {e}")
-        abort(500) # Return 500 for truly unexpected errors
-    # --- END MODIFIED EXCEPTION HANDLING ---
+
+    with open(filepath, "r", encoding="utf-8") as f:
+        content = f.read()
+
+    # Render markdown with code highlighting extensions
+    html = markdown.markdown(content, extensions=['fenced_code', 'tables', 'codehilite'])
+
+    # Define minimal layout styles, letting the theme handle colors/code
+    # You can adjust padding, max-width as desired
+    layout_style = """
+        body {
+            padding: 30px 40px; /* Adjust padding */
+            max-width: 850px; /* Adjust max width */
+            margin: 20px auto; /* Center content with top/bottom margin */
+            line-height: 1.7; /* Improve readability */
+            overflow: auto !important;
+        }
+        /* Optional: Add specific styles for elements not covered well by theme */
+        img { max-width: 100%; height: auto; margin: 1em 0; } /* Responsive images */
+        table { width: 100%; margin: 1.5em 0; } /* Full width tables */
+        blockquote {
+            border-left: 4px solid var(--comment, #6272a4); /* Use theme variable */
+            padding-left: 15px;
+            margin-left: 0;
+            color: var(--base0, #839496); /* Dimmer text for quotes */
+            font-style: italic;
+        }
+        hr {
+            border: none;
+            border-top: 1px solid var(--current-line, #44475a); /* Theme variable */
+            margin: 2em 0;
+        }
+        a {
+        border:none;
+        }
+    """
+
+    # Render using template string, linking the theme CSS
+    # Using Dracula theme as an example default
+    theme_css_path = "/static/monokai.css" # Or dynamically choose based on user pref?
+    return render_template_string(f"""
+    <!DOCTYPE html>
+    <html>
+        <head>
+        <meta charset="UTF-8">
+        <title>{Markup.escape(filename)}</title>
+        <link rel="stylesheet" href="{theme_css_path}">
+        <link href="https://fonts.googleapis.com/css2?family=Fira+Code&family=Share+Tech+Mono&display=swap" rel="stylesheet">
+        <style>{layout_style}</style>
+        </head>
+        
+        <body>
+            {Markup(html)}
+        </body>
+    </html>
+    """
+    )
+
 
 
 @app.route("/update_badges", methods=["POST"])

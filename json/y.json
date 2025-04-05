@@ -5,7 +5,7 @@
       "node_9upb0ah"
     ],
     "id": "node_5kk0017",
-    "percent": 4,
+    "percent": 21,
     "popup": {
       "exercises": [],
       "text": ""
@@ -287,12 +287,12 @@
       "node_4v89qfm"
     ],
     "id": "node_9upb0ah",
-    "percent": 25,
+    "percent": 75,
     "popup": {
       "exercises": [
         {
           "categories": [],
-          "completed": false,
+          "completed": true,
           "id": "ex_node_9i37s3r",
           "label": "Confidence Intervals for Accuracy",
           "optional": false,
@@ -300,7 +300,7 @@
         },
         {
           "categories": [],
-          "completed": false,
+          "completed": true,
           "id": "ex_node_y3ua3tj",
           "label": "Comparing Two Models with Paired t-test",
           "optional": false,
@@ -308,7 +308,7 @@
         },
         {
           "categories": [],
-          "completed": false,
+          "completed": true,
           "id": "ex_node_thsnt29",
           "label": "Understanding p-value Pitfalls",
           "optional": false,
@@ -337,12 +337,12 @@
       "node_oz6jq06"
     ],
     "id": "node_5l0yawa",
-    "percent": 0,
+    "percent": 50,
     "popup": {
       "exercises": [
         {
           "categories": [],
-          "completed": false,
+          "completed": true,
           "id": "ex_node_3y5694y",
           "label": "Accuracy vs. Precision/Recall/F1",
           "optional": false,
@@ -350,7 +350,7 @@
         },
         {
           "categories": [],
-          "completed": false,
+          "completed": true,
           "id": "ex_node_001ix7t",
           "label": "Plotting and Interpreting Precision-Recall Curves",
           "optional": false,
@@ -531,7 +531,7 @@
   {
     "children": [],
     "id": "node_etrm0ra",
-    "percent": 0,
+    "percent": 25,
     "popup": {
       "exercises": [
         {
@@ -1277,48 +1277,48 @@
     "popup": {
       "exercises": [
         {
+          "categories": [],
+          "completed": false,
           "id": "ex_node_bva19wk",
           "label": "Time Series Cross-Validation",
-          "categories": [],
-          "completed": false,
           "optional": false,
           "points": 0
         },
         {
+          "categories": [],
+          "completed": false,
           "id": "ex_node_nk8oo90",
           "label": "Group-Aware Cross-Validation",
-          "categories": [],
-          "completed": false,
           "optional": false,
           "points": 0
         },
         {
+          "categories": [],
+          "completed": false,
           "id": "ex_node_j9ia2tm",
           "label": "Identifying Target Leakage",
-          "categories": [],
-          "completed": false,
           "optional": false,
           "points": 0
         },
         {
+          "categories": [],
+          "completed": false,
           "id": "ex_node_y96exkq",
           "label": "Implementing Adversarial Validation",
-          "categories": [],
-          "completed": false,
           "optional": false,
           "points": 0
         },
         {
-          "id": "ex_node_iime14k",
-          "label": "Cross-Validation for Target Encoding",
           "categories": [],
           "completed": false,
+          "id": "ex_node_iime14k",
+          "label": "Cross-Validation for Target Encoding",
           "optional": false,
           "points": 0
         }
       ],
-      "text": "",
-      "pdf_link": "mdml/3robust.md"
+      "pdf_link": "mdml/3robust.md",
+      "text": ""
     },
     "prerequisites": [
       "node_sm10pzt"
@@ -1335,48 +1335,48 @@
     "popup": {
       "exercises": [
         {
+          "categories": [],
+          "completed": false,
           "id": "ex_node_huhn2xx",
           "label": "Polynomial and Interaction Features",
-          "categories": [],
-          "completed": false,
           "optional": false,
           "points": 0
         },
         {
+          "categories": [],
+          "completed": false,
           "id": "ex_node_up2en1w",
           "label": "Advanced Categorical Encoding (Target/LeaveOneOut)",
-          "categories": [],
-          "completed": false,
           "optional": false,
           "points": 0
         },
         {
+          "categories": [],
+          "completed": false,
           "id": "ex_node_brrkupo",
           "label": "Permutation Importance",
-          "categories": [],
-          "completed": false,
           "optional": false,
           "points": 0
         },
         {
+          "categories": [],
+          "completed": false,
           "id": "ex_node_umsnnxd",
           "label": "Feature Selection with Boruta",
-          "categories": [],
-          "completed": false,
           "optional": false,
           "points": 0
         },
         {
-          "id": "ex_node_qv6iqxz",
-          "label": "Manual Feature Interaction Creation",
           "categories": [],
           "completed": false,
+          "id": "ex_node_qv6iqxz",
+          "label": "Manual Feature Interaction Creation",
           "optional": false,
           "points": 0
         }
       ],
-      "text": "",
-      "pdf_link": "mdml/3feat_eng"
+      "pdf_link": "mdml/3feat_eng",
+      "text": ""
     },
     "prerequisites": [
       "node_i4hwamw"
@@ -1391,56 +1391,56 @@
     "popup": {
       "exercises": [
         {
+          "categories": [],
+          "completed": false,
           "id": "ex_node_lidy4us",
           "label": "Advanced Text Features (TF-IDF & N-grams)",
-          "categories": [],
-          "completed": false,
           "optional": false,
           "points": 0
         },
         {
+          "categories": [],
+          "completed": false,
           "id": "ex_node_1zaeait",
           "label": "Using Pre-trained Word Embeddings",
-          "categories": [],
-          "completed": false,
           "optional": false,
           "points": 0
         },
         {
+          "categories": [],
+          "completed": false,
           "id": "ex_node_7kj0zzs",
           "label": "Image Features via Transfer Learning",
-          "categories": [],
-          "completed": false,
           "optional": false,
           "points": 0
         },
         {
+          "categories": [],
+          "completed": false,
           "id": "ex_node_dx4g30q",
           "label": "Time Series Lag Features",
-          "categories": [],
-          "completed": false,
           "optional": false,
           "points": 0
         },
         {
+          "categories": [],
+          "completed": false,
           "id": "ex_node_u5xik3p",
           "label": "Time Series Rolling Window Features",
-          "categories": [],
-          "completed": false,
           "optional": false,
           "points": 0
         },
         {
-          "id": "ex_node_1w7hjf0",
-          "label": "Automated Time Series Feature Engineering",
           "categories": [],
           "completed": false,
+          "id": "ex_node_1w7hjf0",
+          "label": "Automated Time Series Feature Engineering",
           "optional": false,
           "points": 0
         }
       ],
-      "text": "",
-      "pdf_link": "mdml/3feat_eng_data.md"
+      "pdf_link": "mdml/3feat_eng_data.md",
+      "text": ""
     },
     "prerequisites": [
       "node_negctiu"
@@ -1455,48 +1455,48 @@
     "popup": {
       "exercises": [
         {
+          "categories": [],
+          "completed": false,
           "id": "ex_node_ld2kmwe",
           "label": "Limitations of Grid/Random Search",
-          "categories": [],
-          "completed": false,
           "optional": false,
           "points": 0
         },
         {
+          "categories": [],
+          "completed": false,
           "id": "ex_node_rdtoul2",
           "label": "Bayesian Optimization with Gaussian Processes (Conceptual)",
-          "categories": [],
-          "completed": false,
           "optional": false,
           "points": 0
         },
         {
+          "categories": [],
+          "completed": false,
           "id": "ex_node_msi24c5",
           "label": "HPO with Optuna (TPE Sampler)",
-          "categories": [],
-          "completed": false,
           "optional": false,
           "points": 0
         },
         {
+          "categories": [],
+          "completed": false,
           "id": "ex_node_b57ljz5",
           "label": "HPO with Hyperopt (TPE Sampler)",
-          "categories": [],
-          "completed": false,
           "optional": false,
           "points": 0
         },
         {
-          "id": "ex_node_ntdilu4",
-          "label": "Early Stopping / Pruning with ASHA",
           "categories": [],
           "completed": false,
+          "id": "ex_node_ntdilu4",
+          "label": "Early Stopping / Pruning with ASHA",
           "optional": false,
           "points": 0
         }
       ],
-      "text": "",
-      "pdf_link": "mdml/3hyper.md"
+      "pdf_link": "mdml/3hyper.md",
+      "text": ""
     },
     "prerequisites": [
       "node_i4hwamw"
@@ -1513,48 +1513,48 @@
     "popup": {
       "exercises": [
         {
+          "categories": [],
+          "completed": false,
           "id": "ex_node_uyq5go9",
           "label": "Bagging vs. Random Forest",
-          "categories": [],
-          "completed": false,
           "optional": false,
           "points": 0
         },
         {
+          "categories": [],
+          "completed": false,
           "id": "ex_node_gwi5jgn",
           "label": "Gradient Boosting Machine (GBM) Fundamentals",
-          "categories": [],
-          "completed": false,
           "optional": false,
           "points": 0
         },
         {
+          "categories": [],
+          "completed": false,
           "id": "ex_node_gpwprg7",
           "label": "Tuning XGBoost",
-          "categories": [],
-          "completed": false,
           "optional": false,
           "points": 0
         },
         {
+          "categories": [],
+          "completed": false,
           "id": "ex_node_obzkfht",
           "label": "Tuning LightGBM",
-          "categories": [],
-          "completed": false,
           "optional": false,
           "points": 0
         },
         {
-          "id": "ex_node_gba88lo",
-          "label": "Tuning CatBoost",
           "categories": [],
           "completed": false,
+          "id": "ex_node_gba88lo",
+          "label": "Tuning CatBoost",
           "optional": false,
           "points": 0
         }
       ],
-      "text": "",
-      "pdf_link": "mdml/3ensemble.md"
+      "pdf_link": "mdml/3ensemble.md",
+      "text": ""
     },
     "prerequisites": [
       "node_i4hwamw"
@@ -1571,48 +1571,48 @@
     "popup": {
       "exercises": [
         {
+          "categories": [],
+          "completed": false,
           "id": "ex_node_ciaj8wj",
           "label": "Stacking Workflow (Manual Implementation)",
-          "categories": [],
-          "completed": false,
           "optional": false,
           "points": 0
         },
         {
+          "categories": [],
+          "completed": false,
           "id": "ex_node_0pwwgtr",
           "label": "Stacking with Scikit-learn (`StackingClassifier`/`StackingRegressor`)",
-          "categories": [],
-          "completed": false,
           "optional": false,
           "points": 0
         },
         {
+          "categories": [],
+          "completed": false,
           "id": "ex_node_yb20069",
           "label": "Blending Implementation",
-          "categories": [],
-          "completed": false,
           "optional": false,
           "points": 0
         },
         {
+          "categories": [],
+          "completed": false,
           "id": "ex_node_ucllsbn",
           "label": "Multi-Level Stacking",
-          "categories": [],
-          "completed": false,
           "optional": false,
           "points": 0
         },
         {
-          "id": "ex_node_hr4ha73",
-          "label": "Choosing Base Models and Meta-Learner",
           "categories": [],
           "completed": false,
+          "id": "ex_node_hr4ha73",
+          "label": "Choosing Base Models and Meta-Learner",
           "optional": false,
           "points": 0
         }
       ],
-      "text": "",
-      "pdf_link": "mdml/3ensemble2.md"
+      "pdf_link": "mdml/3ensemble2.md",
+      "text": ""
     },
     "prerequisites": [
       "node_feu8oy5"
@@ -1627,48 +1627,48 @@
     "popup": {
       "exercises": [
         {
+          "categories": [],
+          "completed": false,
           "id": "ex_node_yb8gqm0",
           "label": "Optimal Threshold Tuning for Classification Metrics",
-          "categories": [],
-          "completed": false,
           "optional": false,
           "points": 0
         },
         {
+          "categories": [],
+          "completed": false,
           "id": "ex_node_h62dwht",
           "label": "Calibrating Predictions Post-Hoc",
-          "categories": [],
-          "completed": false,
           "optional": false,
           "points": 0
         },
         {
+          "categories": [],
+          "completed": false,
           "id": "ex_node_7709wx0",
           "label": "Simple Averaging Ensemble for Submissions",
-          "categories": [],
-          "completed": false,
           "optional": false,
           "points": 0
         },
         {
+          "categories": [],
+          "completed": false,
           "id": "ex_node_ktkaasg",
           "label": "Weighted Averaging Ensemble",
-          "categories": [],
-          "completed": false,
           "optional": false,
           "points": 0
         },
         {
-          "id": "ex_node_keowcog",
-          "label": "Understanding Competition Metrics & Leaderboards",
           "categories": [],
           "completed": false,
+          "id": "ex_node_keowcog",
+          "label": "Understanding Competition Metrics & Leaderboards",
           "optional": false,
           "points": 0
         }
       ],
-      "text": "",
-      "pdf_link": "mdml/3post_proc.md"
+      "pdf_link": "mdml/3post_proc.md",
+      "text": ""
     },
     "prerequisites": [
       "node_tgc6i5f"

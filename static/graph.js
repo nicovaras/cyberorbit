@@ -167,7 +167,7 @@ export function initGraph(initialNodes, initialLinks, initialUnlocked, initialDi
   // --- Simulation Setup ---
   currentSimulation = d3.forceSimulation(initialNodes) // Use initialNodes
     .force("link", d3.forceLink(initialLinks).id(d => d.id).distance(150))
-    .force("charge", d3.forceManyBody().strength(-600))
+    .force("charge", d3.forceManyBody().strength(-700))
     .force("collision", d3.forceCollide().radius(d => (d.type === "main" || d.type === "start") ? 45 : 25))
     .force("center", d3.forceCenter(width / 2, height / 2));
 
