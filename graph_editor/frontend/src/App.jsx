@@ -1,9 +1,9 @@
 // src/App.jsx
-import React, { useState, useEffect, useCallback } from 'react';
+import React, { useState, useEffect } from 'react';
 import GraphSelector from './components/GraphSelector';
 import EditorView from './components/EditorView';
-import * as api from './api'; // Import API functions
-import './App.css'; // Basic styling
+import * as api from './api';
+import './App.css'; // Ensure this is imported
 
 function App() {
   const [graphs, setGraphs] = useState([]);
@@ -11,7 +11,6 @@ function App() {
   const [loadingGraphs, setLoadingGraphs] = useState(true);
   const [error, setError] = useState(null);
 
-  // Fetch graphs on component mount
   useEffect(() => {
     setLoadingGraphs(true);
     setError(null);
@@ -26,38 +25,41 @@ function App() {
       .finally(() => {
         setLoadingGraphs(false);
       });
-  }, []); // Empty dependency array means run once on mount
+  }, []);
 
   const handleGraphSelect = (graphId) => {
     setSelectedGraphId(graphId);
   };
 
   const handleBackToGraphs = () => {
-    setSelectedGraphId(null); // Go back to graph selection
+    setSelectedGraphId(null);
   };
 
   return (
+    // Updated structure
     <div className="App">
-      <h1>Graph Editor</h1>
-      {error && <div className="error-message">{error}</div>}
+      <header className="app-header">
+        <h1>Graph Editor</h1>
+      </header>
+      <main className="app-content">
+        {error && <div className="error-message">{error}</div>}
 
-      {loadingGraphs ? (
-        <p>Loading graphs...</p>
-      ) : selectedGraphId === null ? (
-         // Show GraphSelector only if no graph is selected
-         <GraphSelector
+        {loadingGraphs ? (
+          <div className="loading-indicator">Loading graphs...</div>
+        ) : selectedGraphId === null ? (
+          <GraphSelector
              graphs={graphs}
              onSelectGraph={handleGraphSelect}
-             isLoading={loadingGraphs}
-         />
-      ) : (
-         // Show EditorView when a graph is selected
-         <EditorView
+             isLoading={loadingGraphs} // Though handled above, pass for completeness
+          />
+        ) : (
+          <EditorView
              graphId={selectedGraphId}
              graphName={graphs.find(g => g.id === selectedGraphId)?.name || 'Unknown Graph'}
              onBack={handleBackToGraphs}
-         />
-      )}
+          />
+        )}
+      </main>
     </div>
   );
 }

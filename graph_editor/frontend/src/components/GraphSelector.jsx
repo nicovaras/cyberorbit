@@ -7,7 +7,7 @@ function GraphSelector({ graphs, onSelectGraph, isLoading }) {
   }
 
   if (!graphs || graphs.length === 0) {
-    return <p>No graphs found. Ensure the backend is connected and graphs exist.</p>;
+    return <div className="placeholder-message"><FiDatabase/> No graphs found. Ensure the backend is connected and graphs exist.</div>;
   }
 
   return (
@@ -16,8 +16,11 @@ function GraphSelector({ graphs, onSelectGraph, isLoading }) {
       <ul>
         {graphs.map(graph => (
           <li key={graph.id}>
-            <button onClick={() => onSelectGraph(graph.id)}>
-              {graph.name} (ID: {graph.id})
+           {/* Apply new button class and structure */}
+           <button className="button button-secondary" onClick={() => onSelectGraph(graph.id)}>
+             <span>{graph.name}</span>
+             <span className="graph-id">ID: {graph.id}</span>
+             {/* Optional: <FiChevronRight/> */}
             </button>
           </li>
         ))}

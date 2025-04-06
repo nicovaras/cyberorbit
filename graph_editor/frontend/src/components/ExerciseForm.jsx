@@ -1,5 +1,6 @@
 // src/components/ExerciseForm.jsx
 import React, { useState, useEffect } from 'react';
+import { FiSave, FiXCircle } from 'react-icons/fi';
 
 // Assume fixed categories - get this from a config file or API later if needed
 const ALL_CATEGORIES = [
@@ -69,7 +70,6 @@ function ExerciseForm({ nodeId, exerciseData, onSave, onCancel, isProcessing }) 
   return (
     <div className="exercise-form-container">
       <h4>{isEditMode ? 'Edit Exercise' : 'Add New Exercise'}</h4>
-      {/* Removed <form onSubmit={handleSubmit}> */}
         <div className="form-group">
             <label htmlFor="exLabel">Label</label>
             <input type="text" id="exLabel" name="label" value={formData.label} onChange={handleChange} required disabled={isProcessing} />
@@ -82,24 +82,47 @@ function ExerciseForm({ nodeId, exerciseData, onSave, onCancel, isProcessing }) 
             <input type="checkbox" id="exOptional" name="optional" checked={formData.optional} onChange={handleChange} disabled={isProcessing} />
         </div>
         <div className="form-group">
-            <label>Categories</label>
-            <div className="category-checkbox-group">
-                {ALL_CATEGORIES.map(cat => (
-                    <div key={cat} className="category-checkbox-item">
-                        <input type="checkbox" id={`cat-${cat.replace(/\s+/g, '-')}`} value={cat} checked={formData.categories.includes(cat)} onChange={handleCategoryChange} disabled={isProcessing}/>
-                        <label htmlFor={`cat-${cat.replace(/\s+/g, '-')}`}>{cat}</label>
-                    </div>
-                ))}
-            </div>
+          <label>Categories</label>
+          <div className="category-checkbox-group">
+            {ALL_CATEGORIES.map(cat => (
+              <div
+                key={cat}
+                className={`category-pill ${formData.categories.includes(cat) ? 'active' : ''}`}
+                onClick={() => {
+                  setFormData(prev => {
+                    const current = prev.categories || [];
+                    if (current.includes(cat)) {
+                      return { ...prev, categories: current.filter(c => c !== cat) };
+                    } else {
+                      return { ...prev, categories: [...current, cat] };
+                    }
+                  });
+                }}
+              >
+                {cat}
+              </div>
+            ))}
+          </div>
         </div>
         <div className="form-actions">
-            {/* Changed type="submit" to type="button" and added onClick */}
-            <button type="button" onClick={handleSaveClick} disabled={isProcessing}>
-                {isProcessing ? 'Saving...' : (isEditMode ? 'Update Exercise' : 'Add Exercise')}
-            </button>
-            <button type="button" onClick={onCancel} disabled={isProcessing} className="cancel-button">
-                Cancel
-            </button>
+        <button
+          type="button"
+          onClick={handleSaveClick}
+          disabled={isProcessing}
+          className={isProcessing ? 'button-disabled' : 'button-primary'}
+        >
+          {isProcessing ? 'Saving...' : (isEditMode ? 'Update Exercise' : 'Add Exercise')}
+        </button>
+
+        <button
+          type="button"
+          onClick={onCancel}
+          disabled={isProcessing}
+          className={isProcessing ? 'button-disabled' : 'button-cancel'}
+        >
+          Cancel
+        </button>
+
         </div>
       {/* Removed </form> */}
     </div>

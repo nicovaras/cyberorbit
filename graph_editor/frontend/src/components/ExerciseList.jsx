@@ -3,9 +3,10 @@ import React, { useState } from 'react';
 import ExerciseItem from './ExerciseItem';
 import ExerciseForm from './ExerciseForm';
 import * as api from '../api'; // Import API functions
+import { FiPlusCircle, FiInfo, FiAlertCircle } from 'react-icons/fi';
 
 // Receive onDataChange prop which is the refresh function from EditorView
-function ExerciseList({ nodeId, exercises = [], isProcessing, onDataChange }) {
+function ExerciseList({ nodeId, exercises = [], isProcessingParent, onDataChange }) {
     const [showAddForm, setShowAddForm] = useState(false);
     const [editingExercise, setEditingExercise] = useState(null);
     const [exerciseError, setExerciseError] = useState(null); // Local error state for exercises
@@ -70,24 +71,24 @@ function ExerciseList({ nodeId, exercises = [], isProcessing, onDataChange }) {
     }
 
     // Combine processing states for disabling buttons
-    const isBusy = isProcessing || isSubmittingExercise;
+    const isBusy = isProcessingParent || isSubmittingExercise;
 
   return (
     <div className="exercises-section">
-      <div style={{display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '15px'}}>
+      <div className="pane-header">
         <h3>Exercises</h3>
         <button
             type="button"
             onClick={() => { setEditingExercise(null); setShowAddForm(true); setExerciseError(null); }}
             disabled={isBusy || showAddForm || !!editingExercise} // Disable if already adding/editing
-            className="add-exercise-button"
+            className="button button-primary add-exercise-button"
          >
-             + Add Exercise
+          <FiPlusCircle /> Add Exercise 
          </button>
       </div>
 
       {/* Display Exercise-specific Errors */}
-      {exerciseError && <div className="error-message" style={{fontSize: '0.9em', marginBottom: '10px'}}>{exerciseError}</div>}
+      {exerciseError && <div className="error-message"><FiAlertCircle/> {exerciseError}</div>}
 
 
       {/* Conditional Form Rendering */}
@@ -111,8 +112,9 @@ function ExerciseList({ nodeId, exercises = [], isProcessing, onDataChange }) {
 
 
       {/* List of Exercises */}
-      {exercises.length === 0 ? (
-        <p>No exercises added for this node yet.</p>
+      {!showAddForm && !editingExercise && exercises.length === 0 ? (
+        // Use placeholder style
+        <div className="placeholder-message"><FiInfo/> No exercises added for this node yet. Click "+ Add Exercise".</div>
       ) : (
         <ul className="exercise-list">
           {exercises.map(ex => (

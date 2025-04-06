@@ -1,5 +1,6 @@
 // src/components/AddNodeForm.jsx
 import React, { useState } from 'react';
+import { FiSave, FiXCircle } from 'react-icons/fi';
 
 function AddNodeForm({ onClose, onCreate, allNodes = [], isProcessing }) {
   const [title, setTitle] = useState('');
@@ -19,23 +20,11 @@ function AddNodeForm({ onClose, onCreate, allNodes = [], isProcessing }) {
     });
   };
 
-  // Basic modal styling (add to App.css or use a library)
-  const modalStyle = {
-    position: 'fixed', top: '50%', left: '50%',
-    transform: 'translate(-50%, -50%)',
-    backgroundColor: '#2a2a2e', border: '1px solid #4a4a4a',
-    padding: '25px', zIndex: 1000, borderRadius: '5px',
-    minWidth: '350px', boxShadow: '0 5px 15px rgba(0,0,0,0.4)'
-  };
-  const overlayStyle = {
-    position: 'fixed', top: 0, left: 0, right: 0, bottom: 0,
-    backgroundColor: 'rgba(0, 0, 0, 0.6)', zIndex: 999
-  };
-
   return (
-    <div style={overlayStyle} onClick={onClose}> {/* Close on overlay click */}
-      <div style={modalStyle} onClick={e => e.stopPropagation()}> {/* Prevent closing when clicking inside modal */}
-        <h2>Add New Node</h2>
+        // Apply overlay and content classes
+        <div className="add-node-modal-overlay" onClick={onClose}>
+          <div className="add-node-modal-content" onClick={e => e.stopPropagation()}>
+    <h2>Add New Node</h2>
         <form onSubmit={handleSubmit}>
           <div className="form-group">
             <label htmlFor="newTitle">Node Title</label>
@@ -63,11 +52,11 @@ function AddNodeForm({ onClose, onCreate, allNodes = [], isProcessing }) {
             </select>
           </div>
           <div className="form-actions">
-            <button type="submit" disabled={isProcessing}>
-                {isProcessing ? 'Creating...' : 'Create Node'}
-            </button>
-            <button type="button" onClick={onClose} disabled={isProcessing} className="cancel-button">
-                Cancel
+           <button type="button" onClick={onClose} disabled={isProcessing} className="button button-secondary cancel-button">
+               <FiXCircle /> Cancel
+           </button>
+           <button type="submit" disabled={isProcessing} className="button button-primary">
+               <FiSave /> {isProcessing ? 'Creating...' : 'Create Node'}
             </button>
           </div>
         </form>

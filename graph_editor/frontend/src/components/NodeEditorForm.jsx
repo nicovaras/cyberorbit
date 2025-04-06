@@ -51,7 +51,7 @@ function NodeEditorForm({
 
   return (
     <form onSubmit={handleSubmit} className="node-editor-form">
-       {/* Keep all form groups for Node fields (ID, Title, Type, etc.) */}
+       <div className="form-content">
         <div className="form-group"><label htmlFor="nodeId">Node ID</label><input type="text" id="nodeId" value={nodeData.id || ''} readOnly disabled /></div>
         <div className="form-group"><label htmlFor="title">Node Title</label><input type="text" id="title" name="title" value={formData.title} onChange={handleChange} required disabled={isProcessing} /></div>
         <div className="form-group"><label htmlFor="type">Node Type</label><select id="type" name="type" value={formData.type} onChange={handleChange} disabled={isProcessing}><option value="main">Main</option><option value="sub">Sub</option></select></div>
@@ -70,12 +70,23 @@ function NodeEditorForm({
 
       {/* --- Form Actions (Keep as is) --- */}
       <div className="form-actions">
-        <button type="submit" disabled={isProcessing}>
-            {isProcessing ? 'Saving...' : 'Save Node Changes'}
+      <button
+          type="submit"
+          disabled={isProcessing}
+          className={isProcessing ? 'button-disabled' : 'button-primary'}
+        >
+          {isProcessing ? 'Saving...' : 'Save Node Changes'}
         </button>
-        <button type="button" onClick={handleDeleteClick} disabled={isProcessing} className="delete-button">
-            {isProcessing ? 'Deleting...' : 'Delete Node'}
+
+        <button
+          type="button"
+          onClick={handleDeleteClick}
+          disabled={isProcessing}
+          className={isProcessing ? 'button-disabled' : 'button-danger'}
+        >
+          {isProcessing ? 'Deleting...' : 'Delete Node'}
         </button>
+      </div>
       </div>
     </form>
   );
