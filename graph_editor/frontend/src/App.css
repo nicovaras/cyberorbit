@@ -1,0 +1,521 @@
+/* src/App.css - Dark Theme */
+
+/* Define colors using CSS variables for easy theming */
+:root {
+  --bg-color: #1e1e1e; /* Very dark grey background */
+  --bg-secondary-color: #2a2a2e; /* Slightly lighter grey for panes/forms */
+  --text-color: #d4d4d4; /* Light grey text */
+  --text-muted-color: #888; /* Muted grey for less important text */
+  --border-color: #4a4a4a; /* Darker grey for borders */
+  --primary-color: #0e639c; /* Blue accent */
+  --primary-hover-color: #1177bb; /* Lighter blue on hover */
+  --selected-bg-color: var(--primary-color); /* Selected item background */
+  --selected-text-color: #ffffff; /* Selected item text */
+  --hover-bg-color: #3a3d41; /* Background on hover */
+  --button-bg-color: #007acc; /* Standard button */
+  --button-hover-bg-color: #005fa3;
+  --success-bg-color: #1e5e3a; /* Darker green for success */
+  --success-hover-bg-color: #247245;
+  --error-bg-color: #5e1e1e; /* Darker red for errors */
+  --error-border-color: #8b3a3a;
+  --input-bg-color: #3c3c3c; /* Dark input background */
+  --input-border-color: var(--border-color);
+  --input-text-color: var(--text-color);
+  --disabled-bg-color: #4a4a4a;
+  --disabled-text-color: #888;
+}
+
+body {
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+  margin: 0;
+  padding: 0;
+  background-color: var(--bg-color);
+  color: var(--text-color);
+  line-height: 1.6;
+}
+
+.App {
+  padding: 20px;
+  max-width: 1400px;
+  margin: 20px auto;
+  background-color: var(--bg-secondary-color); /* Pane background */
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+  border: 1px solid var(--border-color);
+  border-radius: 5px;
+}
+
+h1, h2, h3 {
+  color: var(--text-color);
+  border-bottom: 1px solid var(--border-color);
+  padding-bottom: 0.3em;
+  margin-bottom: 0.8em;
+}
+
+.error-message {
+  color: var(--text-color);
+  background-color: var(--error-bg-color);
+  border: 1px solid var(--error-border-color);
+  padding: 10px;
+  margin-bottom: 15px;
+  border-radius: 4px;
+}
+
+/* Graph Selector */
+.graph-selector ul {
+  list-style: none;
+  padding: 0;
+}
+.graph-selector li {
+  margin-bottom: 10px;
+}
+.graph-selector button {
+  padding: 10px 15px;
+  cursor: pointer;
+  background-color: var(--button-bg-color);
+  color: white;
+  border: none;
+  border-radius: 4px;
+  font-size: 1em;
+  transition: background-color 0.2s ease;
+}
+.graph-selector button:hover {
+  background-color: var(--button-hover-bg-color);
+}
+
+/* Editor View Layout */
+.editor-view > button { /* Style the 'Back' button */
+   padding: 8px 12px;
+   cursor: pointer;
+   background-color: var(--button-bg-color);
+   color: white;
+   border: none;
+   border-radius: 4px;
+   font-size: 0.9em;
+   margin-bottom: 1rem;
+   transition: background-color 0.2s ease;
+}
+.editor-view > button:hover {
+    background-color: var(--button-hover-bg-color);
+}
+
+.editor-layout {
+  display: flex;
+  gap: 20px;
+  margin-top: 10px; /* Reduced margin */
+}
+
+.tree-pane,
+.form-pane {
+  flex: 1; /* Default to equal width, adjust flex values if needed */
+  border: 1px solid var(--border-color);
+  padding: 15px;
+  height: 75vh; /* Increased height */
+  overflow-y: auto;
+  background-color: var(--bg-secondary-color); /* Match app background or slightly different */
+  border-radius: 4px;
+}
+
+.tree-pane {
+  min-width: 300px;
+  max-width: 450px; /* Allow slightly wider tree */
+  flex: 1;
+}
+
+.form-pane {
+  flex: 2; /* Make form pane wider */
+}
+
+/* Node Tree View */
+.node-tree-view {
+    font-size: 0.95em;
+}
+.tree-node {
+    margin-left: 18px; /* Indentation */
+}
+.node-item {
+    padding: 5px 8px;
+    cursor: pointer;
+    border-radius: 3px;
+    display: flex;
+    align-items: center;
+    margin-bottom: 3px;
+    transition: background-color 0.15s ease;
+}
+.node-item:hover {
+    background-color: var(--hover-bg-color);
+}
+.node-item.selected {
+    background-color: var(--selected-bg-color);
+    color: var(--selected-text-color);
+}
+.node-item .toggle {
+    display: inline-block;
+    width: 18px; /* Space for toggle */
+    margin-right: 6px;
+    font-size: 0.8em;
+    text-align: center;
+    color: var(--text-muted-color);
+}
+.node-item.selected .toggle {
+    color: var(--selected-text-color); /* Ensure toggle is visible when selected */
+}
+.node-item .toggle-placeholder {
+     display: inline-block;
+     width: 18px;
+     margin-right: 6px;
+}
+
+.node-title {
+    flex-grow: 1;
+}
+
+.node-children {
+     /* Optional border or padding for children */
+     /* border-left: 1px dashed var(--border-color); */
+     /* padding-left: 5px; */
+     /* margin-left: -19px; */ /* Align with parent toggle */
+}
+
+
+/* Node Editor Form */
+.node-editor-form .form-group {
+  margin-bottom: 18px; /* Slightly more space */
+}
+
+.node-editor-form label {
+  display: block;
+  margin-bottom: 6px;
+  font-weight: bold;
+  color: var(--text-muted-color); /* Lighter label color */
+  font-size: 0.9em;
+}
+
+.node-editor-form input[type="text"],
+.node-editor-form select,
+.node-editor-form textarea {
+  width: 100%;
+  padding: 10px; /* Slightly larger padding */
+  border: 1px solid var(--input-border-color);
+  border-radius: 4px;
+  box-sizing: border-box;
+  background-color: var(--input-bg-color);
+  color: var(--input-text-color);
+  font-size: 1em;
+}
+.node-editor-form input[type="text"]:focus,
+.node-editor-form select:focus,
+.node-editor-form textarea:focus {
+    outline: none;
+    border-color: var(--primary-color); /* Highlight focus */
+    box-shadow: 0 0 0 2px rgba(14, 99, 156, 0.3); /* Subtle glow */
+}
+
+
+.node-editor-form input[disabled] {
+  background-color: var(--disabled-bg-color);
+  color: var(--disabled-text-color);
+  cursor: not-allowed;
+  opacity: 0.7;
+}
+
+
+.node-editor-form textarea {
+  resize: vertical;
+  min-height: 80px; /* Minimum description height */
+}
+
+.node-editor-form .form-actions {
+  margin-top: 25px;
+  padding-top: 15px;
+  border-top: 1px solid var(--border-color);
+}
+.node-editor-form button { /* General button style within form */
+   padding: 10px 15px;
+   cursor: pointer;
+   color: white;
+   border: none;
+   border-radius: 4px;
+   font-size: 1em;
+   margin-right: 10px; /* Space between buttons */
+   transition: background-color 0.2s ease;
+}
+
+.node-editor-form button[type="submit"] {
+   background-color: var(--success-bg-color);
+}
+.node-editor-form button[type="submit"]:hover {
+  background-color: var(--success-hover-bg-color);
+}
+
+/* Style for delete button (add later) */
+/*
+.node-editor-form button.delete-button {
+   background-color: var(--error-bg-color);
+}
+.node-editor-form button.delete-button:hover {
+  background-color: #8b3a3a;
+}
+*/
+
+/* Exercises Section Placeholder */
+.exercises-section {
+    margin-top: 25px;
+    padding-top: 15px;
+    border-top: 1px solid var(--border-color);
+}
+.exercises-section h3 {
+    margin-bottom: 15px;
+    border-bottom: none; /* Remove double border */
+}
+
+/* Add placeholder text style */
+.exercises-section p,
+.node-editor-form .form-group p {
+    color: var(--text-muted-color);
+    font-style: italic;
+    font-size: 0.9em;
+    margin-top: 5px;
+}
+
+/* Scrollbar styling (optional, works in WebKit browsers) */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+::-webkit-scrollbar-track {
+  background: var(--bg-secondary-color);
+}
+::-webkit-scrollbar-thumb {
+  background-color: var(--border-color);
+  border-radius: 4px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background-color: #555;
+}
+
+/* Loading Indicator */
+.loading-indicator {
+  padding: 10px;
+  background-color: rgba(0, 122, 204, 0.2);
+  border: 1px solid var(--primary-color);
+  border-radius: 4px;
+  margin-bottom: 15px;
+  text-align: center;
+  color: var(--primary-color);
+}
+
+/* Add Node Button in Tree Pane */
+.tree-pane .add-node-button {
+ padding: 5px 10px;
+ font-size: 0.9em;
+ background-color: var(--success-bg-color);
+ color: white;
+ border: none;
+ border-radius: 4px;
+ cursor: pointer;
+ transition: background-color 0.2s ease;
+}
+.tree-pane .add-node-button:hover {
+  background-color: var(--success-hover-bg-color);
+}
+.tree-pane .add-node-button:disabled {
+  background-color: var(--disabled-bg-color);
+  cursor: not-allowed;
+}
+
+
+/* Node Editor Form Actions */
+.node-editor-form .form-actions button {
+  margin-right: 10px; /* Ensure spacing */
+}
+.node-editor-form .delete-button {
+ background-color: #a02c2c; /* Darker red */
+}
+.node-editor-form .delete-button:hover {
+background-color: #c0392b;
+}
+.node-editor-form button:disabled {
+  background-color: var(--disabled-bg-color);
+  color: var(--disabled-text-color);
+  cursor: not-allowed;
+  opacity: 0.7;
+}
+/* Add Node Form Modal Styling */
+/* (Basic styles included inline in AddNodeForm.jsx - enhance here if needed) */
+.form-actions .cancel-button {
+  background-color: #6c757d; /* Grey */
+}
+.form-actions .cancel-button:hover {
+  background-color: #5a6268;
+}
+
+
+/* Exercise List & Items */
+.exercise-list {
+  list-style: none;
+  padding: 0;
+  margin-top: 15px;
+}
+.exercise-item {
+  background-color: var(--input-bg-color); /* Slightly different bg */
+  border: 1px solid var(--border-color);
+  border-radius: 4px;
+  padding: 10px 15px;
+  margin-bottom: 10px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  transition: background-color 0.2s ease;
+}
+.exercise-item.editing {
+  border-left: 3px solid var(--primary-color); /* Highlight item being edited */
+  background-color: #4a4a4e; /* Slightly different bg when editing */
+}
+
+.exercise-details .exercise-label {
+  font-weight: bold;
+  display: block; /* Put label on its own line */
+  margin-bottom: 3px;
+}
+.exercise-details .exercise-points {
+  font-size: 0.9em;
+  color: var(--text-muted-color);
+  margin-right: 10px;
+}
+.exercise-details .exercise-optional {
+  font-size: 0.8em;
+  color: #aaa;
+  font-style: italic;
+  margin-right: 10px;
+}
+.exercise-details .exercise-categories {
+  font-size: 0.85em;
+  color: var(--text-muted-color);
+  margin-top: 4px;
+}
+
+
+.exercise-actions button {
+  font-size: 0.85em;
+  padding: 4px 8px;
+  margin-left: 8px;
+  cursor: pointer;
+  border: none;
+  border-radius: 3px;
+  color: white;
+}
+.exercise-actions button.edit-button {
+  background-color: var(--button-bg-color);
+}
+.exercise-actions button.edit-button:hover {
+  background-color: var(--button-hover-bg-color);
+}
+.exercise-actions button.delete-button {
+  background-color: #a02c2c;
+}
+.exercise-actions button.delete-button:hover {
+  background-color: #c0392b;
+}
+.exercise-actions button:disabled {
+  background-color: var(--disabled-bg-color);
+  color: var(--disabled-text-color);
+  cursor: not-allowed;
+  opacity: 0.7;
+}
+
+/* Add Exercise Button */
+.exercises-section .add-exercise-button {
+ padding: 5px 10px;
+ font-size: 0.9em;
+ background-color: var(--success-bg-color);
+ color: white;
+ border: none;
+ border-radius: 4px;
+ cursor: pointer;
+ transition: background-color 0.2s ease;
+}
+.exercises-section .add-exercise-button:hover {
+  background-color: var(--success-hover-bg-color);
+}
+.exercises-section .add-exercise-button:disabled {
+  background-color: var(--disabled-bg-color);
+  cursor: not-allowed;
+}
+
+/* Exercise Form */
+.exercise-form-container {
+  border: 1px dashed var(--border-color);
+  padding: 15px;
+  margin-top: 10px;
+  margin-bottom: 20px;
+  border-radius: 4px;
+  background-color: #333337; /* Slightly different bg for form */
+}
+.exercise-form-container h4 {
+  margin-top: 0;
+  border-bottom: none;
+}
+.exercise-form-container .form-group-inline {
+  display: flex;
+  align-items: center;
+  gap: 10px; /* Spacing between inline elements */
+}
+.exercise-form-container .form-group-inline label {
+  margin-bottom: 0; /* Remove bottom margin for inline labels */
+  white-space: nowrap; /* Prevent wrapping */
+}
+.category-checkbox-group {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); /* Responsive columns */
+  gap: 10px;
+  margin-top: 5px;
+}
+.category-checkbox-item {
+  display: flex;
+  align-items: center;
+}
+.category-checkbox-item input[type="checkbox"] {
+  margin-right: 8px;
+  width: auto; /* Override default width */
+}
+.category-checkbox-item label {
+  margin-bottom: 0; /* Override default */
+  font-weight: normal; /* Normal weight for checkbox labels */
+  color: var(--text-color);
+  font-size: 0.9em;
+}
+.exercise-form-container .form-actions button.cancel-button {
+  background-color: #6c757d;
+}
+.exercise-form-container .form-actions button.cancel-button:hover {
+  background-color: #5a6268;
+}
+.exercise-form-container {
+  border: 1px dashed var(--border-color);
+  padding: 15px;
+  margin-top: 10px;
+  margin-bottom: 20px;
+  border-radius: 4px;
+  background-color: #333337; /* Slightly different bg */
+}
+.exercise-form-container h4 {
+  margin-top: 0;
+  border-bottom: none;
+  font-size: 1.1em;
+  color: var(--text-color);
+}
+
+/* Ensure cancel button style exists */
+.form-actions button.cancel-button {
+  background-color: #6c757d; /* Grey */
+}
+.form-actions button.cancel-button:hover {
+  background-color: #5a6268;
+}
+/* Ensure exercise action buttons are styled if needed */
+.exercise-actions button {
+ /* Styles defined previously */
+}
+.exercise-actions button:disabled {
+  /* Styles defined previously */
+}

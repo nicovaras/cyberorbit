@@ -145,3 +145,4 @@ venv
 **/*.pyc
 
 .env
+graph_editor/.env
