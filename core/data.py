@@ -17,15 +17,12 @@ _cache_lock = Lock()
 def get_cached_static_graph_data(graph_id):
     cache_key = f"graph_{graph_id}"
     
-    if cache_key in _static_cache:
-        print(f"CACHE HIT for {cache_key}")
-        return _static_cache[cache_key]
+    # if cache_key in _static_cache:
+        # print(f"CACHE HIT for {cache_key}")
+        # return _static_cache[cache_key]
 
     
     with _cache_lock:
-        
-        if cache_key in _static_cache:
-            return _static_cache[cache_key]
 
         print(f"CACHE MISS for {cache_key}. Fetching from DB...")
         

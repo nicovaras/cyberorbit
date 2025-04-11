@@ -29,7 +29,7 @@ export function setupCtfHandlers() {
       // Get current graph selection
       const urlParams = new URLSearchParams(window.location.search);
       let selectedGraph = urlParams.get('graph') || 'x';
-      if (!['x', 'y'].includes(selectedGraph)) { selectedGraph = 'x'; }
+      if (!['x', 'y', 'z'].includes(selectedGraph)) { selectedGraph = 'x'; }
   
       console.log(`Attempting to update CTF ${targetCtf.id} count to ${newCount}`);
   

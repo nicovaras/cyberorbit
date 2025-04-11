@@ -362,7 +362,8 @@ def _get_full_user_state(user_id, graph_id):
             {**ctf_def, 'completed': user_ctf_completions.get(ctf_def['id'], 0)}
             for ctf_def in all_ctfs_list_cached # Use cached list
         ]
-        graph = db.session.get(Graph, graph_id); graph_name = graph.name if graph else 'x'
+        graph = db.session.get(Graph, graph_id); 
+        graph_name = graph.name if graph else 'x'
 
         # Assemble the final state dictionary
         state = {

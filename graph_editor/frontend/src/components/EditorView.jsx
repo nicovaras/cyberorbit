@@ -62,7 +62,6 @@ function EditorView({ graphId, graphName, onBack }) {
       // Optimistic UI update for title/parent change in tree
       setNodes(prevNodes => prevNodes.map(n => n.id === selectedNodeId ? {...n, ...response.data} : n));
       // fetchNodes(); // Or refetch all if complex parent changes occur often
-      alert("Node updated successfully!"); // Replace with better notification later
     } catch (err) { setError(`Update failed: ${err.message}`); }
     finally { setIsProcessing(false); }
   };
@@ -76,7 +75,6 @@ function EditorView({ graphId, graphName, onBack }) {
             setSelectedNodeId(null);
             setSelectedNodeDetails(null);
             fetchNodes(); // Must refetch after delete
-            alert("Node deleted successfully!");
         } catch (err) { setError(`Delete failed: ${err.message}`); }
         finally { setIsProcessing(false); }
     }
@@ -89,7 +87,6 @@ function EditorView({ graphId, graphName, onBack }) {
            fetchNodes(); // Refetch nodes to include the new one
            // Optionally select the new node
            // setSelectedNodeId(response.data.id);
-           alert("Node created successfully! Select it from the tree.");
        } catch (err) {
            setError(`Create failed: ${err.message}`);
            setShowAddNodeForm(true); // Reopen form on failure

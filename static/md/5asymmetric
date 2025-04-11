@@ -1,0 +1,92 @@
+## 🔑 Subtopic 5.3: Asymmetric (Public-Key) Cryptography Concepts
+
+**Goal:** Understand the fundamental principles of asymmetric cryptography, including the use of public/private key pairs for encryption and key exchange, focusing on RSA and ECC, and learn to generate key pairs using common tools.
+
+**Resources:**
+
+* **Concepts:** [Khan Academy Public Key Cryptography](https://www.khanacademy.org/computing/computers-and-internet/xcae6f4a7ff015e7d:online-data-security/xcae6f4a7ff015e7d:pubkey-cryptography/a/public-key-cryptography), [Wikipedia Public-key cryptography](https://en.wikipedia.org/wiki/Public-key_cryptography)
+* **RSA Algorithm:** [Wikipedia RSA](https://en.wikipedia.org/wiki/RSA_(cryptosystem)) (Concept)
+* **ECC Algorithm:** [Cloudflare Learning ECC](https://www.cloudflare.com/learning/ssl/what-is-ecc/) (Concept)
+* **Tools:** `ssh-keygen` (for SSH keys), `openssl genpkey`, `openssl rsa`, `openssl ec`, `openssl pkey` (for generating various key types)
+* **Key Formats:** PEM (Privacy-Enhanced Mail) format is common (`-----BEGIN... KEY-----`).
+
+**Test Environment / Tools Needed:**
+
+* A command-line environment (Linux, macOS, WSL) with `ssh-keygen` and `openssl` installed.
+* A text editor for viewing key files.
+
+---
+
+### 🔹 **Exercise 1: Generating SSH Key Pairs (`ssh-keygen`)**
+
+**Goal:** Use the standard `ssh-keygen` utility to generate RSA or Ed25519 key pairs suitable for SSH authentication.
+
+**Instructions:**
+
+1.  Open your terminal (Linux/macOS/WSL).
+2.  Generate a default RSA SSH key pair: `ssh-keygen -t rsa -b 4096`.
+    * When prompted, choose a file location (or accept the default `~/.ssh/id_rsa`).
+    * **Crucially:** Enter a strong passphrase to protect your private key when prompted. Remember this passphrase.
+3.  Examine the generated files: `id_rsa` (private key) and `id_rsa.pub` (public key) in the `.ssh` directory. Use `cat` or a text editor to view their contents. Note the PEM-like format (`-----BEGIN...`).
+4.  Generate an Ed25519 key pair (generally preferred now for SSH): `ssh-keygen -t ed25519`. Choose a different filename (e.g., `~/.ssh/id_ed25519`) and provide a strong passphrase.
+5.  Examine the `id_ed25519` and `id_ed25519.pub` files.
+6.  Discuss: Why is it critical to protect your private key with a strong passphrase? What is the purpose of the public key (`.pub` file) in SSH authentication?
+7.  **Challenge:** Use `ssh-keygen -y -f ~/.ssh/id_rsa` to derive and print the public key directly from the private key file (you'll need the passphrase). Verify it matches the content of `id_rsa.pub`.
+
+---
+
+### 🔹 **Exercise 2: Generating RSA Keys with OpenSSL**
+
+**Goal:** Use the `openssl` command-line tool to generate RSA private and public keys in PEM format.
+
+**Instructions:**
+
+1.  Generate an RSA private key using `openssl genpkey`. Choose a key size (e.g., 2048 or 3072 bits) and specify the RSA algorithm:
+    `openssl genpkey -algorithm RSA -pkeyopt rsa_keygen_bits:2048 -out private_rsa.pem`
+2.  Examine the `private_rsa.pem` file. Note the `-----BEGIN PRIVATE KEY-----` header.
+3.  (Optional) Encrypt the private key with a passphrase using AES-256 for better security:
+    `openssl pkcs8 -topk8 -inform PEM -outform PEM -in private_rsa.pem -out private_rsa_encrypted.pem -v2 aes-256-cbc`
+    (This converts to PKCS#8 format and encrypts). You will be prompted for a passphrase. Compare the encrypted vs unencrypted private key file contents.
+4.  Derive the corresponding public key from the (unencrypted) private key:
+    `openssl rsa -pubout -in private_rsa.pem -out public_rsa.pem`
+5.  Examine the `public_rsa.pem` file. Note the `-----BEGIN PUBLIC KEY-----` header.
+6.  **Challenge:** Use `openssl pkey -in private_rsa.pem -text -noout` to view the detailed components of the RSA private key (modulus, exponents, primes). Do the same for the public key (`openssl rsa -pubin -in public_rsa.pem -text -noout`).
+
+---
+
+### 🔹 **Exercise 3: Generating ECC Keys with OpenSSL**
+
+**Goal:** Use `openssl` to generate Elliptic Curve Cryptography (ECC) key pairs, which offer smaller key sizes for similar strength compared to RSA.
+
+**Instructions:**
+
+1.  List available ECC curves supported by your OpenSSL installation: `openssl ecparam -list_curves`. Note common ones like `prime256v1` (NIST P-256) or `secp384r1` (NIST P-384). Ed25519 might also be listed or generated differently depending on version.
+2.  Generate an ECC private key using a specific curve (e.g., `prime256v1`):
+    `openssl ecparam -name prime256v1 -genkey -noout -out private_ecc.pem`
+    *Alternatively, using `genpkey`:*
+    `openssl genpkey -algorithm EC -pkeyopt ec_paramgen_curve:prime256v1 -out private_ecc.pem`
+3.  Examine the `private_ecc.pem` file. Note the header (`-----BEGIN EC PRIVATE KEY-----` or generic `-----BEGIN PRIVATE KEY-----`).
+4.  Derive the corresponding ECC public key from the private key:
+    `openssl ec -pubout -in private_ecc.pem -out public_ecc.pem`
+5.  Examine the `public_ecc.pem` file.
+6.  **Challenge:** Compare the file sizes of the generated RSA (2048-bit) and ECC (prime256v1) private/public key files. What is a primary advantage of ECC regarding key size for equivalent security strength compared to RSA?
+
+---
+
+### 🔹 **Exercise 4: Public Key / Private Key Roles**
+
+**Goal:** Solidify understanding of which key (public or private) is used for which operation in common asymmetric cryptography scenarios.
+
+**Instructions:**
+
+1.  Consider the following cryptographic operations:
+    * **Encrypting data** so only a specific recipient can decrypt it.
+    * **Decrypting data** that was encrypted for you.
+    * **Creating a digital signature** to prove you authored a message.
+    * **Verifying a digital signature** to ensure a message came from the claimed sender and wasn't tampered with.
+    * **Establishing a shared secret** during a TLS or SSH key exchange (conceptual).
+2.  For each operation, state whether the **sender** uses the **recipient's public key**, the **sender's private key**, or a combination, and what the **recipient** uses. Briefly explain the logic.
+3.  Example: For "Encrypting data for Bob", Alice uses Bob's Public Key. Bob uses his Private Key to decrypt.
+4.  **Challenge:** In SSH key-based authentication, the client proves ownership of a private key without sending the key itself. Briefly describe how this challenge-response process works using the client's private key and the public key stored on the server. (Hint: It often involves signing data provided by the server).
+
+---

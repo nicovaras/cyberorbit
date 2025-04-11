@@ -769,3 +769,48 @@ body {
   margin-right: 6px;
   vertical-align: middle;
 }
+
+.node-title.main {
+  font-weight: 700;
+  color: #1864ab;
+}
+
+.node-title.sub {
+  font-weight: 400;
+  color: #82bfff;
+  opacity: 0.9;
+}
+
+.node-item:hover {
+  background-color: var(--hover-bg-color);
+}
+
+/* Bulk Add Form Styles */
+.bulk-add-form {
+    border: 1px solid var(--border-low-contrast);
+    padding: var(--space-5);
+    margin-top: var(--space-4);
+    margin-bottom: var(--space-6);
+    border-radius: var(--radius-md);
+    background-color: var(--bg-pane); /* Match exercise form container */
+  }
+  .bulk-add-form h4 {
+    margin-top: 0; margin-bottom: var(--space-2); font-size: 1.05em; color: var(--text-heading); font-weight: 600;
+  }
+  .bulk-add-form .instructions {
+    font-size: 0.85em; color: var(--text-secondary); margin-bottom: var(--space-4);
+  }
+  .bulk-add-form textarea {
+    /* Reuse existing textarea styles */
+    width: 100%; padding: var(--space-3) var(--space-4); border: 1px solid var(--border-interactive); border-radius: var(--radius-md); box-sizing: border-box; background-color: var(--bg-elevated); color: var(--text-primary); font-size: 0.95em; transition: border-color 0.2s ease, box-shadow 0.2s ease; resize: vertical; min-height: 150px; font-family: var(--font-sans); margin-bottom: var(--space-4);
+  }
+  .bulk-add-form textarea:focus {
+    outline: none; border-color: var(--border-focus); box-shadow: 0 0 0 3px rgba(41, 151, 255, 0.2);
+  }
+  .bulk-add-form .form-actions { /* Reuse form actions */
+    margin-top: 0; padding-top: 0; border-top: none; display: flex; justify-content: flex-end; gap: var(--space-3);
+  }
+  
+  /* Feedback Message Style */
+  .message.success { color: var(--success-500); background-color: var(--success-bg); border: 1px solid var(--success-border); padding: var(--space-3) var(--space-4); margin-bottom: var(--space-4); border-radius: var(--radius-md); font-size: 0.9em; display: flex; align-items: center; gap: var(--space-2); }
+  

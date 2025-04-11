@@ -69,7 +69,9 @@ const TreeNode = ({ node, onSelectNode, selectedNodeId }) => {
         ) : (
           <div className="toggle-placeholder"></div>
         )}
-        <div className="node-title">{node.title}</div>
+        <div className={`node-title ${node.type}`}>
+          {node.title}
+        </div>
       </div>
       {hasChildren && (
         <div

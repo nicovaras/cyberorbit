@@ -14,7 +14,7 @@ window.currentAppState = {
 const urlParams = new URLSearchParams(window.location.search);
 let selectedGraph = urlParams.get('graph') || 'x'; // Get from URL or default to 'x'
 // Basic validation
-if (!['x', 'y'].includes(selectedGraph)) { // Add other valid graph codes here (e.g., 'z')
+if (!['x', 'y', 'z'].includes(selectedGraph)) { // Add other valid graph codes here (e.g., 'z')
     selectedGraph = 'x';
 }
 console.log(`Loading graph: ${selectedGraph}.json`);
