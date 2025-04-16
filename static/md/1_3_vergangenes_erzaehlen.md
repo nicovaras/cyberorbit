@@ -19,38 +19,34 @@
 
 **Instructions:**
 
-1.  Review the rules for forming Partizip II:
-    * Regular verbs: `ge- + stem + -(e)t` (e.g., lernen -> gelernt, arbeiten -> gearbeitet)
-    * Separable prefix verbs (regular): `prefix + ge- + stem + -(e)t` (e.g., einkaufen -> eingekauft)
-    * Verbs ending in `-ieren`: `stem + -t` (e.g., studieren -> studiert)
-    * Irregular verbs: Often `ge- + stem change + -en` (e.g., sehen -> gesehen), but many variations exist. Use verb lists!
-2.  Write the correct Partizip II form for **each** of the following **25 verbs**. Consult verb lists (like Mein Deutschbuch link above) for irregular ones.
+1.  Review the rules for forming Partizip II for regular, separable, `-ieren`, and common irregular verbs. Consult verb lists (like Mein Deutschbuch link above).
+2.  Write the correct Partizip II form for **each** of the following **25 verbs**.
 
-    * machen -> ______ (gemacht)
-    * lernen -> ______ (gelernt)
-    * kaufen -> ______ (gekauft)
-    * wohnen -> ______ (gewohnt)
-    * arbeiten -> ______ (gearbeitet)
-    * fragen -> ______ (gefragt)
-    * hören -> ______ (gehört)
-    * kochen -> ______ (gekocht)
-    * spielen -> ______ (gespielt)
-    * studieren -> ______ (studiert)
-    * einkaufen -> ______ (eingekauft)
-    * aufräumen -> ______ (aufgeräumt)
-    * mitkommen -> ______ (mitgekommen)
-    * sein -> ______ (gewesen)
-    * haben -> ______ (gehabt)
-    * gehen -> ______ (gegangen)
-    * fahren -> ______ (gefahren)
-    * lesen -> ______ (gelesen)
-    * sehen -> ______ (gesehen)
-    * schreiben -> ______ (geschrieben)
-    * sprechen -> ______ (gesprochen)
-    * essen -> ______ (gegessen)
-    * trinken -> ______ (getrunken)
-    * finden -> ______ (gefunden)
-    * helfen -> ______ (geholfen)
+    * machen -> ______
+    * lernen -> ______
+    * kaufen -> ______
+    * wohnen -> ______
+    * arbeiten -> ______
+    * fragen -> ______
+    * hören -> ______
+    * kochen -> ______
+    * spielen -> ______
+    * studieren -> ______
+    * einkaufen -> ______
+    * aufräumen -> ______
+    * mitkommen -> ______
+    * sein -> ______
+    * haben -> ______
+    * gehen -> ______
+    * fahren -> ______
+    * lesen -> ______
+    * sehen -> ______
+    * schreiben -> ______
+    * sprechen -> ______
+    * essen -> ______
+    * trinken -> ______
+    * finden -> ______
+    * helfen -> ______
 
 ---
 
@@ -60,31 +56,29 @@
 
 **Instructions:**
 
-1.  Review the general rules for choosing the auxiliary verb:
-    * **'sein'**: Used with verbs indicating motion (gehen, fahren, fliegen, kommen...), change of state (aufwachen, sterben, werden...), or specific verbs like 'sein', 'bleiben'.
-    * **'haben'**: Used with most other verbs, especially transitive verbs (verbs taking a direct object).
-2.  For each of the **20 verbs** below, decide if its Perfekt tense is formed with `haben` or `sein`. Write `haben` or `sein` next to each verb.
+1.  Review the rules for choosing the auxiliary verb ('sein' for motion/change of state; 'haben' for most others).
+2.  For each of the **20 verbs** below, decide if its Perfekt tense is formed with `haben` or `sein`. Write `haben` or `sein` next to each infinitive.
 
-    * lernen -> ______ (haben)
-    * gehen -> ______ (sein)
-    * essen -> ______ (haben)
-    * fahren -> ______ (sein - usually; can be haben if transitive e.g., 'Ich habe das Auto gefahren') -> use 'sein' for basic A2.
-    * schlafen -> ______ (haben)
-    * kommen -> ______ (sein)
-    * sehen -> ______ (haben)
-    * bleiben -> ______ (sein)
-    * arbeiten -> ______ (haben)
-    * fliegen -> ______ (sein)
-    * trinken -> ______ (haben)
-    * aufstehen -> ______ (sein)
-    * lesen -> ______ (haben)
-    * reisen -> ______ (sein)
-    * helfen -> ______ (haben)
-    * passieren -> ______ (sein)
-    * kaufen -> ______ (haben)
-    * fallen -> ______ (sein)
-    * tanzen -> ______ (haben)
-    * schwimmen -> ______ (sein - usually; can be haben) -> use 'sein' for basic A2.
+    * lernen -> ______
+    * gehen -> ______
+    * essen -> ______
+    * fahren -> ______
+    * schlafen -> ______
+    * kommen -> ______
+    * sehen -> ______
+    * bleiben -> ______
+    * arbeiten -> ______
+    * fliegen -> ______
+    * trinken -> ______
+    * aufstehen -> ______
+    * lesen -> ______
+    * reisen -> ______
+    * helfen -> ______
+    * passieren -> ______
+    * kaufen -> ______
+    * fallen -> ______
+    * tanzen -> ______
+    * schwimmen -> ______
 
 ---
 
@@ -95,23 +89,23 @@
 **Instructions:**
 
 1.  Remember the word order: Subject - Conjugated Auxiliary (`haben`) - ... - Partizip II.
-2.  Combine the elements provided to form **15 complete sentences** in the Perfekt tense. Ensure `haben` is correctly conjugated and the Partizip II is at the end.
+2.  Form **15 complete sentences** in the Perfekt tense using the provided subject and verb phrase. You may need to add objects or context where logical. Ensure `haben` is correctly conjugated and the Partizip II is at the end.
 
-    * (Ich) / (Deutsch) / (lernen) -> Ich ______ Deutsch ______. (habe, gelernt)
-    * (Du) / (ein Buch) / (lesen) -> Du ______ ein Buch ______. (hast, gelesen)
-    * (Er) / (eine E-Mail) / (schreiben) -> Er ______ eine E-Mail ______. (hat, geschrieben)
-    * (Wir) / (den Film) / (sehen) -> Wir ______ den Film ______. (haben, gesehen)
-    * (Ihr) / (Pizza) / (essen) -> Ihr ______ Pizza ______. (habt, gegessen)
-    * (Sie, Pl.) / (Kaffee) / (trinken) -> Sie ______ Kaffee ______. (haben, getrunken)
-    * (Ich) / (meine Hausaufgaben) / (machen) -> Ich ______ meine Hausaufgaben ______. (habe, gemacht)
-    * (Du) / (deine Freunde) / (treffen) -> Du ______ deine Freunde ______. (hast, getroffen)
-    * (Anna) / (im Supermarkt) / (einkaufen) -> Anna ______ im Supermarkt ______. (hat, eingekauft)
-    * (Wir) / (Musik) / (hören) -> Wir ______ Musik ______. (haben, gehört)
-    * (Ihr) / (dem Mann) / (helfen) -> Ihr ______ dem Mann ______. (habt, geholfen)
-    * (Ich) / (das Auto) / (kaufen) -> Ich ______ das Auto ______. (habe, gekauft)
-    * (Du) / (gut geschlafen) / (schlafen) -> Du ______ gut ______. (hast, geschlafen)
-    * (Er) / (viel gearbeitet) / (arbeiten) -> Er ______ viel ______. (hat, gearbeitet)
-    * (Wir) / (das Fenster) / (öffnen) -> Wir ______ das Fenster ______. (haben, geöffnet)
+    * (Ich) / (Deutsch lernen) -> ______
+    * (Du) / (ein Buch lesen) -> ______
+    * (Er) / (eine E-Mail schreiben) -> ______
+    * (Wir) / (den Film sehen) -> ______
+    * (Ihr) / (Pizza essen) -> ______
+    * (Sie, Pl.) / (Kaffee trinken) -> ______
+    * (Ich) / (meine Hausaufgaben machen) -> ______
+    * (Du) / (deine Freunde treffen) -> ______
+    * (Anna) / (im Supermarkt einkaufen) -> ______
+    * (Wir) / (Musik hören) -> ______
+    * (Ihr) / (dem Mann helfen) -> ______
+    * (Ich) / (das Auto kaufen) -> ______
+    * (Du) / (gut schlafen) -> ______
+    * (Er) / (viel arbeiten) -> ______
+    * (Wir) / (das Fenster öffnen) -> ______
 
 ---
 
@@ -122,23 +116,23 @@
 **Instructions:**
 
 1.  Remember the word order: Subject - Conjugated Auxiliary (`sein`) - ... - Partizip II.
-2.  Combine the elements provided to form **15 complete sentences** in the Perfekt tense. Ensure `sein` is correctly conjugated and the Partizip II is at the end.
+2.  Form **15 complete sentences** in the Perfekt tense using the provided subject and verb phrase. You may need to add objects or context where logical. Ensure `sein` is correctly conjugated and the Partizip II is at the end.
 
-    * (Ich) / (ins Kino) / (gehen) -> Ich ______ ins Kino ______. (bin, gegangen)
-    * (Du) / (nach Berlin) / (fahren) -> Du ______ nach Berlin ______. (bist, gefahren)
-    * (Er) / (nach Hause) / (kommen) -> Er ______ nach Hause ______. (ist, gekommen)
-    * (Wir) / (in die USA) / (fliegen) -> Wir ______ in die USA ______. (sind, geflogen)
-    * (Ihr) / (lange geblieben) / (bleiben) -> Ihr ______ lange ______. (seid, geblieben)
-    * (Sie, Sg.) / (gestern aufgestanden) / (aufstehen) -> Sie ______ gestern ______. (ist, aufgestanden)
-    * (Ich) / (im Meer) / (schwimmen) -> Ich ______ im Meer ______. (bin, geschwommen)
-    * (Du) / (schnell gelaufen) / (laufen) -> Du ______ schnell ______. (bist, gelaufen)
-    * (Das Kind) / (gewachsen) / (wachsen) -> Das Kind ______ ______. (ist, gewachsen)
-    * (Wir) / (viel gereist) / (reisen) -> Wir ______ viel ______. (sind, gereist)
-    * (Ihr) / (vom Stuhl) / (fallen) -> Ihr ______ vom Stuhl ______. (seid, gefallen)
-    * (Ich) / (umgezogen) / (umziehen) -> Ich ______ ______. (bin, umgezogen)
-    * (Du) / (letzte Woche) / (krank gewesen) / (sein) -> Du ______ letzte Woche krank ______. (bist, gewesen)
-    * (Es) / (passiert) / (passieren) -> Es ______ ______. (ist, passiert)
-    * (Wir) / (eingeschlafen) / (einschlafen) -> Wir ______ ______. (sind, eingeschlafen)
+    * (Ich) / (ins Kino gehen) -> ______
+    * (Du) / (nach Berlin fahren) -> ______
+    * (Er) / (nach Hause kommen) -> ______
+    * (Wir) / (in die USA fliegen) -> ______
+    * (Ihr) / (lange bleiben) -> ______
+    * (Sie, Sg.) / (gestern aufstehen) -> ______
+    * (Ich) / (im Meer schwimmen) -> ______
+    * (Du) / (schnell laufen) -> ______
+    * (Das Kind) / (wachsen) -> ______
+    * (Wir) / (viel reisen) -> ______
+    * (Ihr) / (vom Stuhl fallen) -> ______
+    * (Ich) / (umziehen) (*to move house*) -> ______
+    * (Du) / (letzte Woche krank sein) -> ______
+    * (Es) / (passieren) -> ______
+    * (Wir) / (einschlafen) (*to fall asleep*) -> ______
 
 ---
 
@@ -148,12 +142,9 @@
 
 **Instructions:**
 
-1.  Think about what you did yesterday or on a recent day (e.g., last Saturday).
+1.  Think about what you did yesterday or on a recent day.
 2.  Write **10-15 complete sentences** describing your day in the Perfekt tense. Use a mix of verbs (requiring 'haben' and 'sein') and include past time expressions (e.g., *gestern, heute Morgen, am Vormittag, zu Mittag, am Nachmittag, am Abend, dann, danach, später*).
-3.  Try to connect the sentences logically to describe your routine or activities.
-4.  Refer to "Begegnungen A2+", Kapitel 3 vocabulary and exercises for inspiration if needed.
-5.  Focus on correct Perfekt formation and word order.
-
-    *Example Start:* *Gestern bin ich um 7 Uhr aufgestanden. Dann habe ich geduscht und gefrühstückt. Am Vormittag habe ich Deutsch gelernt...*
+3.  Connect the sentences logically.
+4.  Refer to "Begegnungen A2+", Kapitel 3 vocabulary if needed. Focus on correct Perfekt formation and word order.
 
 ---
