@@ -17,7 +17,6 @@ from sqlalchemy.orm import joinedload, selectinload
 import datetime
 from models import UserBadge # Keep specific imports if needed elsewhere
 from threading import Lock # Import Lock for thread safety
-
 load_dotenv()
 
 app = Flask(__name__, static_folder="static")
@@ -553,6 +552,129 @@ def init_db_command():
         _get_cached_static_definitions() # Attempt to pre-populate cache after DB init
         # --- End Cache Population ---
     except Exception as e: print(f"Error initializing database: {e}")
+
+import json
+import os
+import uuid # Import the uuid module
+import click # Ensure click is imported for the CLI command
+from flask import Flask # Assuming your app instance might be created differently
+from models import Graph, Node, NodeRelationship # Import your specific models
+
+
+def process_node_uuid(node_data, graph_id, parent_node_id=None):
+    """
+    Recursively processes a node and its children from the JSON data,
+    generating a UUID for each new node and creating Node and
+    NodeRelationship entries in the database session.
+    """
+    title = node_data.get('title')
+    node_type = node_data.get('type')
+    children = node_data.get('children', [])
+
+    if not title or not node_type:
+        print(f"Warning: Node data missing title or type: {node_data}. Skipping.")
+        return
+
+    # --- Generate a unique ID for the new node ---
+    # Use uuid4 for random UUIDs, hex for a plain string representation
+    generated_node_id = uuid.uuid4().hex
+
+
+    # --- Create and Add New Node (Simpler version without title check) ---
+    print(f"Creating Node: ID='{generated_node_id}', Title='{title}', Type='{node_type}'")
+    new_node = Node(
+        id=generated_node_id, # Use the generated UUID as the primary key
+        graph_id=graph_id,
+        title=title,
+        type=node_type,
+        popup_text=node_data.get('popup_text', None),
+        pdf_link=node_data.get('pdf_link', None)
+    )
+    db.session.add(new_node)
+    current_node_id_for_children = generated_node_id # Use new ID for children
+
+
+    # --- Create Relationship if it has a parent ---
+    if parent_node_id:
+        print(f"  Creating Relationship: Parent='{parent_node_id}' -> Child='{generated_node_id}'")
+        relationship = NodeRelationship(
+            parent_node_id=parent_node_id,
+            child_node_id=generated_node_id, # Link to the newly generated child ID
+            relationship_type='CHILD'
+        )
+        db.session.add(relationship)
+
+    # --- Recursively process children ---
+    for child_data in children:
+        # Pass the *generated* ID of the current node as the parent_id for its children
+        process_node_uuid(child_data, graph_id, parent_node_id=current_node_id_for_children)
+
+
+@app.cli.command("upload-graph-uuid")
+@click.argument("json_filepath")
+@click.argument("graph_name")
+def upload_graph_data_uuid(json_filepath, graph_name):
+    """
+    Uploads graph data from JSON to the database, generating UUIDs for nodes.
+
+    JSON_FILEPATH: Path to the input JSON file (e.g., data.json).
+    GRAPH_NAME: The unique name of the graph (e.g., w).
+    """
+    print(f"Starting graph upload from '{json_filepath}' for graph '{graph_name}' (generating UUIDs)...")
+
+    # --- 1. Load JSON data ---
+    try:
+        with open(json_filepath, 'r', encoding='utf-8') as f:
+            data = json.load(f)
+        if not isinstance(data, list):
+            print("Error: JSON data must be a list of node objects.")
+            return
+    except FileNotFoundError:
+        print(f"Error: JSON file not found at '{json_filepath}'")
+        return
+    except json.JSONDecodeError as e:
+        print(f"Error: Could not decode JSON file '{json_filepath}': {e}")
+        return
+    except Exception as e:
+        print(f"Error reading file '{json_filepath}': {e}")
+        return
+
+    # --- 2. Find or Create the Graph ---
+    graph = Graph.query.filter_by(name=graph_name).first()
+    if not graph:
+        print(f"Graph '{graph_name}' not found. Creating...")
+        try:
+            graph = Graph(name=graph_name, description=f"Graph for {graph_name}")
+            db.session.add(graph)
+            # Flush is needed here to ensure graph.id is populated before being used
+            db.session.flush()
+            print(f"Graph '{graph_name}' created with ID: {graph.id}")
+        except Exception as e:
+            db.session.rollback()
+            print(f"Error: Could not create graph '{graph_name}': {e}")
+            return
+    else:
+        print(f"Found existing graph '{graph_name}' with ID: {graph.id}")
+
+    graph_id = graph.id
+
+    # --- 3. Process Nodes Recursively ---
+    try:
+        for root_node_data in data:
+            # Start recursion, no parent for root nodes
+            process_node_uuid(root_node_data, graph_id, parent_node_id=None)
+
+        # --- 4. Commit Changes ---
+        print("Committing changes to the database...")
+        db.session.commit()
+        print("Database upload completed successfully!")
+
+    except Exception as e:
+        db.session.rollback()
+        print(f"\nError during node processing: {e}")
+        print("Database transaction rolled back. No changes were saved.")
+        import traceback
+        traceback.print_exc()
 
 
 if __name__ == "__main__":
