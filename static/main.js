@@ -141,7 +141,7 @@ fetch(`/data?graph=${selectedGraph}`)
     handleBadges(window.currentAppState.badges);
     renderBadgeGallery(window.currentAppState.badges);
     setupCtfHandlers(window.currentAppState.ctfs); // Sets up window.updateCtf
-    
+    setupNotesLinkListener();
     const graphSelector = document.getElementById('graphSelector');
     if (graphSelector) {
         graphSelector.value = selectedGraph; // Set dropdown to reflect loaded graph
@@ -235,6 +235,137 @@ if (graphSelector) {
 } else {
     console.warn("Graph selector element (#graphSelector) not found.");
 }
+
+function setupNotesLinkListener() {
+    const viewAllNotesLink = document.getElementById('viewAllNotesLink');
+
+    if (viewAllNotesLink) {
+        viewAllNotesLink.addEventListener('click', (event) => {
+            event.preventDefault(); // Stop the link from navigating
+            console.log("View All Notes link clicked.");
+
+            // Get the current graph identifier
+            const currentUrlParams = new URLSearchParams(window.location.search);
+            const currentGraph = currentUrlParams.get('graph') || 'x'; // Default to 'x' if not specified
+
+            console.log(`Workspaceing notes for graph: ${currentGraph}`);
+
+            // Fetch data from the new backend endpoint
+            fetch(`/notes?graph=${currentGraph}`)
+                .then(response => {
+                    if (!response.ok) {
+                        return response.json().then(err => {
+                            throw new Error(`Error ${response.status}: ${err.error || response.statusText}`);
+                        }).catch(() => {
+                             throw new Error(`Error ${response.status}: ${response.statusText}`);
+                        });
+                    }
+                    return response.json();
+                })
+                .then(data => {
+                    console.log("Received notes data:", data);
+                    generateAndOpenNotesTab(data, currentGraph);
+                })
+                .catch(error => {
+                    console.error('Failed to fetch or process notes:', error);
+                    alert(`Could not load notes: ${error.message}`);
+                });
+        });
+    } else {
+        console.warn("Element #viewAllNotesLink not found.");
+    }
+}
+
+function generateAndOpenNotesTab(notesData, graphName) {
+    if (!Array.isArray(notesData)) {
+        console.error("Invalid notes data received:", notesData);
+        alert("Received invalid data format for notes.");
+        return;
+    }
+
+    let htmlContent = `
+        <!DOCTYPE html>
+        <html lang="en">
+        <head>
+            <meta charset="UTF-8">
+            <title>All Notes - Graph: ${graphName}</title>
+            <style>
+                body { font-family: sans-serif; line-height: 1.6; padding: 20px; background-color: #f4f4f4; color: #333; }
+                h1 { border-bottom: 2px solid #ccc; padding-bottom: 10px; color: #555; }
+                .main-node { margin-bottom: 25px; background-color: #fff; padding: 15px; border-radius: 5px; box-shadow: 0 2px 4px rgba(0,0,0,0.1); }
+                .main-node > h2 { margin-top: 0; color: #0056b3; font-size: 1.4em; }
+                .main-node-notes { margin-left: 20px; font-style: italic; color: #666; background-color: #e9ecef; padding: 8px; border-radius: 4px; margin-top: 5px; white-space: pre-wrap; } /* Added pre-wrap */
+                .sub-node { margin-left: 20px; margin-top: 15px; border-left: 3px solid #007bff; padding-left: 15px; }
+                .sub-node h3 { margin-top: 0; margin-bottom: 5px; color: #17a2b8; font-size: 1.2em; }
+                .sub-node-notes { background-color: #f8f9fa; padding: 10px; border-radius: 4px; border: 1px solid #dee2e6; white-space: pre-wrap; } /* Added pre-wrap */
+                .no-notes { text-align: center; color: #888; font-size: 1.1em; margin-top: 30px; }
+                 hr { border: 0; height: 1px; background: #ddd; margin: 10px 0; }
+            </style>
+        </head>
+        <body>
+            <h1>All Notes for Graph: ${graphName.toUpperCase()}</h1>
+    `;
+
+    if (notesData.length === 0) {
+        htmlContent += '<div class="no-notes">No notes found for this graph.</div>';
+    } else {
+        notesData.forEach(mainNode => {
+            htmlContent += `<div class="main-node">`;
+            htmlContent += `<h2>${escapeHtml(mainNode.main_node_title)}</h2>`;
+
+            // Display Main Node notes if they exist
+            if (mainNode.main_node_notes) {
+                 htmlContent += `<h4>Main Node Notes:</h4>`;
+                 htmlContent += `<div class="main-node-notes">${escapeHtml(mainNode.main_node_notes)}</div>`;
+                 // Add a separator if there are also sub-nodes
+                 if (mainNode.sub_nodes && mainNode.sub_nodes.length > 0) {
+                     htmlContent += `<hr>`;
+                 }
+            }
+
+            if (mainNode.sub_nodes && mainNode.sub_nodes.length > 0) {
+                 mainNode.sub_nodes.forEach(subNode => {
+                    htmlContent += `<div class="sub-node">`;
+                    htmlContent += `<h3>${escapeHtml(subNode.sub_node_title)}</h3>`;
+                    htmlContent += `<div class="sub-node-notes">${escapeHtml(subNode.notes)}</div>`;
+                    htmlContent += `</div>`;
+                });
+            }
+            htmlContent += `</div>`; // Close main-node div
+        });
+    }
+
+    htmlContent += `
+        </body>
+        </html>
+    `;
+
+    // Open a new tab and write the content
+    const newTab = window.open('', '_blank');
+    if (newTab) {
+        newTab.document.open();
+        newTab.document.write(htmlContent);
+        newTab.document.close();
+    } else {
+        alert("Could not open new tab. Please check your browser's popup settings.");
+    }
+}
+
+// Helper function to escape HTML characters to prevent XSS
+function escapeHtml(unsafe) {
+    if (unsafe === null || unsafe === undefined) {
+        return '';
+    }
+    return unsafe
+         .toString() // Ensure it's a string
+         .replace(/&/g, "&amp;")
+         .replace(/</g, "&lt;")
+         .replace(/>/g, "&gt;")
+         .replace(/"/g, "&quot;")
+         .replace(/'/g, "&#039;");
+ }
+
+
 
 // --- Theme Selector Logic ---
 document.addEventListener('DOMContentLoaded', () => {
