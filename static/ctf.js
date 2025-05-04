@@ -61,6 +61,7 @@ export function setupCtfHandlers() {
       .then(newState => { // newState is the full state from the GET request
           console.log(`Updated state received after CTF update. Dispatching appDataUpdated.`);
           // Dispatch event with the NEW state from the GET request
+          new Audio('/static/check.mp3').play();
           document.dispatchEvent(new CustomEvent('appDataUpdated', { detail: newState }));
       })
       .catch(error => {

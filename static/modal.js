@@ -194,6 +194,7 @@ function handleCheckboxChange(event) {
       // Backend successfully processed POST and returned the updated state via GET
       console.log("Updated state received. Dispatching appDataUpdated event.");
       // Dispatch event with the NEW state from the GET request
+      new Audio('/static/check.mp3').play();
       document.dispatchEvent(new CustomEvent('appDataUpdated', { detail: newState }));
       document.getElementById("modal").style.display = "none"; // Close modal on success
   })

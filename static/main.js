@@ -1,20 +1,59 @@
 // Import necessary functions
 import { initGraph, updateGraph } from './graph.js';
 import { initModal } from './modal.js';
-import { handleBadges, renderBadgeGallery } from './badges.js';
+import { handleBadges, renderBadgeGallery, queueNotifications } from './badges.js';
 import { setupCtfHandlers } from './ctf.js';
 import { updateSidebar, renderOrUpdateHexChart } from './sidebar.js';
 
 // --- Global state (within module scope) ---
 window.currentAppState = { 
     nodes: [], links: [], unlocked: {}, discovered: new Set(),
-    streak: {}, ctfs: [], badges: [], current_graph: 'x.json'
+    streak: {}, ctfs: [], badges: [], current_graph: 'x.json',
+    highest_level_popup_shown: 0 
 };
+let previousLevel = 0;
 
 const urlParams = new URLSearchParams(window.location.search);
 let selectedGraph = urlParams.get('graph') || 'x'; // Get from URL or default to 'x'
 
 console.log(`Loading graph: ${selectedGraph}.json`);
+function calculateLevelFromXP(earnedXP) {
+    let levelThresholds = [0];
+    let levelSum = 0;
+    // Define XP thresholds: level 1 = 50xp, level 2 = 60xp, level 3 = 70xp etc.
+    for (let i = 0; i < 50; i++) { // Calculate up to level 50 thresholds
+        levelSum += 50 + (i * 10); // XP needed for this level relative to previous
+        levelThresholds.push(levelSum);
+    }
+
+    let currentLevel = 0; // Start at level 0
+    for (let i = 0; i < levelThresholds.length; i++) {
+         if (earnedXP >= levelThresholds[i]) {
+             currentLevel = i + 1; // Level is index + 1
+         } else {
+             break; // Stop when XP is less than the threshold for the next level
+         }
+     }
+    // Ensure level calculation returns at least 1 if XP > 0, or matches badge logic if needed
+    if (earnedXP > 0 && currentLevel === 0) currentLevel = 1; // Handle edge case for first few XP
+
+    return currentLevel; // Return the calculated level number
+}
+
+function calculateTotalXP(nodes, ctfs) {
+    let earnedXP = 0;
+    // Calculate XP from exercises
+    if (nodes && Array.isArray(nodes)) {
+        earnedXP += nodes.flatMap(n => n.popup?.exercises || [])
+                         .filter(e => e.completed && !e.optional) // Consider only completed non-optional? Or all completed? Adjust as needed.
+                         .reduce((sum, e) => sum + (e.points ?? 10), 0); // Use points, default 10
+    }
+    // Calculate XP from CTFs (assuming 30 points per completion)
+    if (ctfs && Array.isArray(ctfs)) {
+        earnedXP += ctfs.reduce((sum, c) => sum + ((c.completed || 0) * 30), 0);
+    }
+    return earnedXP;
+}
 
 function calculateAbilities(nodes, ctfs) {
   const abilities = {
@@ -59,12 +98,10 @@ function updateUI(newState) {
     );
 
     // Update the sidebar content using data from newState
-    updateSidebar(
-        newState.nodes,
-        newState.streak,
-        newState.ctfs,
-        discoveredSet           // Pass the discovered Set
-    );
+    const currentXP = calculateTotalXP(newState.nodes, newState.ctfs);
+    const currentLevel = calculateLevelFromXP(currentXP); // Use the function defined above
+    updateSidebar( newState.nodes, newState.streak, newState.ctfs, discoveredSet, currentXP, currentLevel ); // Pass XP and level
+
 
     // Update badges (check if they need the full state or just the badges list)
     // These functions likely only need the badges array from the state
@@ -113,12 +150,17 @@ fetch(`/data?graph=${selectedGraph}`)
     if (initialData === null) {
         return; // Exit if we were redirected
     }
+    const initialXP = calculateTotalXP(initialData.nodes, initialData.ctfs);
+    previousLevel = calculateLevelFromXP(initialXP); // Set initial previous level
+    
     // Store initial state
     window.currentAppState = {
         ...initialData,
         discovered: new Set(initialData.discovered || []),
         unlocked: initialData.unlocked || {},
-        abilities: initialData.abilities || calculateAbilities(initialData.nodes, initialData.ctfs) // Ensure abilities are present initially
+        abilities: initialData.abilities || calculateAbilities(initialData.nodes, initialData.ctfs), // Ensure abilities are present initially
+        highest_level_popup_shown: initialData.highest_level_popup_shown || 0 // Ensure it exists
+
     };
 
     // Initial rendering
@@ -132,12 +174,11 @@ fetch(`/data?graph=${selectedGraph}`)
         window.currentAppState.nodes,
         window.currentAppState.unlocked
     );
-    updateSidebar( // Renders sidebar content
-        window.currentAppState.nodes,
-        window.currentAppState.streak,
-        window.currentAppState.ctfs,
-        discoveredNodes
+    updateSidebar( // Pass initial XP and Level
+        window.currentAppState.nodes, window.currentAppState.streak, window.currentAppState.ctfs,
+        discoveredNodes, initialXP, previousLevel
     );
+    queueNotifications(window.currentAppState.badges, null); 
     handleBadges(window.currentAppState.badges);
     renderBadgeGallery(window.currentAppState.badges);
     setupCtfHandlers(window.currentAppState.ctfs); // Sets up window.updateCtf
@@ -150,19 +191,40 @@ fetch(`/data?graph=${selectedGraph}`)
     // --- Add Global Event Listener for Data Updates ---
     document.addEventListener('appDataUpdated', (event) => {
         console.log("Event 'appDataUpdated' received.");
+        let levelUpNotification = null; 
 
         // Check if the event came with a full state update (e.g., initial load, or future GET refresh)
         if (event.detail) {
             console.log("Event received with detail (full state update). Updating global state.");
             // Update the global state first
+            const newState = event.detail;
+
+            // --- Level Up Check ---
+            const newXP = calculateTotalXP(newState.nodes, newState.ctfs);
+            const newLevel = calculateLevelFromXP(newXP);
+            const highestShown = newState.highest_level_popup_shown || 0;
+
+            if (newLevel > previousLevel && newLevel > highestShown) {
+                console.log(`*** Level Up Detected: Level ${newLevel}! ***`);
+                levelUpNotification = { level: newLevel }; // Create notification object
+                // We will update highest_level_popup_shown locally AFTER the popup API call succeeds
+            }
+            // Update previousLevel for the next check AFTER comparison
+            previousLevel = newLevel;
+
             window.currentAppState = {
                ...event.detail,
                // Ensure correct types if needed
                unlocked: event.detail.unlocked || {},
                discovered: new Set(event.detail.discovered || []),
                // Ensure abilities are recalculated or taken from detail
-               abilities: event.detail.abilities || calculateAbilities(event.detail.nodes, event.detail.ctfs)
+               abilities: event.detail.abilities || calculateAbilities(event.detail.nodes, event.detail.ctfs),
+               highest_level_popup_shown: highestShown
+
             };
+            updateUI(window.currentAppState);
+            queueNotifications(window.currentAppState.badges, levelUpNotification);
+    
         } else {
             // This case handles the optimistic updates from modal.js/ctf.js
             // The global state (window.currentAppState) was *already updated* optimistically.
@@ -170,10 +232,8 @@ fetch(`/data?graph=${selectedGraph}`)
             // We might need to recalculate abilities based on the optimistically updated state
             // Note: This assumes abilities change based on exercises/CTFs completions.
             window.currentAppState.abilities = calculateAbilities(window.currentAppState.nodes, window.currentAppState.ctfs);
+            updateUI(window.currentAppState);
         }
-
-        // *** Always call updateUI with the current global state ***
-        updateUI(window.currentAppState);
 
         // Update graph selector dropdown if graph changed
         const graphSelector = document.getElementById('graphSelector');

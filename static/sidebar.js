@@ -69,7 +69,7 @@ function showCtfModal(ctf, index) {
 window.showCtfModal = showCtfModal;
 
 // --- Function to Update Sidebar Content (Chart Logic Removed) ---
-export function updateSidebar(nodes, streak, ctfs, discoveredNodes) {
+export function updateSidebar(nodes, streak, ctfs, discoveredNodes, earnedXP, currentLevel) {
   console.log("Updating sidebar content..."); // Debug log
   const mainProgress = document.getElementById("mainProgress");
   const levelDisplay = document.getElementById("levelDisplay");
@@ -92,30 +92,43 @@ export function updateSidebar(nodes, streak, ctfs, discoveredNodes) {
             item.innerHTML = `${n.title} <span>${n.percent ?? 0}%</span>`;
             mainProgress.appendChild(item);
         });
-  }
+  }  
+  
+  let levelThresholds = [0]; let levelSum = 0;
+  // Ensure this calculation MATCHES the one in main.js
+  for (let i = 0; i < 50; i++) { levelSum += 50 + (i * 10); levelThresholds.push(levelSum); }
 
-  // --- Calculate XP and Level ---
-  let earnedXP = 0;
-  if (nodes) { /* ... xp calculation ... */ earnedXP += nodes.flatMap(n => n.popup?.exercises || []).filter(e => e.completed).reduce((sum, e) => sum + (e.points ?? 10), 0); }
-  if (ctfs) { /* ... ctf xp calculation ... */ earnedXP += ctfs.reduce((sum, c) => sum + ((c.completed || 0) * 30), 0); }
+
 
   // --- Calculate Level ---
-  let levelThresholds = [0]; let levelSum = 0;
-  for (let i = 1; i < 50; i++) { levelSum += 50 + i * 10; levelThresholds.push(levelSum); }
-  let currentLevel = 0;
-  for (let i = levelThresholds.length - 1; i >= 0; i--) { if (earnedXP >= levelThresholds[i]) { currentLevel = i; break; } }
-  currentLevel = currentLevel + 1;
-  const prevXP = levelThresholds[currentLevel - 1] ?? 0;
-  const nextXP = levelThresholds[currentLevel] ?? (prevXP + 100);
-  const xpInLevel = earnedXP - prevXP;
-  const xpForLevel = nextXP - prevXP;
+  const prevLevelIndex = currentLevel - 1;
+  const nextLevelIndex = currentLevel;
+
+  const prevXP = levelThresholds[prevLevelIndex] ?? 0;
+  // Calculate XP needed for the *next* level relative to the *start* (0 XP)
+  const nextXPThreshold = levelThresholds[nextLevelIndex] ?? (prevXP + (50 + prevLevelIndex * 10)); // Calculate next threshold if needed
+
+  const xpInLevel = earnedXP - prevXP; // How much XP earned within the current level range
+  const xpForLevel = nextXPThreshold - prevXP; // Total XP needed to complete the current level
+
+  // Calculate percentage progress within the current level
   const progress = xpForLevel > 0 ? Math.min(100, Math.round((xpInLevel / xpForLevel) * 100)) : (earnedXP > prevXP ? 100 : 0);
 
   // Update Level Display
   if (levelDisplay) levelDisplay.textContent = `Level ${currentLevel}`; else console.warn("levelDisplay element not found");
   // Update XP Bar
-  if (xpBar) { xpBar.style.width = `${progress}%`; xpBar.textContent = `${earnedXP} XP`; } else console.warn("xpBar element not found");
-
+  if (xpBar) {
+    xpBar.style.width = `${progress}%`;
+    // Display XP progress within the level, e.g., "15/100 XP" or just total XP
+    // Option 1: Show progress within level
+     xpBar.textContent = `${xpInLevel} / ${xpForLevel} XP`;
+    // Option 2: Show total XP
+    // xpBar.textContent = `${earnedXP} XP Total`;
+  } else console.warn("xpBar element not found");
+   // Optional: Add a title attribute (tooltip) to the wrapper showing exact values
+   if (xpBarWrapper) {
+        xpBarWrapper.title = `Level <span class="math-inline">\{currentLevel\} \(</span>{progress}%)\nTotal XP: ${earnedXP}\nXP for next level: ${nextXPThreshold}`;
+    }
   // --- Update Streak Display ---
   if (streakDisplay && streak) { streakDisplay.innerHTML = ` <strong>${streak.streak} day${streak.streak === 1 ? '' : 's'}</strong>`; } else console.warn("streakDisplay element not found");
 

@@ -48,7 +48,6 @@ if not app.config["SQLALCHEMY_DATABASE_URI"]:
     raise ValueError("DATABASE_URL environment variable not set.")
 app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
 
-
 # Import all models needed for caching/operations
 from models import (
     db,
@@ -400,7 +399,13 @@ def _get_full_user_state(user_id, graph_id):
                 for b in badges_db
             }
         # --- End Cache Usage ---
-
+        current_user_obj = db.session.get(User, user_id)  # Fetch the user object
+        if not current_user_obj:
+            return {"error": "User not found"}
+        print(current_user_obj.__dict__)
+        highest_level_shown = (
+            current_user_obj.highest_level_popup_shown
+        )  # Get the value
         # --- Fetch user-specific and graph-specific data ---
         streak_data = core_streak.update_user_streak(
             user_id
@@ -483,6 +488,7 @@ def _get_full_user_state(user_id, graph_id):
             "abilities": abilities,
             "badges": final_user_badges_list,
             "current_graph": graph_name,
+            "highest_level_popup_shown": highest_level_shown,
             # Add newly awarded badges for popup?
             # "newly_awarded_badges": newly_awarded_badge_defs_list # Pass badge *objects* or just IDs? Frontend needs details.
         }
@@ -556,6 +562,51 @@ def post_data():
         print(f"Error processing POST /data for user {user_id}: {e}")
         return (
             jsonify({"error": "Failed to process data update", "details": str(e)}),
+            500,
+        )
+
+
+@app.route("/update_level_shown", methods=["POST"])
+@login_required
+def update_level_shown_status():
+    """Endpoint for the frontend to call after showing a level-up popup."""
+    user_id = current_user.id
+    payload = request.json
+    level_shown = payload.get("level")
+
+    if level_shown is None or not isinstance(level_shown, int) or level_shown <= 0:
+        return jsonify({"error": "Invalid or missing 'level' in payload"}), 400
+
+    try:
+        user = db.session.get(User, user_id)
+        if not user:
+            return (
+                jsonify({"error": "User not found"}),
+                404,
+            )  # Should not happen if logged in
+
+        # Update only if the new level shown is higher than the stored one
+        if level_shown > user.highest_level_popup_shown:
+            user.highest_level_popup_shown = level_shown
+            db.session.commit()
+            print(
+                f"Updated highest_level_popup_shown for user {user_id} to {level_shown}"
+            )
+            return jsonify({"status": "ok", "updated": True})
+        else:
+            # Level was not higher, maybe a duplicate request or out of order?
+            print(
+                f"Level {level_shown} not higher than stored {user.highest_level_popup_shown} for user {user_id}. No update."
+            )
+            return jsonify({"status": "ok", "updated": False})
+
+    except Exception as e:
+        db.session.rollback()
+        print(f"Error processing POST /update_level_shown for user {user_id}: {e}")
+        return (
+            jsonify(
+                {"error": "Failed to update level shown status", "details": str(e)}
+            ),
             500,
         )
 
