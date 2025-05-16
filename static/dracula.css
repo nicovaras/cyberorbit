@@ -241,7 +241,7 @@ svg {
 /* Sub node styling */
 .node.sub polygon.node-shape {
   stroke: var(--green);
-   filter: drop-shadow(0 0 6px var(--green));
+  filter: none;
 }
 .node.sub:hover {
      filter: drop-shadow(0 0 12px var(--green));
@@ -260,7 +260,11 @@ svg {
 .node.sub.done:hover polygon.node-shape {
     fill: var(--selection);
 }
-
+.node.sub.started polygon.node-shape {
+    fill: #50546e;
+    stroke: var(--green);
+    filter: none;
+}
 
 /* Start node styling */
 .node.start polygon.node-shape {
@@ -411,3 +415,31 @@ svg {
 /* Chart.js Tooltip Styling */
 .chartjs-tooltip { font-family: 'Share Tech Mono', 'Fira Code', monospace !important; background: rgba(40, 42, 54, 0.9) !important; color: var(--foreground) !important; border-radius: 3px !important; border: 1px solid var(--purple) !important; padding: 8px 12px !important; box-shadow: 0 0 10px var(--purple) !important; }
 .chartjs-tooltip-key { display: inline-block !important; width: 10px !important; height: 10px !important; margin-right: 5px !important; background-color: var(--pink) !important; }
+
+
+
+.node.sub polygon.node-shape {
+  stroke: var(--green);
+  filter: none;
+}
+
+.node.sub.done polygon.node-shape {
+  stroke: var(--green);
+  fill: #325ee2;
+  opacity: 0.8;
+  filter: drop-shadow(0 0 12px var(--green));
+}
+
+.node.sub.started polygon.node-shape {
+  fill: #76a8e1; /* brighter than #50546e */
+  stroke: var(--green);
+  filter: none;
+}
+
+.node.sub:not(.started) polygon.node-shape{
+  stroke: var(--background);
+
+}
+.node.sub:not(.done) {
+  filter: none;
+}

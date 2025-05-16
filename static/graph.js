@@ -24,11 +24,15 @@ function getNodeClasses(d, unlocked, discovered) {
     else if (d.id === "Start") classes += " start";
     else if (d.type === "main") classes += " mainColor";
     else { // Sub nodes
-        classes += " sub";
         const ex = d.popup?.exercises || [];
-        const allExercisesComplete = ex.length > 0 && ex.every(e => e.completed === true);
+        const completedCount = ex.filter(e => e.completed).length;
+        const allExercisesComplete = ex.length > 0 && completedCount === ex.length;
         if (allExercisesComplete) {
-            classes += " done";
+            classes += " sub done";
+        } else if (completedCount > 0) {
+            classes += " sub started";
+        } else {
+            classes += " sub";
         }
     }
     if (!unlocked[d.id] && d.id !== "Start") {

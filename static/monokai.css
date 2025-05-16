@@ -560,3 +560,29 @@ svg {
     /* Adjust value based on sidebar width (250px) + desired gap (e.g., 10px) */
     transform: translateX(-260px);
 }
+
+.node.sub polygon.node-shape {
+  stroke:  #fd971f;
+  filter: none;
+}
+
+.node.sub.done polygon.node-shape {
+  stroke:  #fd971f;
+  fill: #f92672;
+  opacity: 0.8;
+  filter: drop-shadow(0 0 12px  #fd971f);
+}
+
+.node.sub.started polygon.node-shape {
+  fill: #c45d83; /* brighter than #50546e */
+  stroke:  #fd971f;
+  filter: none;
+}
+
+.node.sub:not(.started) polygon.node-shape{
+  stroke: #272822; 
+
+}
+.node.sub:not(.done) {
+  filter: none;
+}
